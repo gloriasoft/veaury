@@ -8,7 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "core-js": "^3.6.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "vue": "^3.0.0"
   },
   "devDependencies": {
