@@ -1,15 +1,15 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
-  <BBB/>
+<!--  <BBB/>-->
   <HelloWorld msg="Welcome to Your Vue.js App" style="color: red" :class="['abc', 'aaa']" :aaa="aaa">
-    <div>{{aaa}}</div>
-    <template v-slot:ccc>
-      {{aaa}}
-    </template>
-    <template v-slot:bbb1>
-      {{bbb.a}}
-    </template>
-    <div>{{aaa}}</div>
+<!--    <div>{{aaa}}</div>-->
+<!--    <template v-slot:ccc>-->
+<!--      {{aaa}}-->
+<!--    </template>-->
+<!--    <template v-slot:bbb1>-->
+<!--      {{bbb.a}}-->
+<!--    </template>-->
+<!--    <div>{{aaa}}</div>-->
   </HelloWorld>
 </template>
 
@@ -22,7 +22,7 @@ const AAA = {
     // console.log(777, this)
   },
   render () {
-    return <div>666</div>
+    return [<div>666</div>, <div>7777</div>]
   }
 }
 const BBB = {
@@ -38,7 +38,8 @@ export default {
   name: 'App',
   components: {
     HelloWorld,
-    BBB
+    BBB,
+    AAA
   },
   data() {
     return {

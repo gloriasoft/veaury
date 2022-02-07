@@ -1,4 +1,4 @@
-import React, {version} from 'react'
+import React, {version, Fragment} from 'react'
 import Vue, {Teleport, h as createElement, createApp} from 'vue'
 
 import applyReactInVue from './applyReactInVue'
@@ -11,6 +11,18 @@ import App from "../dev-projcet/src/App";
 
 const unsafePrefix = parseFloat(version) >= 17 ? 'UNSAFE_' : ''
 const optionsName = 'vuereact-combined-options'
+
+// 获取随机的元素id，并保证不重复
+function getRandomId (prefix) {
+  const id = prefix + (Math.random() + '').substr(2)
+  // 如果产生碰撞则重新获取
+  if (getRandomId.pool.has(id)) {
+    return getRandomId(prefix)
+  }
+  getRandomId.pool.add(id)
+  return id
+}
+getRandomId.pool = new Set()
 
 // 根据传入的是否是字符串，判断是否需要获取Vue的全局组件
 function filterVueComponent (component) {
@@ -135,7 +147,7 @@ class VueComponentLoader extends React.Component {
       }
     }
 
-    return options.vue.componentWrapHOC(<div ref={this.createVueInstance} key={null} />, nativeProps)
+    return options.vue.componentWrapHOC(<div {...options.vue.componentWrapAttrs} ref={this.createVueInstance} key={null} />, nativeProps)
   }
 
   [`${unsafePrefix}componentWillReceiveProps`] (nextProps) {
@@ -156,6 +168,7 @@ class VueComponentLoader extends React.Component {
       return
     }
     this.vueInstance && this.vueInstance.$destroy()
+    getRandomId.pool.delete(this.vueTargetId)
   }
 
   // 处理v-model
@@ -491,8 +504,9 @@ class VueComponentLoader extends React.Component {
     if (!targetElement) return
 
     // Vue.nextTick(() => {
-    const targetId = '__vue_wrapper_container_' + (Math.random() + '').substr(2)
+    const targetId = getRandomId('__vue_wrapper_container_')
     targetElement.id = targetId
+    this.vueTargetId = targetId
     // 获取react的fiber实例
     let vueWrapperRef = options.wrapInstance
     if (!vueWrapperRef) {
@@ -516,19 +530,17 @@ class VueComponentLoader extends React.Component {
     }
 
     // 如果存在包囊层，则激活portal
-    // if (vueWrapperRef && document.getElementById(targetId)) {
-    //   // 存储包囊层引用
-    //   this.parentVueWrapperRef = vueWrapperRef
-    //
-    //   // 存储portal引用
-    //   this.vuePortal = (createElement, key) => createElement(Teleport, {props: {to: '#' + targetId, slim:true, targetSlim: true}, key: targetId}, [createElement(Object.assign(vueOptions, {router: this._router}))])
-    //   vueWrapperRef.pushVuePortal(this.vuePortal)
-    //   return
-    // }
+    if (vueWrapperRef && document.getElementById(targetId)) {
+      // 存储包囊层引用
+      this.parentVueWrapperRef = vueWrapperRef
+
+      // 存储portal引用
+      this.vuePortal = (createElement, key) => createElement(Teleport, {to: '#' + targetId, key: targetId}, [createElement(Object.assign(vueOptions, {router: this._router}))])
+      vueWrapperRef.pushVuePortal(this.vuePortal)
+      return
+    }
 
     // 创建vue实例
-    // this.vueInstance = new Vue({...vueOptions, el: targetElement})
-    console.log(7777, vueOptions)
     this.vueInstance = createApp(vueOptions).mount(targetElement)
     // })
 
@@ -541,7 +553,7 @@ class VueComponentLoader extends React.Component {
     // 使用$forceUpdate强制重新渲染vue实例，因为此方法只会重新渲染当前实例和插槽，不会重新渲染子组件，所以不会造成性能问题
     if (nextComponent.__fromReactSlot) {
       // 如果是来自react的slot，就强行通过修改vue组件构造器的use_vue_wrapper的缓存
-      Object.assign(this.vueInstance.$.components.use_vue_wrapper, nextComponent)
+      // Object.assign(this.vueInstance.$.components.use_vue_wrapper, nextComponent)
     } else {
       // 如果是标准的vue组件，则整个替换use_vue_wrapper为新的组件
       this.vueInstance.$options.components.use_vue_wrapper = nextComponent

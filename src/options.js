@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 
 const originOptions = {
   react: {
@@ -23,7 +23,7 @@ const originOptions = {
     componentWrapHOC: (VueComponentMountAt, nativeProps = []) => {
       // 传入portals
       return function ({ portals = [] } = {}) {
-        return (<div {...nativeProps}>{VueComponentMountAt}{portals.map(({ Portal, key }) => <Portal key={key}/>)}</div>)
+        return (<Fragment>{VueComponentMountAt}{portals.map(({ Portal, key }) => <Portal key={key}/>)}</Fragment>)
       }
     },
     componentWrapAttrs: {

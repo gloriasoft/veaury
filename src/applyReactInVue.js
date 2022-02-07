@@ -105,7 +105,9 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           const {key, ['data-passed-props']:dataPassedProps, ...otherAttrs} = this.$attrs
           children[0].props = {...otherAttrs, ...children[0].props}
         }
-        return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
+        // return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
+        // vue3不再需要根节点
+        return children
       },
     }
   }

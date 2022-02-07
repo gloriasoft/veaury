@@ -1,7 +1,7 @@
 <template>
   <div class="hello" ref="aaa">
-    <slot></slot>
-    <slot name="bbb22" v-bind="{a:1}"></slot>
+<!--    <slot></slot>-->
+<!--    <slot name="bbb22" v-bind="{a:1}"></slot>-->
     <Test>
       <div>1212</div>
     </Test>
