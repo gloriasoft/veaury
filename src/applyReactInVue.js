@@ -284,34 +284,28 @@ export default function applyReactInVue(component, options = {}) {
       },
       // hack!!!! 一定要在render函数李触发，才能激活具名插槽
       slotsInit(vnode) {
-        // TODO: 先不处理插槽更新
-        return
+        // TODO: 之后处理
         // 针对pureTransformer类型的react组件进行兼容，解决具名插槽和作用域插槽不更新的问题
-        if (vnode) {
-          if (vnode.componentOptions?.Ctor?.options && !vnode.componentOptions?.Ctor?.options.originReactComponent) return
-          if (vnode.data?.scopedSlots) {
-            Object.keys(vnode.data?.scopedSlots).forEach((key) => {
-              if (typeof vnode.data.scopedSlots[key] === "function") {
-                try {
-                  vnode.data.scopedSlots[key]()
-                } catch (e) {}
-              }
-            })
-          }
-          const children = vnode.children || vnode.componentOptions?.children || []
-          children.forEach((subVnode) => {
-            this.slotsInit(subVnode)
-          })
-          return
-        }
+        // if (vnode) {
+        //   if (vnode.componentOptions?.Ctor?.options && !vnode.componentOptions?.Ctor?.options.originReactComponent) return
+        //   if (vnode.data?.scopedSlots) {
+        //     Object.keys(vnode.data?.scopedSlots).forEach((key) => {
+        //       if (typeof vnode.data.scopedSlots[key] === "function") {
+        //         try {
+        //           vnode.data.scopedSlots[key]()
+        //         } catch (e) {}
+        //       }
+        //     })
+        //   }
+        //   const children = vnode.children || vnode.componentOptions?.children || []
+        //   children.forEach((subVnode) => {
+        //     this.slotsInit(subVnode)
+        //   })
+        //   return
+        // }
         Object.keys(this.$slots).forEach((key) => {
-          (this.$slots[key] || []).forEach((subVnode) => {
-            this.slotsInit(subVnode)
-          })
-        })
-        Object.keys(this.$scopedSlots).forEach((key) => {
           try {
-            this.$scopedSlots[key]()
+            this.$slots[key]()
           } catch (e) {}
         })
       },
@@ -353,7 +347,6 @@ export default function applyReactInVue(component, options = {}) {
       mountReactComponent(update, updateType, extraData = {}) {
         // 先提取透传属性
         let {
-          on: __passedPropsOn,
           $slots: __passedPropsSlots,
           $scopedSlots: __passedPropsScopedSlots,
           children,
@@ -397,8 +390,7 @@ export default function applyReactInVue(component, options = {}) {
             $slots: normalSlots,
             $scopedSlots: scopedSlots,
             children,
-          } : {}),
-          on: { ...__passedPropsOn, ...this.$listeners },
+          } : {})
         }
         let lastNormalSlots
         if (!update || update && updateType?.slot) {
@@ -410,7 +402,6 @@ export default function applyReactInVue(component, options = {}) {
         // 存上一次
         this.last = this.last || {}
         this.last.slot = this.last.slot || {}
-        this.last.listeners = this.last.listeners || {}
         this.last.attrs = this.last.attrs || {}
         const compareLast = {
           slot: () => {
@@ -419,9 +410,6 @@ export default function applyReactInVue(component, options = {}) {
               ...lastNormalSlots,
               ...scopedSlots,
             }
-          },
-          listeners: () => {
-            this.last.listeners = __passedProps.on
           },
           attrs: () => {
             this.last.attrs = this.$attrs
@@ -433,18 +421,11 @@ export default function applyReactInVue(component, options = {}) {
         // 如果不传入组件，就作为更新
         if (!update) {
           compareLast.slot()
-          compareLast.listeners()
           compareLast.attrs()
           const Component = createReactContainer(component, options, this)
-          const reactEvent = {}
-          Object.keys(__passedProps.on).forEach((key) => {
-            reactEvent[`on${key.replace(/^(\w)/, ($, $1) => $1.toUpperCase())}`] = __passedProps.on[key]
-          })
           let reactRootComponent = <Component
               {...__passedPropsRest}
               {...this.$attrs}
-              // {...__passedProps.on}
-              {...reactEvent}
               {...{ children }}
               {...lastNormalSlots}
               {...scopedSlots}
@@ -514,7 +495,6 @@ export default function applyReactInVue(component, options = {}) {
                 ...this.cache,
                 ...this.last.slot,
                 ...this.last.attrs,
-                ...reactEvent
               }
             })
             this.cache = null
@@ -538,24 +518,15 @@ export default function applyReactInVue(component, options = {}) {
             clearTimeout(this.updateTimer)
             this.updateTimer = setTimeout(() => {
               clearTimeout(this.updateTimer)
-              // this.reactInstance && this.reactInstance.setState(this.cache)
-              // this.cache = null
               setReactState()
               this.macroTaskUpdate = false
             })
           }
 
-          const reactEvent = {}
-          Object.keys(this.last.listeners).forEach((key) => {
-            reactEvent[`on${key.replace(/^(\w)/, ($, $1) => $1.toUpperCase())}`] = this.$listeners[key]
-          })
           this.cache = {
             ...this.cache || {},
             ...{
               ...__passedPropsRest,
-              // ...this.last.attrs,
-              // ...reactEvent,
-              // ...(update && updateType?.slot ? {...this.last.slot} : {}),
               ...extraData,
               ...{ "data-passed-props": __passedProps },
               ...(this.$attrs.class ? { className: this.$attrs.class } : {}),
@@ -611,12 +582,6 @@ export default function applyReactInVue(component, options = {}) {
           // Promise.resolve().then(() => {
           //   this.attrsUpdated = false
           // })
-        },
-        deep: true,
-      },
-      $listeners: {
-        handler() {
-          this.mountReactComponent(true, {listeners: true})
         },
         deep: true,
       },

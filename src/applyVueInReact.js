@@ -156,7 +156,8 @@ class VueComponentLoader extends React.Component {
     if (this.currentVueComponent !== component) {
       this.updateVueComponent(component)
     }
-    // Object.assign(this.vueInstance.$data.children, this.doVModel(props).children)
+    if (component.__fromReactSlot) return
+    Object.assign(this.vueInstance.$data.children, this.doVModel(props).children)
     // 更改vue组件的data
     this.vueInstance && Object.assign(this.vueInstance.$data, this.doVModel(props))
   }
@@ -412,7 +413,8 @@ class VueComponentLoader extends React.Component {
         }
       },
       mounted () {
-        console.log('LLLLLLLL', this.$refs)
+        // 隐藏id
+        targetElement.removeAttribute('id')
         // 在react包囊实例中，使用vueRef保存vue的目标组件实例
         VueContainerInstance.vueRef = this.$refs.use_vue_wrapper
         // 在vue的目标组件实例中，使用reactWrapperRef保存react包囊实例，vue组件可以通过这个属性来判断是否被包囊使用
@@ -485,7 +487,7 @@ class VueComponentLoader extends React.Component {
         const attrs = filterAttrs({ ...lastProps })
         const {className: newClassName, classname: newClassName1, ...lastAttrs} = attrs
         return createElement(
-            vueComponent,
+            VueContainerInstance.currentVueComponent,
             {
               // props: lastProps,
               // on: lastOn,
@@ -551,13 +553,13 @@ class VueComponentLoader extends React.Component {
     if (!this.vueInstance) return
 
     // 使用$forceUpdate强制重新渲染vue实例，因为此方法只会重新渲染当前实例和插槽，不会重新渲染子组件，所以不会造成性能问题
-    if (nextComponent.__fromReactSlot) {
-      // 如果是来自react的slot，就强行通过修改vue组件构造器的use_vue_wrapper的缓存
-      // Object.assign(this.vueInstance.$.components.use_vue_wrapper, nextComponent)
-    } else {
-      // 如果是标准的vue组件，则整个替换use_vue_wrapper为新的组件
-      this.vueInstance.$options.components.use_vue_wrapper = nextComponent
-    }
+    // if (nextComponent.__fromReactSlot) {
+    //   // 如果是来自react的slot，就强行通过修改vue组件构造器的use_vue_wrapper的缓存
+    //   // Object.assign(this.vueInstance.$.components.use_vue_wrapper, nextComponent)
+    // } else {
+    //   // 如果是标准的vue组件，则整个替换use_vue_wrapper为新的组件
+    //   this.vueInstance.$options.components.use_vue_wrapper = nextComponent
+    // }
     this.vueInstance.$forceUpdate()
   }
 

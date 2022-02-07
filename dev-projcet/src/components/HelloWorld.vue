@@ -2,8 +2,9 @@
   <div class="hello" ref="aaa">
 <!--    <slot></slot>-->
 <!--    <slot name="bbb22" v-bind="{a:1}"></slot>-->
+<!--    {{bbb}}-->
     <Test>
-      <div>1212</div>
+      <div>{{ bbb }}</div>
     </Test>
   </div>
 </template>
@@ -35,9 +36,11 @@ export default {
     // console.log(22222, this.$)
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.bbb = 'blue'
-    // }, 2000)
+    console.log(this)
+    this.$emit('click')
+    setTimeout(() => {
+      this.bbb = 'blue'
+    }, 2000)
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
 <!--  <BBB/>-->
-  <HelloWorld msg="Welcome to Your Vue.js App" style="color: red" :class="['abc', 'aaa']" :aaa="aaa">
+  <HelloWorld msg="Welcome to Your Vue.js App" style="color: red" :class="['abc', 'aaa']" :aaa="aaa" :onClick="ddd">
 <!--    <div>{{aaa}}</div>-->
 <!--    <template v-slot:ccc>-->
 <!--      {{aaa}}-->
@@ -40,6 +40,11 @@ export default {
     HelloWorld,
     BBB,
     AAA
+  },
+  methods: {
+    ddd() {
+      console.log('dddd')
+    }
   },
   data() {
     return {
