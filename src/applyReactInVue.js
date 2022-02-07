@@ -2,6 +2,7 @@ import React, { version } from "react"
 import ReactDOM from "react-dom"
 import applyVueInReact, { VueContainer } from "./applyVueInReact"
 import options, { setOptions } from "./options"
+import {h as createElement, createApp} from 'vue'
 
 // vueRootInfo是为了保存vue的root节点options部分信息，现在保存router、store，在applyVueInReact方法中创建vue的中间件实例时会被设置
 // 为了使applyReactInVue -> applyVueInReact之后的vue组件依旧能引用vuex和vue router
@@ -89,22 +90,22 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
   // 对于插槽的处理仍然需要将VNode转换成React组件
   createSlot(children) {
-    const { style, ...attrs } = options.react.slotWrapAttrs
     return {
       inheritAttrs: false,
       __fromReactSlot: true,
-      render(createElement) {
+      render() {
         if (children instanceof Function) {
           children = children(this)
         }
+        console.log('XXXXXXXXXXX', children)
         // 有些react组件通过直接处理自身children的方式给children中的组件传递属性，会导致传递到包囊层中
         // 这里对包囊层属性进行透传，透传条件为children中只有一个vnode
         if (children?.length === 1 && children[0]?.data) {
           // 过滤掉内部属性
           const {key, ['data-passed-props']:dataPassedProps, ...otherAttrs} = this.$attrs
-          children[0].data.attrs = {...otherAttrs, ...children[0].data.attrs}
+          children[0].props = {...otherAttrs, ...children[0].props}
         }
-        return createElement(options.react.slotWrap, { attrs, style }, children)
+        return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
       },
     }
   }
@@ -248,8 +249,6 @@ export default function applyReactInVue(component, options = {}) {
       }
     },
     created() {
-      // this.vnodeData = this.$vnode.data
-      this.cleanVnodeStyleClass()
       if (this.$root.$options.router) {
         vueRootInfo.router = this.$root.$options.router
       }
@@ -258,11 +257,9 @@ export default function applyReactInVue(component, options = {}) {
       }
     },
     props: ["dataPassedProps"],
-    render(createElement) {
+    render() {
       this.slotsInit()
-      const { style, ...attrs } = options.react.componentWrapAttrs
-      // return createElement(options.react.componentWrap, { ref: "react", attrs, style }, this.portals.map((Portal, index) => Portal(createElement, index)))
-      return createElement(options.react.componentWrap, { ref: "react", attrs, style }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
+      return createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
     },
     methods: {
       pushVuePortal(vuePortal) {
@@ -285,6 +282,8 @@ export default function applyReactInVue(component, options = {}) {
       },
       // hack!!!! 一定要在render函数李触发，才能激活具名插槽
       slotsInit(vnode) {
+        // TODO: 先不处理插槽更新
+        return
         // 针对pureTransformer类型的react组件进行兼容，解决具名插槽和作用域插槽不更新的问题
         if (vnode) {
           if (vnode.componentOptions?.Ctor?.options && !vnode.componentOptions?.Ctor?.options.originReactComponent) return
@@ -313,76 +312,6 @@ export default function applyReactInVue(component, options = {}) {
             this.$scopedSlots[key]()
           } catch (e) {}
         })
-      },
-      updateLastVnodeData(vnode) {
-        this.lastVnodeData = {
-          style: { ...this.formatStyle(vnode.data.style), ...this.formatStyle(vnode.data.staticStyle) },
-          class: Array.from(new Set([...this.formatClass(vnode.data.class), ...this.formatClass(vnode.data.staticClass)])).join(" "),
-        }
-        Object.assign(vnode.data, {
-          staticStyle: null,
-          style: null,
-          staticClass: null,
-          class: null,
-        })
-        return vnode
-      },
-      // 清除style和class，避免包囊层被污染
-      cleanVnodeStyleClass() {
-        let vnode = this.$vnode
-        this.updateLastVnodeData(vnode)
-        // 每次$vnode被修改，将vnode.data中的style、staticStyle、class、staticClass记下来并且清除
-        Object.defineProperty(this, "$vnode", {
-          get() {
-            return vnode
-          },
-          set: (val) => {
-            if (val === vnode) return vnode
-            vnode = this.updateLastVnodeData(val)
-            return vnode
-          },
-        })
-      },
-      toCamelCase(val) {
-        const reg = /-(\w)/g
-        return val.replace(reg, ($, $1) => $1.toUpperCase())
-      },
-      formatStyle(val) {
-        if (!val) return {}
-        if (typeof val === "string") {
-          val = val.trim()
-          return val.split(/\s*;\s*/).reduce((prev, cur) => {
-            if (!cur) {
-              return prev
-            }
-            cur = cur.split(/\s*:\s*/)
-            if (cur.length !== 2) return prev
-            Object.assign(prev, {
-              [this.toCamelCase(cur[0])]: cur[1],
-            })
-            return prev
-          }, {})
-        }
-        if (typeof val === "object") {
-          const newVal = {}
-          Object.keys(val).forEach((v) => {
-            newVal[this.toCamelCase(v)] = val[v]
-          })
-          return newVal
-        }
-        return {}
-      },
-      formatClass(val) {
-        if (!val) return []
-        if (val instanceof Array) return val
-        if (typeof val === "string") {
-          val = val.trim()
-          return val.split(/\s+/)
-        }
-        if (typeof val === "object") {
-          return Object.keys(val).map((v) => (val[v] ? val[v] : ""))
-        }
-        return []
       },
       // 用多阶函数解决作用域插槽的传递问题
       getScopeSlot(slotFunction, hashList, originSlotFunction) {
@@ -432,52 +361,31 @@ export default function applyReactInVue(component, options = {}) {
         // 获取style scoped生成的hash
         const hashMap = {}
         const hashList = []
-        const scopedId = this.$vnode.context?.$vnode?.componentOptions?.Ctor?.extendOptions?._scopeId
+        const scopedId = this.$.vnode.scopeId
         if (scopedId) {
           hashMap[scopedId] = ""
           hashList.push(scopedId)
         }
-        // for (let i in this.$el.dataset) {
-        //   if (this.$el.dataset.hasOwnProperty(i) && (i.match(/v-[\da-z]+/) || i.match(/v[A-Z][\da-zA-Z]+/))) {
-        //     // 尝试驼峰转中划线
-        //     i = i.replace(/([A-Z])/g, "-$1").toLowerCase()
-        //     hashMap[`data-${i}`] = ""
-        //     hashList.push(`data-${i}`)
-        //   }
-        // }
 
-        const normalSlots = {}
-        const scopedSlots = {}
+        const normalSlots = { ...__passedPropsSlots }
+        const scopedSlots = { ...__passedPropsScopedSlots }
         if (!update || update && updateType?.slot) {
           // 处理具名插槽，将作为属性被传递
+          // vue3所有插槽都函数（作用域插槽）
+          // 为了让react区分是renderProps还是reactNode，这里仍然要区分是作用域插槽还是具名插槽
+          // 约定以特殊的slots key的前缀作为具名插槽，处理方式就是直接执行函数
 
-          const mergeSlots = { ...__passedPropsSlots, ...this.$slots }
           // 对插槽类型的属性做标记
-          for (const i in mergeSlots) {
-            normalSlots[i] = mergeSlots[i]
-            normalSlots[i].__slot = true
-          }
-          // 对作用域插槽进行处理
-          const mergeScopedSlots = { ...__passedPropsScopedSlots, ...this.$scopedSlots }
-          for (const i in mergeScopedSlots) {
-            // 过滤普通插槽
-            if (normalSlots[i]) {
-              // 并且做上标记，vue2.6之后，所有插槽都推荐用作用域，所以之后要转成普通插槽
-              if (this.$scopedSlots[i]) {
-                this.$scopedSlots[i].__slot = true
-              }
-              continue
-            }
-            // 如果发现作用域插槽中有普通插槽的标记，就转成成普通插槽
-            if (mergeScopedSlots[i].__slot) {
-              normalSlots[i] = mergeScopedSlots[i]()
+          for (const i in this.$slots || {}) {
+            if (!this.$slots.hasOwnProperty(i) || this.$slots[i] == null) continue
+            if (options.react.vueNamedSlotsKey.find((prefix) => i.indexOf(prefix) === 0) || i === 'default') {
+              normalSlots[i] = this.$slots[i]()
               normalSlots[i].__slot = true
               continue
             }
-            scopedSlots[i] = this.getScopeSlot(mergeScopedSlots[i], hashList, this.$vnode?.data?.scopedSlots?.[i])
+            scopedSlots[i] = this.getScopeSlot(this.$slots[i], hashList, this.$.vnode?.children?.[i])
           }
         }
-
 
         // 预生成react组件的透传属性
         const __passedProps = {
@@ -539,10 +447,10 @@ export default function applyReactInVue(component, options = {}) {
               {...lastNormalSlots}
               {...scopedSlots}
               {...{ "data-passed-props": __passedProps }}
-              {...(this.lastVnodeData.class ? { className: this.lastVnodeData.class } : {})}
+              {...(this.$attrs.class ? { className: this.$attrs.class } : {})}
               {...hashMap}
               hashList={hashList}
-              style={this.lastVnodeData.style}
+              style={this.$attrs.style}
               ref={(ref) => (this.reactInstance = ref)}
           />
           // 必须通过ReactReduxContext连接context
@@ -648,10 +556,10 @@ export default function applyReactInVue(component, options = {}) {
               // ...(update && updateType?.slot ? {...this.last.slot} : {}),
               ...extraData,
               ...{ "data-passed-props": __passedProps },
-              ...(this.lastVnodeData.class ? { className: this.lastVnodeData.class } : {}),
+              ...(this.$attrs.class ? { className: this.$attrs.class } : {}),
               ...{ ...hashMap },
               hashList,
-              style: this.lastVnodeData.style,
+              style: this.$attrs.style,
             },
           }
 

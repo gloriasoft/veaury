@@ -15,7 +15,8 @@ const originOptions = {
       style: {
         all: 'unset'
       }
-    }
+    },
+    vueNamedSlotsKey: ['node:']
   },
   vue: {
     // 组件wrapper

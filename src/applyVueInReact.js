@@ -1,13 +1,13 @@
 import React, {version} from 'react'
-import Vue from 'vue'
+import Vue, {Teleport, h as createElement, createApp} from 'vue'
 
 import applyReactInVue from './applyReactInVue'
 import vueRootInfo from './vueRootInfo'
 import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './applyReactRouterInVue'
 import globalOptions, {setOptions} from './options'
 import ReactDOM from "react-dom";
-import {MountingPortal} from 'portal-vue'
 import REACT_ALL_HANDLERS from './reactAllHandles'
+import App from "../dev-projcet/src/App";
 
 const unsafePrefix = parseFloat(version) >= 17 ? 'UNSAFE_' : ''
 const optionsName = 'vuereact-combined-options'
@@ -223,7 +223,7 @@ class VueComponentLoader extends React.Component {
   // 将通过react组件的ref回调方式接收组件的dom对象，并且在class的constructor中已经绑定了上下文
   createVueInstance (targetElement) {
     const VueContainerInstance = this
-    let { component, 'data-passed-props': __passedProps = {}, [optionsName]: options, children, $slots, ...props } = this.props
+    let { component: vueComponent, 'data-passed-props': __passedProps = {}, [optionsName]: options, children, $slots, ...props } = this.props
     children = this.transferChildren(children)
     $slots = this.transferSlots($slots)
     if (children) {
@@ -233,7 +233,7 @@ class VueComponentLoader extends React.Component {
       props.$slots = $slots
     }
 
-    component = filterVueComponent(component)
+    vueComponent = filterVueComponent(vueComponent)
     // 过滤vue组件实例化后的$attrs
     let filterAttrs = (props) => {
       // 对mixin进行合并
@@ -399,17 +399,18 @@ class VueComponentLoader extends React.Component {
         }
       },
       mounted () {
+        console.log('LLLLLLLL', this.$refs)
         // 在react包囊实例中，使用vueRef保存vue的目标组件实例
-        VueContainerInstance.vueRef = this.$children[0]
+        VueContainerInstance.vueRef = this.$refs.use_vue_wrapper
         // 在vue的目标组件实例中，使用reactWrapperRef保存react包囊实例，vue组件可以通过这个属性来判断是否被包囊使用
-        this.$children[0].reactWrapperRef = VueContainerInstance
+        this.$refs.use_vue_wrapper.reactWrapperRef = VueContainerInstance
       },
       beforeDestroy () {
         // 垃圾回收
         VueContainerInstance.vueRef = null
-        this.$children[0].reactWrapperRef = null
+        this.$refs.use_vue_wrapper.reactWrapperRef = null
       },
-      render (createElement) {
+      render () {
         // 这里很重要，将不是属性的内容过滤掉，并单独抽取
         let { component,
           on,
@@ -428,7 +429,7 @@ class VueComponentLoader extends React.Component {
         filterNamedSlots(__passedPropsScopedSlots, __passedPropsSlots)
         // 作用域插槽的处理
         const scopedSlots = this.getScopedSlots(createElement, { ...__passedPropsScopedSlots, ...$scopedSlots })
-        const lastChildren = this.getChildren(createElement, this.children || __passedPropsChildren)
+        const lastChildren = this.getChildren(createElement, this.$slots?.default?.() || __passedPropsChildren)
         // 获取插槽数据（包含了具名插槽）
         const namedSlots = this.getNamespaceSlots(createElement, { ...__passedPropsSlots, ...$slots })
         if (lastChildren) namedSlots.default = lastChildren
@@ -471,21 +472,19 @@ class VueComponentLoader extends React.Component {
         const attrs = filterAttrs({ ...lastProps })
         const {className: newClassName, classname: newClassName1, ...lastAttrs} = attrs
         return createElement(
-            'use_vue_wrapper',
+            vueComponent,
             {
-              props: lastProps,
-              on: lastOn,
-              nativeOn,
-              attrs: lastAttrs,
-              'class': className || newClassName || newClassName1 || '',
-              style,
-              scopedSlots: { ...scopedSlots }
+              // props: lastProps,
+              // on: lastOn,
+              // nativeOn,
+              // attrs: lastAttrs,
+              // 'class': className || newClassName || newClassName1 || '',
+              // style,
+              // scopedSlots: { ...scopedSlots },
+              ref: 'use_vue_wrapper'
             },
-            lastSlots
+            // lastSlots
         )
-      },
-      components: {
-        'use_vue_wrapper': component
       }
     }
 
@@ -517,18 +516,20 @@ class VueComponentLoader extends React.Component {
     }
 
     // 如果存在包囊层，则激活portal
-    if (vueWrapperRef && document.getElementById(targetId)) {
-      // 存储包囊层引用
-      this.parentVueWrapperRef = vueWrapperRef
-
-      // 存储portal引用
-      this.vuePortal = (createElement, key) => createElement(MountingPortal, {props: {mountTo: '#' + targetId, slim:true, targetSlim: true}, key: targetId}, [createElement(Object.assign(vueOptions, {router: this._router}))])
-      vueWrapperRef.pushVuePortal(this.vuePortal)
-      return
-    }
+    // if (vueWrapperRef && document.getElementById(targetId)) {
+    //   // 存储包囊层引用
+    //   this.parentVueWrapperRef = vueWrapperRef
+    //
+    //   // 存储portal引用
+    //   this.vuePortal = (createElement, key) => createElement(Teleport, {props: {to: '#' + targetId, slim:true, targetSlim: true}, key: targetId}, [createElement(Object.assign(vueOptions, {router: this._router}))])
+    //   vueWrapperRef.pushVuePortal(this.vuePortal)
+    //   return
+    // }
 
     // 创建vue实例
-    this.vueInstance = new Vue({...vueOptions, el: targetElement})
+    // this.vueInstance = new Vue({...vueOptions, el: targetElement})
+    console.log(7777, vueOptions)
+    this.vueInstance = createApp(vueOptions).mount(targetElement)
     // })
 
   }
@@ -538,10 +539,9 @@ class VueComponentLoader extends React.Component {
     if (!this.vueInstance) return
 
     // 使用$forceUpdate强制重新渲染vue实例，因为此方法只会重新渲染当前实例和插槽，不会重新渲染子组件，所以不会造成性能问题
-    // $options.components包含了vue实例中所对应的组件序列, $option是只读,但是确实可以修改components属性,依靠此实现了动态组件替换
     if (nextComponent.__fromReactSlot) {
       // 如果是来自react的slot，就强行通过修改vue组件构造器的use_vue_wrapper的缓存
-      Object.assign(this.vueInstance.$options.components.use_vue_wrapper._Ctor[0].options, nextComponent)
+      Object.assign(this.vueInstance.$.components.use_vue_wrapper, nextComponent)
     } else {
       // 如果是标准的vue组件，则整个替换use_vue_wrapper为新的组件
       this.vueInstance.$options.components.use_vue_wrapper = nextComponent

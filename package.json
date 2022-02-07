@@ -7,7 +7,12 @@
   "module": "dist/combined.esm.js",
   "typings": "types/combined.d.ts",
   "scripts": {
-    "build": "cross-env BABEL_ENV=rollup rollup -c"
+    "build": "cross-env BABEL_ENV=rollup rollup -c",
+    "dev": "npm run serve --prefix dev-projcet",
+    "dev-setup:yarn": "yarn --cwd dev-projcet",
+    "dev-setup:npm": "npm i --prefix dev-projcet",
+    "setup:yarn": "yarn && npm run dev-setup:yarn",
+    "setup:npm": "npm i && npm run dev-setup:npm"
   },
   "repository": {
     "type": "git",

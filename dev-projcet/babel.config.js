@@ -17,6 +17,10 @@ module.exports = {
       test:function(filename) {
         // 仅对src/react_app目录有效
         if (filename !== undefined && filename.indexOf(resolve('src/react_app')) === 0) return filename
+        if (filename !== undefined && filename.indexOf(resolve('../src')) === 0) {
+          console.log('XXXXXXX', filename)
+          return filename
+        }
       },
       plugins: [
         // 使用react的jsx编译
