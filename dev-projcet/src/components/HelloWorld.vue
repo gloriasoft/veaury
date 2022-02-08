@@ -1,19 +1,36 @@
 <template>
-  <div class="hello" ref="aaa">
+<!--  <div>111</div>-->
+<!--  <div>222</div>-->
+<!--  <div class="hello" ref="aaa">-->
 <!--    <slot></slot>-->
-<!--    <slot name="bbb22" v-bind="{a:1}"></slot>-->
-<!--    {{bbb}}-->
-    <Test>
-      <div>{{ bbb }}</div>
+<!--&lt;!&ndash;    <slot name="bbb22" v-bind="{a:1}"></slot>&ndash;&gt;-->
+<!--&lt;!&ndash;    {{bbb}}&ndash;&gt;-->
+    <Test @click="()=>{}" v-if="vvv">
+      <div>{{bbb}}</div>
+      <template v-slot:slot1="a, b">
+        <div @click="die">{{ a.a }}</div>
+        <div @click="die">{{ bbb }}</div>
+      </template>
     </Test>
-  </div>
+<!--  </div>-->
 </template>
 
 <script>
+import {h} from 'vue'
 import {createElement} from 'react'
 import reactDom from 'react-dom'
 import test from 'react_app/test'
 import applyReactInVue from "combined/applyReactInVue";
+
+const AA = {
+  mounted() {
+    console.log('AAAAAAA', this)
+  },
+  render () {
+    return h('div', this.$slots.default())
+  }
+}
+
 export default {
   name: 'HelloWorld',
   props: {
@@ -21,11 +38,21 @@ export default {
   },
   data () {
     return {
-      bbb: 'red'
+      bbb: 'red',
+      vvv: true
     }
   },
   components: {
-    Test: applyReactInVue(test)
+    Test: applyReactInVue(test),
+    AA
+  },
+  methods: {
+    die() {
+      this.vvv = false
+    }
+  },
+  updated() {
+    console.log('UUUUUUUU')
   },
   watch: {
     '$slots.aaa' () {

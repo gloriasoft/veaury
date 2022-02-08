@@ -4,13 +4,21 @@ import applyVueInReact, { VueContainer } from "./applyVueInReact"
 import options, { setOptions } from "./options"
 import {h as createElement, createApp} from 'vue'
 
-// vueRootInfo是为了保存vue的root节点options部分信息，现在保存router、store，在applyVueInReact方法中创建vue的中间件实例时会被设置
-// 为了使applyReactInVue -> applyVueInReact之后的vue组件依旧能引用vuex和vue router
+/**
+ * 'vueRootInfo' is to save some information about the root node options of Vue.
+ * Now save 'router' and 'store',
+ * which will be set when creating the middleware instance of 'Vue' in the 'applyVueInReact' method
+**/
+//To enable the 'Vue' component after 'applyReactInVue - > applyVueInReact' to still reference 'vuex' and 'Vue router'
 import vueRootInfo from "./vueRootInfo"
 
 const domMethods = ["getElementById", "getElementsByClassName", "getElementsByTagName", "getElementsByTagNameNS", "querySelector", "querySelectorAll"]
 const domTopObject = { Document: {}, Element: {} }
-// 覆盖原生的查找dom对象的方法，为了确保react在销毁前都可以获取dom，而vue的beforeDestroy阶段已经将dom卸载的问题
+/**
+ * Override the native method of finding DOM objects.
+ * In order to ensure that React can obtain the DOM before destruction,
+ * and the DOM has been unloaded in the beforeDestroy phase of Vue
+**/
 function overwriteDomMethods(refDom) {
   Object.keys(domTopObject).forEach((key) => {
     domMethods.forEach((method) => {
@@ -24,7 +32,7 @@ function overwriteDomMethods(refDom) {
     })
   })
 }
-// 恢复原生方法
+// Restore native method
 function recoverDomMethods() {
   Object.keys(domTopObject).forEach((key) => {
     domMethods.forEach((method) => {
@@ -45,10 +53,9 @@ class FunctionComponentWrap extends React.Component {
   }
 }
 const createReactContainer = (Component, options, wrapInstance) => class applyReact extends React.Component {
-  // 用于reactDevTools调试用
+  // reactDevTools
   static displayName = `useReact_${Component.displayName || Component.name || "Component"}`
 
-  // 使用静态方法申明是因为可以节省性能开销，因为内部没有调用到实例属性和方法
   setRef(ref) {
     if (!ref) return
     // 使用reactRef属性保存目标react组件的实例，可以被父组setRef件的实例获取到
@@ -97,7 +104,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         if (children instanceof Function) {
           children = children(this)
         }
-        console.log('XXXXXXXXXXX', children)
         // 有些react组件通过直接处理自身children的方式给children中的组件传递属性，会导致传递到包囊层中
         // 这里对包囊层属性进行透传，透传条件为children中只有一个vnode
         if (children?.length === 1 && children[0]?.data) {
@@ -260,8 +266,19 @@ export default function applyReactInVue(component, options = {}) {
     },
     props: ["dataPassedProps"],
     render() {
+      /**
+       * Very magical code!
+       * The 'slotsInit' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
+       * However, when 'scopedSlot' is forcibly executed, it may rely on some function input parameters.
+       * Forcibly executing without input parameters may lead to errors,
+       * resulting in the failure of subsequent 'createElement' function execution,
+       * resulting in 'reactdom The 'container' on which render 'depends cannot be obtained.Therefore,
+       * you can create a 'VNode' node first and then execute 'slotsInit', which effectively avoids this situation
+       */
+      const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
+      // Must be executed after 'VNode' is created
       this.slotsInit()
-      return createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
+      return VNode
     },
     methods: {
       pushVuePortal(vuePortal) {
@@ -538,16 +555,16 @@ export default function applyReactInVue(component, options = {}) {
 
           // 同步更新
           if (!this.macroTaskUpdate && !this.microTaskUpdate) {
-            // ...this.last.attrs,
-            // ...reactEvent,
-            // ...(update && updateType?.slot ? {...this.last.slot} : {}),
-            // this.reactInstance && this.reactInstance.setState(this.cache)
             setReactState()
           }
         }
       },
     },
     mounted() {
+      this.IGNORE_STRANGE_UPDATE = true
+      Promise.resolve().then(() => {
+        this.IGNORE_STRANGE_UPDATE = false
+      })
       clearTimeout(this.updateTimer)
       this.mountReactComponent()
     },
@@ -570,7 +587,16 @@ export default function applyReactInVue(component, options = {}) {
       recoverDomMethods()
     },
     updated() {
-      // if (this.attrsUpdated) return
+      // ignore the first strange update by Teleport of 'applyVueInReact'
+      /**
+       *  If the React component renders the slots passed in the Vue component,
+       *  the 'slots' will be rendered into the React component using 'applyVueInReact',
+       *  and the 'applyVueInReact' will use 'Teleport',
+       *  and the scope of 'Teleport' is integrated with the outer Vue component ,
+       *  will cause the outer Vue component to trigger an 'updated' life cycle by default
+       **/
+      if (this.IGNORE_STRANGE_UPDATE) return
+
       this.mountReactComponent(true, {slot: true})
     },
     inheritAttrs: false,
@@ -578,10 +604,6 @@ export default function applyReactInVue(component, options = {}) {
       $attrs: {
         handler() {
           this.mountReactComponent(true, {attrs: true})
-          // this.attrsUpdated = true
-          // Promise.resolve().then(() => {
-          //   this.attrsUpdated = false
-          // })
         },
         deep: true,
       },

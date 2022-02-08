@@ -1,7 +1,7 @@
 <template>
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
 <!--  <BBB/>-->
-  <HelloWorld msg="Welcome to Your Vue.js App" style="color: red" :class="['abc', 'aaa']" :aaa="aaa" :onClick="ddd">
+  <HelloWorld ref="aaa">
 <!--    <div>{{aaa}}</div>-->
 <!--    <template v-slot:ccc>-->
 <!--      {{aaa}}-->
@@ -10,6 +10,10 @@
 <!--      {{bbb.a}}-->
 <!--    </template>-->
 <!--    <div>{{aaa}}</div>-->
+<!--    <AAA>-->
+<!--      {{aaa}}-->
+<!--    </AAA>-->
+<!--    {{aaa}}-->
   </HelloWorld>
 </template>
 
@@ -22,7 +26,7 @@ const AAA = {
     // console.log(777, this)
   },
   render () {
-    return [<div>666</div>, <div>7777</div>]
+    return this.$slots.default()
   }
 }
 const BBB = {
@@ -54,8 +58,11 @@ export default {
   beforeCreate() {
     // console.log(11111, this)
   },
+  updated() {
+    console.log('uuuuuuuuuuuuuuuuuuuu')
+  },
   mounted() {
-    console.log(this)
+    console.log(3333, this)
     // setTimeout(() => {
     //   this.aaa = 2222
     // }, 1000)
