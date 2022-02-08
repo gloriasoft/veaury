@@ -1,8 +1,8 @@
 import React, { version } from "react"
 import ReactDOM from "react-dom"
-import applyVueInReact, { VueContainer } from "./applyVueInReact"
-import options, { setOptions } from "./options"
-import {h as createElement, createApp} from 'vue'
+import applyVueInReact from "./applyVueInReact"
+import { setOptions } from "./options"
+import { h as createElement } from 'vue'
 
 /**
  * 'vueRootInfo' is to save some information about the root node options of Vue.
@@ -54,7 +54,7 @@ class FunctionComponentWrap extends React.Component {
 }
 const createReactContainer = (Component, options, wrapInstance) => class applyReact extends React.Component {
   // reactDevTools
-  static displayName = `useReact_${Component.displayName || Component.name || "Component"}`
+  static displayName = `applyReact_${Component.displayName || Component.name || "Component"}`
 
   setRef(ref) {
     if (!ref) return
@@ -98,9 +98,11 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
   // 对于插槽的处理仍然需要将VNode转换成React组件
   createSlot(children) {
     return {
+      originVNode: children,
       inheritAttrs: false,
       __fromReactSlot: true,
       render() {
+        children = this.$slots?.default?.() || children
         if (children instanceof Function) {
           children = children(this)
         }
@@ -111,7 +113,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           const {key, ['data-passed-props']:dataPassedProps, ...otherAttrs} = this.$attrs
           children[0].props = {...otherAttrs, ...children[0].props}
         }
-        // return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
+        return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
         // vue3不再需要根节点
         return children
       },
@@ -167,6 +169,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           // 执行applyVueInReact方法将直接获得react组件对象，无需使用jsx
           // props[i] = { ...applyVueInReact(this.createSlot(props[i]))() }
           // 自定义插槽处理
+          // TODO: defaultSlotsFormatter后续考虑
           if (options.defaultSlotsFormatter) {
             props[i].__top__ = this.vueWrapperRef
             props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
@@ -267,7 +270,7 @@ export default function applyReactInVue(component, options = {}) {
     props: ["dataPassedProps"],
     render() {
       /**
-       * Very magical code!
+       * Magical code!
        * The 'slotsInit' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
        * However, when 'scopedSlot' is forcibly executed, it may rely on some function input parameters.
        * Forcibly executing without input parameters may lead to errors,
@@ -565,7 +568,7 @@ export default function applyReactInVue(component, options = {}) {
       clearTimeout(this.updateTimer)
       this.mountReactComponent()
     },
-    beforeDestroy() {
+    beforeUnmount() {
       clearTimeout(this.updateTimer)
       // destroy 'Portal'
       if (this.reactPortal) {

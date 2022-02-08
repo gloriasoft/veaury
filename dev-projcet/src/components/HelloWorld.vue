@@ -5,12 +5,23 @@
 <!--    <slot></slot>-->
 <!--&lt;!&ndash;    <slot name="bbb22" v-bind="{a:1}"></slot>&ndash;&gt;-->
 <!--&lt;!&ndash;    {{bbb}}&ndash;&gt;-->
-    <Test @click="()=>{}" v-if="vvv">
-      <div>{{bbb}}</div>
-      <template v-slot:slot1="a, b">
-        <div @click="die">{{ a.a }}</div>
-        <div @click="die">{{ bbb }}</div>
-      </template>
+    <Test >
+<!--      <template v-if="bbb==='red'">-->
+        {{ bbb }}
+        <AA v-if="bbb==='red'">
+          <div>{{ bbb }}</div>
+        </AA>
+<!--      </template>-->
+<!--      <template v-if="bbb==='blue'">-->
+<!--        AAAA-->
+<!--      </template>-->
+
+<!--      <template v-slot:slot1="a, b">-->
+<!--        <AA>-->
+<!--          <div @click="die">{{ a.a }}</div>-->
+<!--          <div @click="die">{{ bbb }}</div>-->
+<!--        </AA>-->
+<!--      </template>-->
     </Test>
 <!--  </div>-->
 </template>
@@ -24,10 +35,31 @@ import applyReactInVue from "combined/applyReactInVue";
 
 const AA = {
   mounted() {
-    console.log('AAAAAAA', this)
+    console.log('AA mounted')
+  },
+  updated() {
+    console.log('AA updated')
+  },
+  beforeUnmount() {
+    console.log('AA destroy!!!!')
   },
   render () {
-    return h('div', this.$slots.default())
+    return this.$slots.default()
+  }
+}
+
+const Test1 = {
+  beforeCreate() {
+    console.log('HHHHHHHHHHHHHH', this.$slots.default)
+  },
+  mounted() {
+    console.log('Test1 mounted')
+  },
+  updated() {
+    console.log('Test1 updated')
+  },
+  render () {
+    return this.$slots.default()
   }
 }
 
@@ -44,7 +76,8 @@ export default {
   },
   components: {
     Test: applyReactInVue(test),
-    AA
+    AA,
+    Test1
   },
   methods: {
     die() {
