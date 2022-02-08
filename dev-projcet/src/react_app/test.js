@@ -21,6 +21,6 @@ export default function (props) {
     return <div>
         <div>33333</div>
         {props.children}
-        {/*{props.slot1({a:1}, 2)}*/}
+        {props.slot1({a:1}, 2)}
     </div>
 }

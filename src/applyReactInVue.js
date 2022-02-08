@@ -272,8 +272,8 @@ export default function applyReactInVue(component, options = {}) {
        * However, when 'scopedSlot' is forcibly executed, it may rely on some function input parameters.
        * Forcibly executing without input parameters may lead to errors,
        * resulting in the failure of subsequent 'createElement' function execution,
-       * resulting in 'reactdom The 'container' on which render 'depends cannot be obtained.Therefore,
-       * you can create a 'VNode' node first and then execute 'slotsInit', which effectively avoids this situation
+       * resulting in reactdom 'container' on which render depends cannot be obtained.
+       * Therefore,you can create a 'VNode' node first and then execute 'slotsInit', which effectively avoids this situation
        */
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
@@ -458,14 +458,13 @@ export default function applyReactInVue(component, options = {}) {
             const ReduxContext = this.$redux.ReactReduxContext
             reactRootComponent = <ReduxContext.Provider value={{ store: this.$redux.store }}>{reactRootComponent}</ReduxContext.Provider>
           }
-          // 必须异步，等待包囊层的react实例完毕
-          // this.$nextTick(() => {
+
           const container = this.$refs.react
           let reactWrapperRef = options.wrapInstance
 
           if (!reactWrapperRef) {
             let parentInstance = this.$parent
-            // 向上查找react包囊层
+            // Look up the React encapsulation layer
             while (parentInstance) {
               if (parentInstance.parentReactWrapperRef) {
                 reactWrapperRef = parentInstance.parentReactWrapperRef
@@ -482,11 +481,11 @@ export default function applyReactInVue(component, options = {}) {
             reactWrapperRef.vueWrapperRef = this
           }
 
-          // 如果存在包囊层，则激活portal
+          // If there is a React component in the outer component, use 'Portal' to open up the React scope
           if (reactWrapperRef) {
-            // 存储包囊层引用
+            // Store React encapsulation layer
             this.parentReactWrapperRef = reactWrapperRef
-            // 存储portal引用
+            // Store 'portal' reference
             this.reactPortal = () => ReactDOM.createPortal(
                 reactRootComponent,
                 container,
@@ -499,12 +498,11 @@ export default function applyReactInVue(component, options = {}) {
               reactRootComponent,
               container,
           )
-          // })
         } else {
 
           const setReactState = () => {
             this.reactInstance && this.reactInstance.setState((prevState) => {
-              // 清除之前的state，阻止合并
+              // Clear the previous 'state', preventing merging
               Object.keys(prevState).forEach((key) => {
                 delete prevState[key]
               })
@@ -518,19 +516,18 @@ export default function applyReactInVue(component, options = {}) {
           }
 
 
-          // 更新
+          // do the micro task update
           if (this.microTaskUpdate) {
-            // Promise异步合并更新
+            // 'Promise' asynchronous merge update
             if (!this.cache) {
               this.$nextTick(() => {
-                // this.reactInstance && this.reactInstance.setState(this.cache)
                 setReactState()
                 this.microTaskUpdate = false
               })
             }
           }
 
-          // 宏任务合并更新
+          // do the macro task update
           if (this.macroTaskUpdate) {
             clearTimeout(this.updateTimer)
             this.updateTimer = setTimeout(() => {
@@ -553,7 +550,7 @@ export default function applyReactInVue(component, options = {}) {
             },
           }
 
-          // 同步更新
+          // do the sync update
           if (!this.macroTaskUpdate && !this.microTaskUpdate) {
             setReactState()
           }
@@ -570,20 +567,23 @@ export default function applyReactInVue(component, options = {}) {
     },
     beforeDestroy() {
       clearTimeout(this.updateTimer)
-      // 删除portal
+      // destroy 'Portal'
       if (this.reactPortal) {
-        // 骚操作，覆盖原生dom查找dom的一些方法，使react在vue组件销毁前仍然可以查到dom
+        // Magical Code!
+        // Override some methods of native lookup 'dom',
+        // so that React can still look up the dom object before the Vue component is destroyed
         overwriteDomMethods(this.$refs.react)
         this.parentReactWrapperRef?.removeReactPortal(this.reactPortal)
-        // 恢复原生方法
+        // restore native method
         recoverDomMethods()
         return
       }
-      // 删除根节点
-      // 骚操作，覆盖原生dom查找dom的一些方法，使react在vue组件销毁前仍然可以查到dom
+
+      // Override some methods of native lookup 'dom'
       overwriteDomMethods(this.$refs.react)
+      // Destroy the React root node
       ReactDOM.unmountComponentAtNode(this.$refs.react)
-      // 恢复原生方法
+      // restore native method
       recoverDomMethods()
     },
     updated() {
