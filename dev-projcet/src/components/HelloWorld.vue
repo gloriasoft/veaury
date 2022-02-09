@@ -6,23 +6,9 @@
 <!--&lt;!&ndash;    <slot name="bbb22" v-bind="{a:1}"></slot>&ndash;&gt;-->
 <!--&lt;!&ndash;    {{bbb}}&ndash;&gt;-->
     <Test >
-<!--      <template v-if="bbb==='red'">-->
-        {{ bbb }}
-        <AA v-if="bbb==='red'">
-          <div>{{ bbb }}</div>
-        </AA>
-<!--      </template>-->
-<!--      <template v-if="bbb==='blue'">-->
-<!--        AAAA-->
-<!--      </template>-->
-
-<!--      <template v-slot:slot1="a, b">-->
-<!--        <AA>-->
-<!--          <div @click="die">{{ a.a }}</div>-->
-<!--          <div @click="die">{{ bbb }}</div>-->
-<!--        </AA>-->
-<!--      </template>-->
     </Test>
+<!--  <AA @:click="click"><div>12122</div></AA>-->
+<!--  <Test1 @click="click"><button>3333333</button></Test1>-->
 <!--  </div>-->
 </template>
 
@@ -30,10 +16,12 @@
 import {h} from 'vue'
 import {createElement} from 'react'
 import reactDom from 'react-dom'
-import test from 'react_app/test'
+import dev from 'react_app/dev'
 import applyReactInVue from "combined/applyReactInVue";
+import Test1 from './Test1'
 
 const AA = {
+  emits: ['click'],
   mounted() {
     console.log('AA mounted')
   },
@@ -48,20 +36,20 @@ const AA = {
   }
 }
 
-const Test1 = {
-  beforeCreate() {
-    console.log('HHHHHHHHHHHHHH', this.$slots.default)
-  },
-  mounted() {
-    console.log('Test1 mounted')
-  },
-  updated() {
-    console.log('Test1 updated')
-  },
-  render () {
-    return this.$slots.default()
-  }
-}
+// const Test1 = {
+//   beforeCreate() {
+//     console.log('HHHHHHHHHHHHHH', this.$slots.default)
+//   },
+//   mounted() {
+//     console.log('Test1 mounted')
+//   },
+//   updated() {
+//     console.log('Test1 updated')
+//   },
+//   render () {
+//     return this.$slots.default()
+//   }
+// }
 
 export default {
   name: 'HelloWorld',
@@ -75,13 +63,20 @@ export default {
     }
   },
   components: {
-    Test: applyReactInVue(test),
+    Test: applyReactInVue(dev),
     AA,
     Test1
   },
   methods: {
     die() {
       this.vvv = false
+    },
+    random() {
+      // console.log('touch random!!!!!!!!!!!!')
+      return Math.random()
+    },
+    click() {
+      console.log(3333333333)
     }
   },
   updated() {
@@ -96,7 +91,7 @@ export default {
     // console.log(22222, this.$)
   },
   mounted() {
-    console.log(this)
+    // console.log(this)
     this.$emit('click')
     setTimeout(() => {
       this.bbb = 'blue'

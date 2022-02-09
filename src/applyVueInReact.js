@@ -13,6 +13,12 @@ import options from "./options";
 const unsafePrefix = parseFloat(version) >= 17 ? 'UNSAFE_' : ''
 const optionsName = 'vuereact-combined-options'
 
+
+function toCamelCase(val) {
+  const reg = /-(\w)/g
+  return val.replace(reg, ($, $1) => $1.toUpperCase())
+}
+
 // 获取随机的元素id，并保证不重复
 function getRandomId (prefix) {
   const id = prefix + (Math.random() + '').substr(2)
@@ -158,7 +164,13 @@ class VueComponentLoader extends React.Component {
       this.updateVueComponent(component)
     }
     if (component.__fromReactSlot) return
-    Object.assign(this.vueInstance.$data.children, this.doVModel(props).children)
+    // Object.assign(this.vueInstance.$data.children, this.doVModel(props).children)
+    if (props.children) {
+      props.children = this.transferChildren(props.children)
+    }
+    if (props.$slots) {
+      props.$slots = this.transferSlots(props.$slots)
+    }
     // 更改vue组件的data
     this.vueInstance && Object.assign(this.vueInstance.$data, this.doVModel(props))
   }
@@ -311,7 +323,7 @@ class VueComponentLoader extends React.Component {
     const vueOptions = {
       ...vueRootInfo,
       data() {
-        return options.isSlots? { children: null }: vueOptionsData
+        return options.isSlots? { children: VueContainerInstance.currentVueComponent.originVNode }: vueOptionsData
       },
       created() {
         this.reactWrapperRef = VueContainerInstance
@@ -404,9 +416,10 @@ class VueComponentLoader extends React.Component {
               // Object.assign(this.getChildren.__vnode[0], createElement(applyReactInVue(() => children, {...options, isSlots: true})))
               newSlot = this.getChildren.__vnode
               // 直接修改react的fiberNode，此过程vnode无感知，此方案只是临时
-              this.$nextTick(() => {
-                newSlot[0].child.reactInstance.setState({ children })
-              })
+              // this.$nextTick(() => {
+              //   newSlot[0].component.ctx.reactInstance.setState({ children })
+              // })
+              newSlot[0].component.ctx.reactInstance.setState({ children })
             }
             newSlot.reactSlot = children
             return newSlot
@@ -445,7 +458,7 @@ class VueComponentLoader extends React.Component {
         filterNamedSlots(__passedPropsScopedSlots, __passedPropsSlots)
         // 作用域插槽的处理
         const scopedSlots = this.getScopedSlots(createElement, { ...__passedPropsScopedSlots, ...$scopedSlots })
-        const lastChildren = this.getChildren(createElement, this.$slots?.default?.() || __passedPropsChildren)
+        const lastChildren = this.getChildren(createElement, this.children || __passedPropsChildren)
         // 获取插槽数据（包含了具名插槽）
         const namedSlots = this.getNamespaceSlots(createElement, { ...__passedPropsSlots, ...$slots })
         if (lastChildren) namedSlots.default = lastChildren
@@ -458,16 +471,16 @@ class VueComponentLoader extends React.Component {
             return namedSlots[key]
           })
         ]
-        const lastOn = { ...__passedPropsOn, ...on }
-        const nativeOn = {}
+        // const lastOn = { ...__passedPropsOn, ...on }
+        const nativeOn = {};
 
         // 解决原生事件
-        Object.keys(props).forEach((keyName) => {
-          if (REACT_ALL_HANDLERS.has(keyName) && typeof props[keyName] === 'function') {
-            nativeOn[keyName.replace(/^on/, '').toLowerCase()] = props[keyName]
-            delete props[keyName]
-          }
-        })
+        // Object.keys(props).forEach((keyName) => {
+        //   if (REACT_ALL_HANDLERS.has(keyName) && typeof props[keyName] === 'function') {
+        //     nativeOn[keyName.replace(/^on/, '').toLowerCase()] = props[keyName]
+        //     delete props[keyName]
+        //   }
+        // })
 
         let lastProps = {
           ...__passedPropsRest,
@@ -476,7 +489,7 @@ class VueComponentLoader extends React.Component {
           'data-passed-props': {
             ...__passedPropsRest,
             ...props,
-            on: lastOn,
+            // on: lastOn,
             children: lastChildren,
             $slots: namedSlots,
             $scopedSlots: scopedSlots
@@ -487,9 +500,11 @@ class VueComponentLoader extends React.Component {
         // 这一步有点繁琐，但是又必须得处理
         const attrs = filterAttrs({ ...lastProps })
         const {className: newClassName, classname: newClassName1, ...lastAttrs} = attrs
+        console.log(1111111111, lastProps)
         return createElement(
             VueContainerInstance.currentVueComponent,
             {
+              ...lastProps,
               // props: lastProps,
               // on: lastOn,
               // nativeOn,
@@ -501,8 +516,8 @@ class VueComponentLoader extends React.Component {
             },
             {
               ...options.isSlots && this.children? {
-                default: () => this.children
-              } : {}
+                default: this.children
+              } : { default: () => lastSlots }
             }
             // lastSlots
             //
@@ -563,8 +578,7 @@ class VueComponentLoader extends React.Component {
 
     // 使用$forceUpdate强制重新渲染vue实例，因为此方法只会重新渲染当前实例和插槽，不会重新渲染子组件，所以不会造成性能问题
     if (nextComponent.__fromReactSlot) {
-      window.aaa =  this.vueInstance
-      this.vueInstance.children = nextComponent.originVNode
+      this.vueInstance.children = typeof nextComponent.originVNode === 'function'? nextComponent.originVNode: () => nextComponent.originVNode
     } else {
       this.currentVueComponent = nextComponent
       // 如果是标准的vue组件，则整个替换use_vue_wrapper为新的组件

@@ -113,7 +113,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           const {key, ['data-passed-props']:dataPassedProps, ...otherAttrs} = this.$attrs
           children[0].props = {...otherAttrs, ...children[0].props}
         }
-        return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
+        // return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
         // vue3不再需要根节点
         return children
       },
@@ -280,7 +280,7 @@ export default function applyReactInVue(component, options = {}) {
        */
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
-      this.slotsInit()
+      // this.slotsInit()
       return VNode
     },
     methods: {
@@ -348,7 +348,7 @@ export default function applyReactInVue(component, options = {}) {
               }
               return scopeSlot
             }
-            return applyVueInReact(createReactSlot(slotFunction.apply(this, args)), { ...options, isSlots: true, wrapInstance: _this }).render()
+            return applyVueInReact(createReactSlot(slotFunction), { ...options, isSlots: true, wrapInstance: _this }).render()
           }
           if (options.pureTransformer && originSlotFunction) {
             getSlot.vueFunction = originSlotFunction
@@ -391,11 +391,13 @@ export default function applyReactInVue(component, options = {}) {
           // 约定以特殊的slots key的前缀作为具名插槽，处理方式就是直接执行函数
 
           // 对插槽类型的属性做标记
-          for (const i in this.$slots || {}) {
+          for (let i in this.$slots || {}) {
             if (!this.$slots.hasOwnProperty(i) || this.$slots[i] == null) continue
-            if (options.react.vueNamedSlotsKey.find((prefix) => i.indexOf(prefix) === 0) || i === 'default') {
-              normalSlots[i] = this.$slots[i]()
-              normalSlots[i].__slot = true
+            const prefix = options.react.vueNamedSlotsKey.find((prefix) => i.indexOf(prefix) === 0)
+            if (prefix || i === 'default') {
+              const newKey = i.replace(new RegExp(`^${prefix}`), '')
+              normalSlots[newKey] = this.$slots[i]
+              normalSlots[newKey].__slot = true
               continue
             }
             scopedSlots[i] = this.getScopeSlot(this.$slots[i], hashList, this.$.vnode?.children?.[i])

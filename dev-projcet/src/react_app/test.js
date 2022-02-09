@@ -44,6 +44,6 @@ export default function (props) {
         {/*    <EEE>{VVV}</EEE>*/}
         {/*</DDD>*/}
         {props.children}
-        {/*{props.slot1({a:1}, 2)}*/}
+        {/*{props.slot1()}*/}
     </div>
 }
