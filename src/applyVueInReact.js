@@ -1,14 +1,11 @@
-import React, {version, Fragment} from 'react'
-import Vue, {Teleport, h as createElement, createApp} from 'vue'
+import React, {version} from 'react'
+import {Teleport, h as createElement, createApp} from 'vue'
 
 import applyReactInVue from './applyReactInVue'
 import vueRootInfo from './vueRootInfo'
 import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './applyReactRouterInVue'
-import globalOptions, {setOptions} from './options'
-import ReactDOM from "react-dom";
+import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
-import App from "../dev-projcet/src/App";
-import options from "./options";
 
 const unsafePrefix = parseFloat(version) >= 17 ? 'UNSAFE_' : ''
 const optionsName = 'vuereact-combined-options'
@@ -19,10 +16,10 @@ function toCamelCase(val) {
   return val.replace(reg, ($, $1) => $1.toUpperCase())
 }
 
-// 获取随机的元素id，并保证不重复
+// Get a random element id and ensure that it does not repeat
 function getRandomId (prefix) {
   const id = prefix + (Math.random() + '').substr(2)
-  // 如果产生碰撞则重新获取
+  // Recreate random numbers if duplicate data is generated
   if (getRandomId.pool.has(id)) {
     return getRandomId(prefix)
   }
@@ -31,17 +28,17 @@ function getRandomId (prefix) {
 }
 getRandomId.pool = new Set()
 
-// 根据传入的是否是字符串，判断是否需要获取Vue的全局组件
+// According to whether the incoming parameter is a string, determine whether it is necessary to obtain the global component of Vue
 function filterVueComponent (component, vueInstance) {
   if (typeof component === 'string' && vueInstance) {
+    // Vue3's global components are relative to appContext
     component = vueInstance.$?.appContext?.app?.component?.(component)
   }
   return component
 }
-// 获取组件选项对象
+// Get the options object of a Vue component
 function getOptions (Component) {
   if (typeof Component === 'function') {
-    // return new (Component)().$options
     return Component.options
   }
   return Component
@@ -171,12 +168,16 @@ class VueComponentLoader extends React.Component {
     if (props.$slots) {
       props.$slots = this.transferSlots(props.$slots)
     }
-    // 更改vue组件的data
-    this.vueInstance && Object.assign(this.vueInstance.$data, this.doVModel(props))
+    // delete all keys
+    Object.keys(this.vueInstance.$data).forEach((key) => {
+      delete this.vueInstance.$data[key]
+    })
+    // update vue $data
+    this.vueInstance && Object.assign(this.vueInstance.$data, this.parseVModel(props))
   }
 
   componentWillUnmount () {
-    // 删除portal
+    // remove portal
     if (this.vuePortal) {
       this.parentVueWrapperRef.removeVuePortal(this.vuePortal)
       return
@@ -185,25 +186,75 @@ class VueComponentLoader extends React.Component {
     getRandomId.pool.delete(this.vueTargetId)
   }
 
-  // 处理v-model
-  doVModel (props) {
-    let { $model, ...newProps } = props
-    if ($model === undefined) return props
-    // 考虑到了自定义v-model
-    let vueInstanceModelOption = { ...{ prop: 'value', event: 'input' }, ...getOptions(this.currentVueComponent).model }
-    let modelProp = { [vueInstanceModelOption.prop]: $model.value }
-    // 如果有绑定的事件和v-model事件相同，需合并两个绑定函数
-    if (!newProps.on) newProps.on = {}
-    if (newProps.on[vueInstanceModelOption.event]) {
-      let oldFun = newProps.on[vueInstanceModelOption.event]
-      newProps.on[vueInstanceModelOption.event] = function (...args) {
-        oldFun.apply(this, args)
-        $model.setter && $model.setter.apply(this, args)
-      }
-    } else {
-      newProps.on = { ...newProps.on, ...{ [vueInstanceModelOption.event]: $model.setter || (() => {}) } }
+  // parse v-model
+  parseVModel (props) {
+    const VModels = {}
+    const newProps = {...props}
+    function createModifiers(VModels, modelKey, modifiers) {
+      const modifiersObject = {}
+      modifiers.forEach((key) => {
+        modifiersObject[key] = true
+      })
+      return VModels[(modelKey === 'modelValue'? 'model': modelKey) + 'Modifiers'] = modifiersObject
     }
-    return { ...newProps, ...modelProp }
+    function setVModel(originValue, modelKey) {
+      const modelMix = originValue
+      if (modelMix instanceof Array) {
+        if (typeof modelMix[1] !== 'function') {
+          throw Error('If the parameter \'v-model\' is an array type, the second element of the array must be a setter function')
+        }
+        const setter = modelMix[1]
+        if (typeof modelMix[2] === 'string') {
+          modelKey = modelMix[2]
+          if (modelMix[3] instanceof Array) {
+            createModifiers(VModels, modelKey, modelMix[3])
+          }
+        } else if (modelMix[2] instanceof Array) {
+          createModifiers(VModels, modelKey, modelMix[2])
+        }
+        VModels['onUpdate:' + modelKey] = setter
+        VModels[modelKey] = modelMix[0]
+      } else {
+        throw Error('The parameter \'v-model\' must be an array type, such as [val, setter, \'argumentKey\', modifiers]')
+      }
+    }
+    Object.keys(props).forEach((key) => {
+      // single v-model
+      const matcher = key.match(/^v-model($|:([^:]+)|-([^:]+))/)
+      if (matcher) {
+        let modelKey = matcher[2] || matcher[3] || 'modelValue'
+        setVModel(props[key], modelKey)
+        delete newProps[key]
+        return
+      }
+      // multiple v-model
+      if (key === 'v-models' && typeof props[key] === 'object' && !(props[key] instanceof Array)) {
+        Object.keys(props[key]).forEach((key) => {
+          setVModel(props[key], 'modelValue')
+        })
+        delete newProps[key]
+      }
+    })
+    console.log('v-model', VModels)
+    return newProps
+
+    // let { $model, ...newProps } = props
+    // if ($model === undefined) return props
+    // // 考虑到了自定义v-model
+    // let vueInstanceModelOption = { ...{ prop: 'value', event: 'input' }, ...getOptions(this.currentVueComponent).model }
+    // let modelProp = { [vueInstanceModelOption.prop]: $model.value }
+    // // 如果有绑定的事件和v-model事件相同，需合并两个绑定函数
+    // if (!newProps.on) newProps.on = {}
+    // if (newProps.on[vueInstanceModelOption.event]) {
+    //   let oldFun = newProps.on[vueInstanceModelOption.event]
+    //   newProps.on[vueInstanceModelOption.event] = function (...args) {
+    //     oldFun.apply(this, args)
+    //     $model.setter && $model.setter.apply(this, args)
+    //   }
+    // } else {
+    //   newProps.on = { ...newProps.on, ...{ [vueInstanceModelOption.event]: $model.setter || (() => {}) } }
+    // }
+    // return { ...newProps, ...modelProp }
   }
 
   // 处理sync
@@ -250,7 +301,7 @@ class VueComponentLoader extends React.Component {
   // 将通过react组件的ref回调方式接收组件的dom对象，并且在class的constructor中已经绑定了上下文
   createVueInstance (targetElement) {
     const VueContainerInstance = this
-    let { component: vueComponent, 'data-passed-props': __passedProps = {}, [optionsName]: options, children, $slots, ...props } = this.props
+    let { component: vueComponent, [optionsName]: options, children, $slots, ...props } = this.props
     children = this.transferChildren(children)
     $slots = this.transferSlots($slots)
     if (children) {
@@ -261,43 +312,6 @@ class VueComponentLoader extends React.Component {
     }
 
     vueComponent = filterVueComponent(vueComponent, this.props[optionsName]?.wrapInstance)
-    // 过滤vue组件实例化后的$attrs
-    let filterAttrs = (props) => {
-      // 对mixin进行合并
-      let mixinsPropsArray = []
-      let mixinsPropsJson = {}
-      // 这一步我暂时没有想到更好的方案
-      let componentOptions = getOptions(this.currentVueComponent)
-      if (componentOptions.mixins) {
-        componentOptions.mixins.forEach((v) => {
-          if (v.props) {
-            if (v.props instanceof Array) {
-              mixinsPropsArray = [...v.props]
-            } else {
-              mixinsPropsJson = { ...v.props }
-            }
-          }
-        })
-      }
-
-      let attrs = Object.assign({}, props)
-      let optionProps = componentOptions.props
-      if (optionProps) {
-        if (optionProps instanceof Array) {
-          let tempArr = [...optionProps, ...mixinsPropsArray]
-          tempArr.forEach((v) => {
-            delete attrs[v]
-          })
-        } else {
-          let tempJson = { ...optionProps, ...mixinsPropsJson }
-          for (let i in tempJson) {
-            if (!tempJson.hasOwnProperty(i)) continue
-            delete attrs[i]
-          }
-        }
-      }
-      return attrs
-    }
 
     // 从作用域插槽中过滤具名插槽
     let filterNamedSlots = (scopedSlots, slots) => {
@@ -319,7 +333,7 @@ class VueComponentLoader extends React.Component {
     // 将vue组件的inheritAttrs设置为false，以便组件可以顺利拿到任何类型的attrs
     // 这一步不确定是否多余，但是vue默认是true，导致属性如果是函数，又不在props中，会出警告，正常都需要在组件内部自己去设置false
     // component.inheritAttrs = false
-    const vueOptionsData = { ...this.doSync(this.doVModel(props)), 'data-passed-props': __passedProps }
+    const vueOptionsData = { ...this.doSync(this.parseVModel(props)) }
     const vueOptions = {
       ...vueRootInfo,
       data() {
@@ -351,9 +365,10 @@ class VueComponentLoader extends React.Component {
                 this.getNamespaceSlots.__namespaceSlots[i] = newSlot
               } else {
                 newSlot = this.getNamespaceSlots.__namespaceSlots[i]
-                this.$nextTick(() => {
-                  newSlot[0].child.reactInstance.setState({ children: slot })
-                })
+                // this.$nextTick(() => {
+                //   newSlot[0].child.reactInstance.setState({ children: slot })
+                // })
+                newSlot[0]?.component?.ctx.reactInstance.setState({ children: slot })
               }
               newSlot.reactSlot = slot
               return newSlot
@@ -419,7 +434,7 @@ class VueComponentLoader extends React.Component {
               // this.$nextTick(() => {
               //   newSlot[0].component.ctx.reactInstance.setState({ children })
               // })
-              newSlot[0].component.ctx.reactInstance.setState({ children })
+              newSlot[0]?.component?.ctx.reactInstance.setState({ children })
             }
             newSlot.reactSlot = children
             return newSlot
@@ -440,84 +455,54 @@ class VueComponentLoader extends React.Component {
         this.$refs.use_vue_wrapper.reactWrapperRef = null
       },
       render () {
-        // 这里很重要，将不是属性的内容过滤掉，并单独抽取
+        // Filter out the content that is not an property and extract it separately
         let { component,
-          on,
           $slots,
           $scopedSlots,
           children,
           'class': className = '',
           style = '',
-          'data-passed-props': {
-            $slots: __passedPropsSlots,
-            $scopedSlots: __passedPropsScopedSlots,
-            children: __passedPropsChildren,
-            on: __passedPropsOn,
-            ...__passedPropsRest
-          } = {}, ...props } = this.$data
-        filterNamedSlots(__passedPropsScopedSlots, __passedPropsSlots)
+          ...lastProps } = this.$data
+
         // 作用域插槽的处理
-        const scopedSlots = this.getScopedSlots(createElement, { ...__passedPropsScopedSlots, ...$scopedSlots })
-        const lastChildren = this.getChildren(createElement, this.children || __passedPropsChildren)
+        const scopedSlots = this.getScopedSlots(createElement, { ...$scopedSlots })
+        const lastChildren = this.getChildren(createElement, this.children)
         // 获取插槽数据（包含了具名插槽）
-        const namedSlots = this.getNamespaceSlots(createElement, { ...__passedPropsSlots, ...$slots })
-        if (lastChildren) namedSlots.default = lastChildren
-        const lastSlots = [
-          (lastChildren || []),
-          ...Object.keys(namedSlots).map((key) => {
-            if (key === 'default') {
-              return
-            }
-            return namedSlots[key]
-          })
-        ]
-        // const lastOn = { ...__passedPropsOn, ...on }
-        const nativeOn = {};
+        const namedSlots = this.getNamespaceSlots(createElement, { ...$slots })
 
-        // 解决原生事件
-        // Object.keys(props).forEach((keyName) => {
-        //   if (REACT_ALL_HANDLERS.has(keyName) && typeof props[keyName] === 'function') {
-        //     nativeOn[keyName.replace(/^on/, '').toLowerCase()] = props[keyName]
-        //     delete props[keyName]
-        //   }
-        // })
-
-        let lastProps = {
-          ...__passedPropsRest,
-          ...props,
-          // 封装透传属性
-          'data-passed-props': {
-            ...__passedPropsRest,
-            ...props,
-            // on: lastOn,
-            children: lastChildren,
-            $slots: namedSlots,
-            $scopedSlots: scopedSlots
+        const {className: newClassName, classname: newClassName1, ...lastAttrs} = lastProps
+        const lastNamedSlots = {}
+        // Serialize 'namedSlots' into an object consisting of functions
+        Object.keys(namedSlots).forEach((key) => {
+          lastNamedSlots[key] = () => namedSlots[key]
+        })
+        const lastScopedSlots = {}
+        // Make sure 'scopedSlots' is composed of functions, if not, convert to functions
+        Object.keys(scopedSlots).forEach((key) => {
+          const scopeFun = scopedSlots[key]
+          if (typeof scopeFun === 'function') {
+            lastScopedSlots[key] = scopeFun
+          } else {
+            lastScopedSlots[key] = () => scopeFun
           }
-        }
-
-        // 手动把props丛attrs中去除，
-        // 这一步有点繁琐，但是又必须得处理
-        const attrs = filterAttrs({ ...lastProps })
-        const {className: newClassName, classname: newClassName1, ...lastAttrs} = attrs
-        console.log(1111111111, lastProps)
+        })
         return createElement(
             VueContainerInstance.currentVueComponent,
             {
               ...lastProps,
-              // props: lastProps,
-              // on: lastOn,
-              // nativeOn,
-              // attrs: lastAttrs,
-              // 'class': className || newClassName || newClassName1 || '',
-              // style,
-              // scopedSlots: { ...scopedSlots },
+              ...lastAttrs,
+              'class': className || newClassName || newClassName1 || '',
+              style,
               ref: 'use_vue_wrapper',
             },
             {
               ...options.isSlots && this.children? {
                 default: this.children
-              } : { default: () => lastSlots }
+              } : {
+                ...lastNamedSlots,
+                ...scopedSlots,
+                default: () => lastChildren
+              }
             }
             // lastSlots
             //
