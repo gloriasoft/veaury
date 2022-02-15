@@ -16,7 +16,7 @@
 import {h} from 'vue'
 import {createElement} from 'react'
 import reactDom from 'react-dom'
-import dev from 'react_app/dev'
+import dev from 'react_app/test'
 import applyReactInVue from "combined/applyReactInVue";
 import Test1 from './Test1'
 
