@@ -1,7 +1,7 @@
 # The React development environment for Veaury  
 The React project created by `create-react-app`, and run the command `npm run eject` in the project. 
 
-## configure
+## configuration
 Then make configuration modifications in the generated `config/webpack.config.js`, enables the project to compile `.vue` type files and to debug the `veaury` source code in the parent project  
 1. Set `vue-loader` in `rules`  
 2. Insert the instantiated `VueLoaderPlugin` into `plugins`  
