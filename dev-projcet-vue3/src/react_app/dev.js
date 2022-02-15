@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Test1 from '../components/Test1'
-import {applyVueInReact} from 'combined'
+import {applyVueInReact} from 'veaury'
 const Com1 = applyVueInReact(Test1)
 function A1 () {
     const [val1, setVal1] = useState('red')

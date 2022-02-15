@@ -1,24 +1,9 @@
-# dev-projcet
+# The Vue3 development environment for Veaury
+The vue3 project created by vue-cli, and through the configuration of `babel.config.js`, the files in the specified path support React's jsx compilation.  
+This project serves as the development base of `veaury` in the Vue3 main environment.  
 
-## Project setup
-```
-yarn install
-```
+## Path to React file  
+Js files in the path `src/react_app` will support jsx compilation with React.  
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Alias
+The alias of `veaury` is configured in `vue.config.js`, pointing to the src directory of the parent project.  

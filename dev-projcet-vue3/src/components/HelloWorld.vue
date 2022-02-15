@@ -17,7 +17,7 @@ import {h} from 'vue'
 import {createElement} from 'react'
 import reactDom from 'react-dom'
 import dev from 'react_app/test'
-import applyReactInVue from "combined/applyReactInVue";
+import {applyReactInVue} from 'veaury';
 import Test1 from './Test1'
 
 const AA = {

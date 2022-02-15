@@ -267,7 +267,6 @@ export default function applyReactInVue(component, options = {}) {
         vueRootInfo.store = this.$root.$options.store
       }
     },
-    props: ["dataPassedProps"],
     render() {
       /**
        * Magical code!
@@ -360,18 +359,19 @@ export default function applyReactInVue(component, options = {}) {
         scopedSlotFunction.__scopedSlot = true
         return scopedSlotFunction
       },
+      // used by 'pureTransformer'
       __syncUpdateProps(extraData) {
         // this.mountReactComponent(true, false, extraData)
         this.reactInstance && this.reactInstance.setState(extraData)
       },
       mountReactComponent(update, updateType, extraData = {}) {
         // 先提取透传属性
-        let {
-          $slots: __passedPropsSlots,
-          $scopedSlots: __passedPropsScopedSlots,
-          children,
-          ...__passedPropsRest
-        } = (this.$props.dataPassedProps != null ? this.$props.dataPassedProps : {})
+        // let {
+        //   $slots: __passedPropsSlots,
+        //   $scopedSlots: __passedPropsScopedSlots,
+        //   children,
+        //   ...__passedPropsRest
+        // } = (this.$props.dataPassedProps != null ? this.$props.dataPassedProps : {})
 
         // 获取style scoped生成的hash
         const hashMap = {}
@@ -382,8 +382,9 @@ export default function applyReactInVue(component, options = {}) {
           hashList.push(scopedId)
         }
 
-        const normalSlots = { ...__passedPropsSlots }
-        const scopedSlots = { ...__passedPropsScopedSlots }
+        const normalSlots = {}
+        const scopedSlots = {}
+        let children
         if (!update || update && updateType?.slot) {
           // 处理具名插槽，将作为属性被传递
           // vue3所有插槽都函数（作用域插槽）
@@ -405,15 +406,15 @@ export default function applyReactInVue(component, options = {}) {
         }
 
         // 预生成react组件的透传属性
-        const __passedProps = {
-          ...__passedPropsRest,
-          ...{ ...this.$attrs },
-          ...(!update || update && updateType?.slot ? {
-            $slots: normalSlots,
-            $scopedSlots: scopedSlots,
-            children,
-          } : {})
-        }
+        // const __passedProps = {
+        //   ...__passedPropsRest,
+        //   ...{ ...this.$attrs },
+        //   ...(!update || update && updateType?.slot ? {
+        //     $slots: normalSlots,
+        //     $scopedSlots: scopedSlots,
+        //     children,
+        //   } : {})
+        // }
         let lastNormalSlots
         if (!update || update && updateType?.slot) {
           lastNormalSlots = { ...normalSlots }
@@ -446,12 +447,10 @@ export default function applyReactInVue(component, options = {}) {
           compareLast.attrs()
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
-              {...__passedPropsRest}
               {...this.$attrs}
               {...{ children }}
               {...lastNormalSlots}
               {...scopedSlots}
-              {...{ "data-passed-props": __passedProps }}
               {...(this.$attrs.class ? { className: this.$attrs.class } : {})}
               {...hashMap}
               hashList={hashList}
@@ -611,13 +610,7 @@ export default function applyReactInVue(component, options = {}) {
           this.mountReactComponent(true, {attrs: true})
         },
         deep: true,
-      },
-      "$props.dataPassedProps": {
-        handler() {
-          this.mountReactComponent(true, {passedProps: true})
-        },
-        deep: true,
-      },
+      }
     },
   }
 }

@@ -10,7 +10,7 @@ module.exports = {
   configureWebpack: {
     resolve: {
       alias: {
-        combined: path.resolve(__dirname, '../src'),
+        veaury: path.resolve(__dirname, '../src'),
         src: path.resolve(__dirname, './src'),
         react_app: path.resolve(__dirname, './src/react_app'),
       }
