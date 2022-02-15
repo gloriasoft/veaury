@@ -1,6 +1,6 @@
 import vueRootInfo from './vueRootInfo'
 import React from 'react'
-import Vue from 'vue'
+import {createApp} from 'vue'
 const vueRouterInfo = {}
 export default function widthVueRouter (Component) {
   class WithVueRouterCom extends React.Component {
@@ -12,7 +12,7 @@ export default function widthVueRouter (Component) {
           throw Error('Vue router does not exist! You must setting the Vue router in the Vue Instance options first.')
         }
         // 这里需要借用一个vue实例来完成watch
-        vueRouterInfo.instance = new Vue({
+        vueRouterInfo.instance = createApp({
           router: vueRootInfo.router
         })
       }

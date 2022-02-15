@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {createApp} from 'vue'
 class ReduxLinkVue {
   constructor (store) {
     if (!store || !store.subscribe || !store.getState) {
@@ -12,7 +12,7 @@ class ReduxLinkVue {
       this._vm.state = store.getState()
     })
     // 利用一个vue实例做双向绑定
-    this._vm = new Vue({
+    this._vm = createApp({
       data () {
         return {
           state: store.getState() // 初始化的数据

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {createApp} from 'vue'
 let reactRouterInfo = {}
 function applyReactRouterInVue (withRouter) {
   // 只允许调用一次
@@ -14,12 +14,12 @@ export function setReactRouterInVue (reactRouter) {
     updateReactRouterInVue(reactRouter)
     return
   }
-  reactRouterInfo.vueInstance = new Vue({
+  reactRouterInfo.vueInstance = createApp({
     data: {
       ...reactRouter
     }
   })
-  Vue.prototype.$reactRouter = reactRouterInfo.vueInstance.$data
+  reactRouterInfo.vueInstance.config.globalProperties.$reactRouter = reactRouterInfo.vueInstance.$data
 }
 export function updateReactRouterInVue (reactRouter) {
   Object.assign(reactRouterInfo.vueInstance.$data, { ...reactRouter })

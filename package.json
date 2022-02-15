@@ -34,12 +34,9 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
-
+    "react": "^17.0.2",
+    "vue": "^3.2.31"
   },
-  "keywords": [
-
-  ],
-  "dependencies": {
-
-  }
+  "keywords": [],
+  "dependencies": {}
 }
