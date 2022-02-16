@@ -1,5 +1,5 @@
 # The Vue3 development environment for Veaury
-The vue3 project created by vue-cli, and through the configuration of `babel.config.js`, the files in the specified path support React's jsx compilation.  
+The vue3 project created by `@vue/cli`, and through the configuration of `babel.config.js`, the files in the specified path support React's jsx compilation.  
 This project is only used for the development of veaury in the main Vue3 environment, not a standard usage scenario.   
 
 ## Dependency of React environment  
