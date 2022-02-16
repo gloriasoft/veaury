@@ -1,6 +1,8 @@
 # The React development environment for Veaury  
 The React project created by `create-react-app`, and ran the `npm run eject` command in the project.
 
+## Dependency of Vue3 environment  
+To enable React projects to develop Vue3 files, some additional dependencies need to be installed. In actual usage scenarios, it is not necessary to deploy two front-end frameworks in one project.   
 ## configuration
 Then make configuration modifications in the generated `config/webpack.config.js`, enables the project to compile `.vue` type files and to debug the `veaury` source code in the parent project  
 1. Set `vue-loader` in `rules`  
