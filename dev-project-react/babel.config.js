@@ -11,9 +11,10 @@ module.exports = {
                 // Open React JSX's compiling capability to the 'src' directory of the parent project
                 if (filename && filename.startsWith(resolve('../src'))) return filename
             },
-            plugins: [
-                // Compile with React's jsx
-                'transform-react-jsx'
+            presets: [
+                [
+                    'babel-preset-react-app'
+                ],
             ]
         }
     ]
