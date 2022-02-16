@@ -5,7 +5,8 @@ This project is only used for the development of `veaury` in the main Vue3 envir
 ## Dependency of React environment  
 To enable Vue3 project to develop React JS files, some additional dependencies need to be installed. In actual usage scenarios, it is not necessary to deploy two front-end frameworks in one project.  
 1. `react` —— It is recommended to install the latest version.  
-2. `babel-plugin-transform-react-jsx` —— It is recommended to install the latest version.  
+2. `react-dom` —— It is recommended to install the latest version.  
+3. `babel-plugin-transform-react-jsx` —— It is recommended to install the latest version.  
 
 ## configuration  
 It is relatively easy to configure the Vue3 project to support React JSX compilation, just configure the `babel.config.js` of the local project.   
