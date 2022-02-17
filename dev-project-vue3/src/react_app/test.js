@@ -39,6 +39,7 @@ export default function (props) {
     //     }, 1000)
     // }, [])
     return <div>
-1212
+        1212
+        {props.children}
     </div>
 }

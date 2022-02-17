@@ -8,9 +8,10 @@
   "typings": "types/combined.d.ts",
   "scripts": {
     "build": "cross-env BABEL_ENV=rollup rollup -c",
-    "dev:vue3": "npm run serve --prefix dev-projcet-vue3",
-    "dev-setup:yarn": "yarn --cwd dev-projcet-vue3 && yarn --cwd dev-projcet-react",
-    "dev-setup:npm": "npm i --prefix dev-projcet-vue3 && npm i --prefix dev-projcet-react",
+    "dev:vue": "npm run serve --prefix dev-project-vue3",
+    "dev:react": "npm run start --prefix dev-project-react",
+    "dev-setup:yarn": "yarn --cwd dev-project-vue3 && yarn --cwd dev-project-react",
+    "dev-setup:npm": "npm i --prefix dev-project-vue3 && npm i --prefix dev-project-react",
     "setup:yarn": "yarn && npm run dev-setup:yarn",
     "setup:npm": "npm i && npm run dev-setup:npm"
   },
@@ -32,10 +33,6 @@
     "react": ">= 16.3.0",
     "react-dom": ">= 16.3.0",
     "vue": "^3.0.0"
-  },
-  "devDependencies": {
-    "react": "^17.0.2",
-    "vue": "^3.2.31"
   },
   "keywords": [],
   "dependencies": {}

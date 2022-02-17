@@ -110,7 +110,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         // 这里对包囊层属性进行透传，透传条件为children中只有一个vnode
         if (children?.length === 1 && children[0]?.data) {
           // 过滤掉内部属性
-          const {key, ['data-passed-props']:dataPassedProps, ...otherAttrs} = this.$attrs
+          const {key, ...otherAttrs} = this.$attrs
           children[0].props = {...otherAttrs, ...children[0].props}
         }
         // return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
@@ -153,7 +153,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
   render() {
     let {
       children,
-      "data-passed-props": __passedProps,
       hashList,
       ...props
     } = this.state
@@ -214,8 +213,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       }
     }
     $slots.default = children
-    // 封装透传属性
-    __passedProps = { ...__passedProps, ...{ $slots, $scopedSlots }, children }
     const refInfo = {}
     refInfo.ref = this.setRef
     if (options.isSlots) {
@@ -226,13 +223,12 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     if (options.defaultPropsFormatter) {
       finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
     }
-    const newProps = { ...finalProps, ...{ "data-passed-props": __passedProps } }
+    const newProps = { ...finalProps }
     // 判断是否要通过一个class组件包装一下来获取ref
     // 通过判断Component的原型是否不是Function原型
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
       return (
-          <Component {...newProps}
-                     {...{ "data-passed-props": __passedProps }} {...refInfo}>
+          <Component {...newProps} {...refInfo}>
             {children}
           </Component>
       )
@@ -544,9 +540,7 @@ export default function applyReactInVue(component, options = {}) {
           this.cache = {
             ...this.cache || {},
             ...{
-              ...__passedPropsRest,
               ...extraData,
-              ...{ "data-passed-props": __passedProps },
               ...(this.$attrs.class ? { className: this.$attrs.class } : {}),
               ...{ ...hashMap },
               hashList,

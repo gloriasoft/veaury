@@ -6,6 +6,7 @@
 <!--&lt;!&ndash;    <slot name="bbb22" v-bind="{a:1}"></slot>&ndash;&gt;-->
 <!--&lt;!&ndash;    {{bbb}}&ndash;&gt;-->
     <Test >
+      <div>3333</div>
     </Test>
 <!--  <AA @:click="click"><div>12122</div></AA>-->
 <!--  <Test1 @click="click"><button>3333333</button></Test1>-->
@@ -18,7 +19,7 @@ import {createElement} from 'react'
 import reactDom from 'react-dom'
 import dev from 'react_app/test'
 import {applyReactInVue} from 'veaury';
-import Test1 from './Test1'
+// import Test1 from './Test1'
 
 const AA = {
   emits: ['click'],
@@ -36,20 +37,20 @@ const AA = {
   }
 }
 
-// const Test1 = {
-//   beforeCreate() {
-//     console.log('HHHHHHHHHHHHHH', this.$slots.default)
-//   },
-//   mounted() {
-//     console.log('Test1 mounted')
-//   },
-//   updated() {
-//     console.log('Test1 updated')
-//   },
-//   render () {
-//     return this.$slots.default()
-//   }
-// }
+const Test1 = {
+  beforeCreate() {
+    console.log('HHHHHHHHHHHHHH', this.$slots.default)
+  },
+  mounted() {
+    console.log('Test1 mounted', this)
+  },
+  updated() {
+    console.log('Test1 updated')
+  },
+  render () {
+    return h('div', {ref: 'aaa'})
+  }
+}
 
 export default {
   name: 'HelloWorld',
