@@ -1,46 +1,44 @@
 <template>
   <h3>
-    This example shows the basic usage of `applyReactInVue`.
+    When React components are used in Vue components, you can use the 'withVueRouter' higher-order component to get the 'vue-router' context of the current environment
   </h3>
   <h4>
-    Using React components in Vue components.
+    current route path: {{$route.path}}<br/>
+    current route query: {{$route.query}}
   </h4>
-  <Basic :foo="foo">
+  <Basic a="1">
     <div class="slot">
       This is the Vue default slot
-      <div>
-        current time: {{currentTime}}
-      </div>
+      <Custom1/>
     </div>
   </Basic>
+  <button style="margin-top: 20px" @click="changeValue">Randomly change the value of query parameter 'a'</button>
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { getCurrentInstance } from 'vue'
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
+import Custom1 from "./Custom1"
+import { useRouter } from 'vue-router'
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    Basic: applyReactInVue(ReactBasic),
+    Custom1
   },
   setup() {
-    let timer
-    const currentTime = ref(new Date().toLocaleString())
-    const foo = ref(Math.random())
-    onMounted(() => {
-      timer = setInterval(() => {
-        currentTime.value = new Date().toLocaleString()
-        foo.value = Math.random()
-      }, 1000)
-    })
-    onUnmounted(() => {
-      clearInterval(timer)
-    })
+    const router = useRouter()
+    function changeValue() {
+      router.replace({
+        query: {
+          a: Math.random()
+        }
+      })
+    }
     return {
-      currentTime,
-      foo
+      changeValue
     }
   }
 }

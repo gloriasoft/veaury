@@ -1,4 +1,5 @@
 import React, { useRef } from 'react'
+import { VueContainer } from 'veaury'
 
 export default function(props) {
     const style = useRef({
@@ -10,8 +11,8 @@ export default function(props) {
     return (<div style={style.current}>
         This is the React Component
         <h3>
-            received foo's value: {props.foo}
+            use the 'router-view' of 'vue-router'
         </h3>
-        {props.children}
+        <VueContainer component='RouterView'/>
     </div>)
 }

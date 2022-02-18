@@ -1,22 +1,18 @@
-import vueRootInfo from './vueRootInfo'
 import React from 'react'
 class WithVueRouterCom extends React.Component {
   constructor (props) {
     super(props)
-    if (!vueRootInfo.$root?.$router) {
-      throw Error('Vue router does not exist! You must setting the Vue router in the Vue Instance options first.')
-    }
-    this.state = {
-      $vueRouter: vueRootInfo.$root.$router,
-      $vueRoute: vueRootInfo.$root.$route
-    }
+    const __routeKey = props.__widthVueRouter__options?.routeKey
+    const __routerKey = props.__widthVueRouter__options?.routerKey
+    Object.assign(this, {__routeKey, __routerKey})
   }
   componentDidMount () {
     // watch
-    this.subscribe = vueRootInfo.$root.$watch('$route', () => {
+    if (!this.vueWrapperRef) return
+    this.subscribe = this.vueWrapperRef.$watch('$route', () => {
       this.setState({
-        $vueRouter: vueRootInfo.$root.$router,
-        $vueRoute: vueRootInfo.$root.$route
+        [this.__routerKey]: this.vueWrapperRef?.$router,
+        [this.__routeKey]: this.vueWrapperRef?.$route
       })
     })
   }
@@ -25,21 +21,53 @@ class WithVueRouterCom extends React.Component {
     this.subscribe()
   }
   render () {
-    let Component = this.props.__widthVueRouter__component
+    if (!this.checkVueInstance) {
+      this.checkVueInstance = true
+      const fiberNode = this._reactInternals || this._reactInternalFiber
+      let parentInstance = fiberNode.return
+      let vueWrapperRef
+      // Look up the vueWrapperRef
+      while (parentInstance) {
+        if (parentInstance.stateNode?.parentVueWrapperRef) {
+          vueWrapperRef = parentInstance.stateNode.parentVueWrapperRef
+          break
+        }
+        if (parentInstance.stateNode?.vueWrapperRef) {
+          vueWrapperRef = parentInstance.stateNode.vueWrapperRef
+          break
+        }
+        parentInstance = parentInstance.return
+      }
+      if (!vueWrapperRef || !vueWrapperRef.$router) {
+        console.warn('Vue router does not exist! You must setting the Vue router in the Vue Instance options first.')
+      } else {
+        this.vueWrapperRef = vueWrapperRef
+        // do not use 'setState'
+        this.state = {
+          [this.__routerKey]: this.vueWrapperRef?.$router,
+          [this.__routeKey]: this.vueWrapperRef?.$route
+        }
+      }
+    }
+    const {__widthVueRouter__forwardedRef, __widthVueRouter__component, passedProps} = this.props
+    let Component = __widthVueRouter__component
     let refInfo = {}
     if (typeof Component === 'function' && Component.length > 1) {
       Component = React.forwardRef(Component)
       refInfo = {
-        ref: this.props.__widthVueRouter__forwardedRef
+        ref: __widthVueRouter__forwardedRef
       }
     }
     return (
-        <Component {...this.props} {...this.state} {...refInfo}/>
+        <Component {...passedProps} {...this.state} {...refInfo}/>
     )
   }
 }
-export default function widthVueRouter (Component) {
+export default function widthVueRouter (Component, options = {
+  routeKey: '$vueRoute',
+  routerKey: '$vueRouter'
+}) {
   return React.forwardRef((props, ref) => (
-    <WithVueRouterCom __widthVueRouter__forwardedRef={ref} __widthVueRouter__component={Component} {...props} />
+    <WithVueRouterCom __widthVueRouter__forwardedRef={ref} __widthVueRouter__component={Component} __widthVueRouter__options={options} passedProps={props} />
   ))
 }

@@ -2,7 +2,6 @@ import React, {version} from 'react'
 import {Teleport, h as createElement, createApp} from 'vue'
 
 import applyReactInVue from './applyReactInVue'
-import vueRootInfo from './vueRootInfo'
 import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './applyReactRouterInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
@@ -87,7 +86,7 @@ class VueComponentLoader extends React.Component {
     this.portalKeyPool = []
     this.maxPortalCount = 0
     // 捕获vue组件
-    this.currentVueComponent = filterVueComponent(props.component, props[optionsName]?.wrapInstance)
+    this.currentVueComponent = props.component
     this.createVueInstance = this.createVueInstance.bind(this)
     this.vueComponentContainer = this.createVueComponentContainer()
   }
@@ -146,7 +145,6 @@ class VueComponentLoader extends React.Component {
 
   [`${unsafePrefix}componentWillReceiveProps`] (nextProps) {
     let { component, [optionsName]: options, 'v-slots': $slots = {}, children, ...props } = nextProps
-    component = filterVueComponent(component, options?.wrapInstance)
     if (this.currentVueComponent !== component) {
       this.updateVueComponent(component)
     }
@@ -283,7 +281,6 @@ class VueComponentLoader extends React.Component {
     setVueInstance = setVueInstance.bind(this)
     const vueOptionsData = { ...this.parseVModel(props) }
     const vueOptions = {
-      ...vueRootInfo,
       data() {
         return options.isSlots? { children: VueContainerInstance.currentVueComponent.originVNode }: vueOptionsData
       },
@@ -380,7 +377,7 @@ class VueComponentLoader extends React.Component {
           }
         })
         return createElement(
-          VueContainerInstance.currentVueComponent,
+          filterVueComponent(VueContainerInstance.currentVueComponent, this),
           {
             ...lastProps,
             ...lastAttrs,

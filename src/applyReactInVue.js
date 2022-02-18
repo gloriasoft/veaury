@@ -4,14 +4,6 @@ import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement } from 'vue'
 
-/**
- * 'vueRootInfo' is to save some information about the root node options of Vue.
- * Now save 'router' and 'store',
- * which will be set when creating the middleware instance of 'Vue' in the 'applyVueInReact' method
-**/
-//To enable the 'Vue' component after 'applyReactInVue - > applyVueInReact' to still reference 'vuex' and 'Vue router'
-import vueRootInfo from "./vueRootInfo"
-
 const domMethods = ["getElementById", "getElementsByClassName", "getElementsByTagName", "getElementsByTagNameNS", "querySelector", "querySelectorAll"]
 const domTopObject = { Document: {}, Element: {} }
 /**
@@ -256,12 +248,6 @@ export default function applyReactInVue(component, options = {}) {
       }
     },
     created() {
-      if (!vueRootInfo.$root) {
-        vueRootInfo.$root = this.$root
-      }
-      // if (this.$root.$options.router) {
-      //   vueRootInfo.store = this.$root.$options.store
-      // }
     },
     render() {
       /**

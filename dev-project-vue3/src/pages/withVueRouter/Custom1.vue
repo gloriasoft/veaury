@@ -1,7 +1,8 @@
 <template>
-  <div style="background: #42b983">
+  <div style="background: #42b983; padding:10px">
     This is the Custom1 Vue Component.<br/>
-    the value of prop 'zoo': {{zoo}}
+    current route path: {{$route.path}}<br/>
+    current route query: {{$route.query}}
   </div>
 </template>
 
