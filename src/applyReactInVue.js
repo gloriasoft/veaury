@@ -256,12 +256,12 @@ export default function applyReactInVue(component, options = {}) {
       }
     },
     created() {
-      if (this.$root.$options.router) {
-        vueRootInfo.router = this.$root.$options.router
+      if (!vueRootInfo.$root) {
+        vueRootInfo.$root = this.$root
       }
-      if (this.$root.$options.router) {
-        vueRootInfo.store = this.$root.$options.store
-      }
+      // if (this.$root.$options.router) {
+      //   vueRootInfo.store = this.$root.$options.store
+      // }
     },
     render() {
       /**
@@ -343,7 +343,7 @@ export default function applyReactInVue(component, options = {}) {
               }
               return scopeSlot
             }
-            return applyVueInReact(createReactSlot(slotFunction), { ...options, isSlots: true, wrapInstance: _this }).render()
+            return applyVueInReact(createReactSlot(() => slotFunction.apply(this, args)), { ...options, isSlots: true, wrapInstance: _this }).render()
           }
           if (options.pureTransformer && originSlotFunction) {
             getSlot.vueFunction = originSlotFunction

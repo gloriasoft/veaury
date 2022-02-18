@@ -1,46 +1,42 @@
 <template>
   <h3>
-    This example shows the basic usage of `applyReactInVue`.
+    Vue components in slots can receive the context.<br/>
   </h3>
-  <h4>
-    Using React components in Vue components.
-  </h4>
-  <Basic :foo="foo">
+  The random number set in 'provide': <span style="color:red; font-weight: bold">{{random}}</span>
+  <Basic>
     <div class="slot">
       This is the Vue default slot
-      <div>
-        current time: {{currentTime}}
-      </div>
+      <Custom1/>
     </div>
   </Basic>
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, provide } from 'vue'
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
+import Custom1 from "./Custom1"
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    Basic: applyReactInVue(ReactBasic),
+    Custom1
   },
   setup() {
     let timer
-    const currentTime = ref(new Date().toLocaleString())
-    const foo = ref(Math.random())
+    const random = ref(Math.random())
+    provide('random', random)
     onMounted(() => {
       timer = setInterval(() => {
-        currentTime.value = new Date().toLocaleString()
-        foo.value = Math.random()
+        random.value = Math.random()
       }, 1000)
     })
     onUnmounted(() => {
       clearInterval(timer)
     })
     return {
-      currentTime,
-      foo
+      random
     }
   }
 }
