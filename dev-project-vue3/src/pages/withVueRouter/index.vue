@@ -6,7 +6,7 @@
     current route path: {{$route.path}}<br/>
     current route query: {{$route.query}}
   </h4>
-  <Basic a="1">
+  <Basic>
     <div class="slot">
       This is the Vue default slot
       <Custom1/>

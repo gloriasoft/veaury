@@ -4,7 +4,7 @@ import { VueContainer } from 'veaury'
 export default function(props) {
     const style = useRef({
         background: '#91e7fc',
-        width: 300,
+        width: 500,
         margin: 'auto',
         padding: 10
     })
@@ -13,6 +13,7 @@ export default function(props) {
         <h3>
             use the 'router-view' of 'vue-router'
         </h3>
+        {/* Similar to the global component 'router-view' in Vue */}
         <VueContainer component='RouterView'/>
     </div>)
 }

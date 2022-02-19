@@ -1,10 +1,7 @@
 <template>
   <h3>
-    This example shows the basic usage of `applyReactInVue`.
+    Import async React components using 'lazyReactInVue'.
   </h3>
-  <h4>
-    Using React components in Vue components.
-  </h4>
   <Basic :foo="foo">
     <div class="slot">
       This is the Vue default slot
@@ -17,13 +14,15 @@
 
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { applyReactInVue } from 'veaury'
-// This is a React Component
-import ReactBasic from "./react_app/Basic"
+import { lazyReactInVue } from 'veaury'
+
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    // import an async React component
+    // It is also possible to use the full parameter of the Vue3 API 'defineAsyncComponent'
+    // for example: lazyReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
+    Basic: lazyReactInVue(() => import('./react_app/Basic'))
   },
   setup() {
     let timer

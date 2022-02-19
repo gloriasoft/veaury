@@ -1,22 +1,14 @@
 <template>
   <h3>
-    This example shows the basic usage of `applyReactInVue`.
+    In React components you can use higher order component 'withVuex' to get an instance of Vuex.
   </h3>
-  <h4>
-    Using React components in Vue components.
-  </h4>
-  <Basic :foo="foo">
-    <div class="slot">
-      This is the Vue default slot
-      <div>
-        current time: {{currentTime}}
-      </div>
-    </div>
-  </Basic>
+  Vuex state 'count': {{$store.state.count}}
+  <Basic/>
+  <button style="margin-top: 20px" @click="changeValue">increment the count of the Vuex state</button>
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { useStore } from 'vuex'
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
@@ -26,21 +18,13 @@ export default {
     Basic: applyReactInVue(ReactBasic)
   },
   setup() {
-    let timer
-    const currentTime = ref(new Date().toLocaleString())
-    const foo = ref(Math.random())
-    onMounted(() => {
-      timer = setInterval(() => {
-        currentTime.value = new Date().toLocaleString()
-        foo.value = Math.random()
-      }, 1000)
-    })
-    onUnmounted(() => {
-      clearInterval(timer)
-    })
+    const store = useStore()
+    function changeValue() {
+      // This action is defined in 'src/store/index.js'
+      store.dispatch('increment')
+    }
     return {
-      currentTime,
-      foo
+      changeValue
     }
   }
 }

@@ -1,10 +1,10 @@
 import React, {version} from 'react'
 import {Teleport, h as createElement, createApp} from 'vue'
-
 import applyReactInVue from './applyReactInVue'
 import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './applyReactRouterInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
+import lookupVueWrapperRef from "./lookupVueWrapperRef"
 
 const unsafePrefix = parseFloat(version) >= 17 ? 'UNSAFE_' : ''
 const optionsName = 'vuereact-combined-options'
@@ -404,20 +404,7 @@ class VueComponentLoader extends React.Component {
     // 获取react的fiber实例
     let vueWrapperRef = options.wrapInstance
     if (!vueWrapperRef) {
-      const fiberNode = this._reactInternals || this._reactInternalFiber
-      let parentInstance = fiberNode.return
-      // 向上查找react包囊层
-      while (parentInstance) {
-        if (parentInstance.stateNode?.parentVueWrapperRef) {
-          vueWrapperRef = parentInstance.stateNode.parentVueWrapperRef
-          break
-        }
-        if (parentInstance.stateNode?.vueWrapperRef) {
-          vueWrapperRef = parentInstance.stateNode.vueWrapperRef
-          break
-        }
-        parentInstance = parentInstance.return
-      }
+      vueWrapperRef = lookupVueWrapperRef(this)
     } else {
       vueWrapperRef = options.wrapInstance
       vueWrapperRef.reactWrapperRef = VueContainerInstance
@@ -434,10 +421,7 @@ class VueComponentLoader extends React.Component {
       return
     }
 
-    // 创建vue实例
     this.vueInstance = createApp(vueOptions).mount(targetElement)
-    // })
-
   }
 
   updateVueComponent (nextComponent) {

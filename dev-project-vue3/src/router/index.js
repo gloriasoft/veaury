@@ -39,6 +39,16 @@ export default createRouter({
                     component: () => import('../pages/routerView/Sub')
                 }
             ]
+        },
+        {
+            name: 'withVuex',
+            path: '/withVuex',
+            component: () => import('../pages/withVuex')
+        },
+        {
+            name: 'lazyReactInVue',
+            path: '/lazyReactInVue',
+            component: () => import('../pages/lazyReactInVue')
         }
     ],
 })
