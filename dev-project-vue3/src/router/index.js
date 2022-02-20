@@ -49,6 +49,11 @@ export default createRouter({
             name: 'lazyReactInVue',
             path: '/lazyReactInVue',
             component: () => import('../pages/lazyReactInVue')
-        }
+        },
+        {
+            name: 'introduce',
+            path: '/:default(.*)',
+            component: () => import('../pages/introduce')
+        },
     ],
 })

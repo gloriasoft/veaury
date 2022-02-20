@@ -3,9 +3,9 @@
   "private": false,
   "version": "0.0.0-beta.1",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
-  "main": "dist/combined.umd.js",
-  "module": "dist/combined.esm.js",
-  "typings": "types/combined.d.ts",
+  "main": "dist/veaury.umd.js",
+  "module": "dist/veaury.esm.js",
+  "typings": "types/veaury.d.ts",
   "scripts": {
     "build": "cross-env BABEL_ENV=rollup rollup -c",
     "dev:vue": "npm run serve --prefix dev-project-vue3",

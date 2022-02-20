@@ -1,9 +1,10 @@
-import createLinkVueWrapperRefHoc from './createLinkVueWrapperRefHoc'
+import createHocForGetVueInstance from './createHocForGetVueInstance'
 
-export default createLinkVueWrapperRefHoc({
+export default createHocForGetVueInstance({
     defaultOptions: {
         storeKey: '$vuexStore'
     },
+    // Must return a method for unsubscribing
     createSubscribe(vueWrapperRef, {storeKey}) {
         return vueWrapperRef.$store.subscribe((mutation, state) => {
             this.setState({
@@ -17,6 +18,8 @@ export default createLinkVueWrapperRefHoc({
             return false
         }
     },
+    // The second parameter is an object,
+    // the key value must be the same as the key value of 'defaultOptions'
     setupState(vueWrapperRef, {storeKey}) {
         return {
             [storeKey]: vueWrapperRef?.$store

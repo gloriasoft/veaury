@@ -2,7 +2,7 @@
   <h3>
     Pass Slots to React Components.
   </h3>
-  <div style="line-height: 30px">
+  <div style="line-height: 30px; color: red">
     Vue named slots & scoped slots = React render props.<br/>
     Vue default slots $ children = React props.children.<br/>
     Name a named slot starting with 'node:' = React Node.
@@ -21,7 +21,7 @@
     </template>
     <template v-slot:node:slot3>
       <div class="slot">
-        this is slot3 (react node)
+        this is slot3 (react node)<br/>
         this content is passed from Vue: {{foo}}
       </div>
     </template>
