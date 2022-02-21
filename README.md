@@ -26,7 +26,7 @@ import { useState } from 'react'
 const Basic = applyVueInReact(BasicVue)
 export default function () {
     const [foo] = useState(Math.random())
-    return <Basic foo={state.foo}>
+    return <Basic foo={foo}>
         <div>
             for the default slot
         </div>
