@@ -5,6 +5,7 @@ import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
+import parseVModel from "./parseVModel"
 
 const optionsName = 'vuereact-combined-options'
 
@@ -165,7 +166,7 @@ class VueComponentLoader extends React.Component {
       delete this.vueInstance.$data[key]
     })
     // update vue $data
-    this.vueInstance && Object.assign(this.vueInstance.$data, this.parseVModel(props))
+    this.vueInstance && Object.assign(this.vueInstance.$data, parseVModel(props))
     return true
   }
 
@@ -177,71 +178,6 @@ class VueComponentLoader extends React.Component {
     }
     this.vueInstance && this.vueInstance.$.appContext.app.unmount()
     getRandomId.pool.delete(this.vueTargetId)
-  }
-
-  // parse v-model
-  parseVModel (props) {
-    const VModels = {}
-    const newProps = {...props}
-    function createModifiers(VModels, modelKey, modifiers) {
-      const modifiersObject = {}
-      modifiers.forEach((key) => {
-        modifiersObject[key] = true
-      })
-      return VModels[(modelKey === 'modelValue'? 'model': modelKey) + 'Modifiers'] = modifiersObject
-    }
-    function setVModel(originValue, modelKey, errorFrom = 'v-model') {
-      const modelMix = originValue
-      if (modelMix instanceof Array) {
-        if (typeof modelMix[1] !== 'function') {
-          throw Error(`[error:veaury] Parameter type error from '${errorFrom}', a single v-model is an array, the second element of the array must be a setter function`)
-        }
-        const setter = modelMix[1]
-        if (typeof modelMix[2] === 'string') {
-          modelKey = modelMix[2]
-          if (modelMix[3] instanceof Array) {
-            createModifiers(VModels, modelKey, modelMix[3])
-          }
-        } else if (modelMix[2] instanceof Array) {
-          createModifiers(VModels, modelKey, modelMix[2])
-        }
-        VModels['onUpdate:' + modelKey] = setter
-        VModels[modelKey] = modelMix[0]
-      } else {
-        throw Error(`[error:veaury] Parameter type error from '${errorFrom}', a single v-model is an array, such as [val, setter, argumentKey, modifiers] or [val, setter, modifiers]`)
-      }
-    }
-    Object.keys(props).forEach((key) => {
-      // parse onUpdate event
-      let matcher = key.match(/^onUpdate-([^-]+)/)
-      if (matcher) {
-        delete newProps[key]
-        newProps[`onUpdate:${matcher[1]}`] = props[key]
-        return
-      }
-
-      // single v-model
-      matcher = key.match(/^v-model($|:([^:]+)|-([^:]+))/)
-      if (matcher) {
-        let modelKey = matcher[2] || matcher[3] || 'modelValue'
-        setVModel(props[key], modelKey)
-        delete newProps[key]
-        return
-      }
-      // multiple v-model
-      if (key === 'v-models') {
-        if (typeof props[key] === 'object' && !(props[key] instanceof Array)) {
-          const modelsParam = props[key]
-          Object.keys(modelsParam).forEach((key) => {
-            setVModel(modelsParam[key], key, 'v-models')
-          })
-          delete newProps[key]
-        } else {
-          throw Error('[error:veaury] The parameter \'v-models\' must be an object type, such as {[argumentKey]: singleVModel}')
-        }
-      }
-    })
-    return {...newProps, ...VModels}
   }
 
   transferSlots ($slots) {
@@ -282,7 +218,7 @@ class VueComponentLoader extends React.Component {
       }
     }
     setVueInstance = setVueInstance.bind(this)
-    const vueOptionsData = { ...this.parseVModel(props) }
+    const vueOptionsData = { ...parseVModel(props) }
     const vueOptions = {
       data() {
         return options.isSlots? { children: VueContainerInstance.currentVueComponent.originVNode }: vueOptionsData

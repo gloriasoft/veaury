@@ -13,5 +13,13 @@ export default [
     {
         path: '/events',
         element: asyncElement(() => import('../components/Events')),
+    },
+    {
+        path: '/slots',
+        element: asyncElement(() => import('../components/Slots')),
+    },
+    {
+        path: '/v-model',
+        element: asyncElement(() => import('../components/VModel')),
     }
 ]

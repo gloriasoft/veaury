@@ -1,7 +1,8 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    received foo's value: {{$attrs.foo}}
+    <slot name="slot1"/>
+    <slot name="slot2" value="121212"/>
     <slot/>
   </div>
 </template>

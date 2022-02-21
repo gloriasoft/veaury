@@ -3,35 +3,8 @@ import ReactDOM from "react-dom"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement } from 'vue'
+import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 
-const domMethods = ["getElementById", "getElementsByClassName", "getElementsByTagName", "getElementsByTagNameNS", "querySelector", "querySelectorAll"]
-const domTopObject = { Document: {}, Element: {} }
-/**
- * Override the native method of finding DOM objects.
- * In order to ensure that React can obtain the DOM before destruction,
- * and the DOM has been unloaded in the beforeDestroy phase of Vue
-**/
-function overwriteDomMethods(refDom) {
-  Object.keys(domTopObject).forEach((key) => {
-    domMethods.forEach((method) => {
-      const old = window[key].prototype[method]
-      domTopObject[key][method] = old
-      window[key].prototype[method] = function (...args) {
-        const oldResult = old.apply(this, args)
-        if ((oldResult && oldResult.constructor !== NodeList) || (oldResult.constructor === NodeList && oldResult.length > 0)) return oldResult
-        return Element.prototype[method].apply(refDom, args)
-      }
-    })
-  })
-}
-// Restore native method
-function recoverDomMethods() {
-  Object.keys(domTopObject).forEach((key) => {
-    domMethods.forEach((method) => {
-      window[key].prototype[method] = domTopObject[key][method]
-    })
-  })
-}
 
 class FunctionComponentWrap extends React.Component {
   constructor(props) {

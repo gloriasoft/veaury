@@ -2,7 +2,6 @@
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
     received modelValue's value: {{$attrs.modelValue}}<br/>
-    received bar's value: {{$attrs.bar}}
     <slot/>
   </div>
 </template>
@@ -15,7 +14,6 @@ export default {
     onMounted(() => {
       timer = setInterval(() => {
         instance.emit('update:modelValue', Math.random())
-        instance.emit('update:bar', Math.random())
       }, 1000)
     })
     onUnmounted(() => {
