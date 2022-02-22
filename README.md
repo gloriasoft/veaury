@@ -15,17 +15,19 @@ In theory, you don't need to do additional configuration in a React project to s
 If the React or Vue component you want to convert comes from a npm package, or has already been built, you can use `applyReactInVue` or `applyVueInReact` directly.  
 
 If you need to develop both Vue and React in a project, instead of just using an existing npm component, then you should do some configuration, usually configuring `webpack.config.js` and `babel.config.js`.  
+
 The `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively. You can refer to How the two projects are configured to support the other framework.
 
 Use Vue components in React app:  
 ```jsx
 import { applyVueInReact } from 'veaury'
+// This is a vue component
 import BasicVue from './Basic.vue'
 import { useState } from 'react'
-
+// Use HOC 'applyVueInReact'
 const Basic = applyVueInReact(BasicVue)
 export default function () {
-    const [foo] = useState(Math.random())
+    const [foo] = useState('Hello!')
     return <Basic foo={foo}>
         <div>
             for the default slot
