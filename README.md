@@ -331,6 +331,7 @@ The value type of the `v-model` property should be
 `[ modelValue, modelSetter ]`  
 Additional 'argumentKey' attached property, such as `v-model-god={[godValue, setGodValue]}` = `v-model={[godValue, setGodValue, 'god']}`
 ```typescript
+// types
 type modelValue = any
 type modelSetter = (newValue) => void
 type argumentKey = string
@@ -353,7 +354,7 @@ export default function () {
     <Basic v-model={[foo, setFoo]} v-model-bar={[bar, setBar]} />
     {/*<Basic1 v-model={[zoo, setZoo, 'zoo']}/>*/}
     {/*<Basic1 v-model={[zoo, setZoo, 'zoo', ['number']]}/>*/}
-    {/*<Basic1 v-model={[zoo, setZoo, ['number']]}/>*/}
+    {/*<Basic1 v-model-zoo={[zoo, setZoo, ['number']]}/>*/}
     <Basic1 v-models={{
       // The key value of 'modelValue' is equivalent to 'v-model'
       modelValue: [zoo, setZoo],
