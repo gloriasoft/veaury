@@ -205,7 +205,64 @@ Veaury will judge that if there is a wrapper layer of the same framework in the 
 It's a really awesome! Veaury can well pass the root node context to the child nodes, regardless of whether the node is wrapped or not.  
 This means that a React component is used in a Vue component, and then another Vue subcomponent is used in this React component. This Vue subcomponent can get the context of the outer Vue component.  
 
-#### Vue in React - usage of Provider/useContext
+#### Vue in React - usage of Provider / useContext
 ```jsx
-export function 
+import {applyVueInReact} from 'veaury'
+import BasicVue from './Basic.vue'
+import {createContext, useContext} from 'react'
+
+const Basic = applyVueInReact(BasicVue)
+// Create React context object
+const Context = createContext({})
+
+function SubReactComponent() {
+  // Get context value
+  const {bossName} = useContext(Context)
+  return <div className="slot">bossName from Context: {bossName}</div>
+}
+
+export default function () {
+  // Set context value
+  return <Context.Provider value={{bossName: 'God'}}>
+    <Basic>
+      {/* This React component can get the context value from 'Provider' */}
+      <SubReactComponent/>
+    </Basic>
+  </Context.Provider>
+}
+```
+
+#### React in Vue - usage of Provide / Inject
+```vue
+<template>
+  <Basic>
+    <!--  This Vue component can get the injection value from 'provide'  -->
+    <SubVueComponent/>
+  </Basic>
+</template>
+
+<script>
+import { provide, inject, h } from 'vue'
+import { applyReactInVue } from 'veaury'
+// This is a React component
+import ReactBasic from "./react_app/Basic"
+// This is a Vue component
+const SubVueComponent = {
+  setup() {
+    // get bossName from injection
+    const bossName = inject('bossName')
+    return h('div', () => bossName)
+  }
+}
+
+export default {
+  components: {
+    Basic: applyReactInVue(ReactBasic),
+    SubVueComponent
+  },
+  setup() {
+    provide('bossName', 'God')
+  }
+}
+</script>
 ```
