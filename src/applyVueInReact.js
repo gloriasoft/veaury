@@ -1,7 +1,6 @@
 import React from 'react'
 import {Teleport, h as createElement, createApp} from 'vue'
 import applyReactInVue from './applyReactInVue'
-import { reactRouterInfo, setReactRouterInVue, updateReactRouterInVue } from './applyReactRouterInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
@@ -34,45 +33,16 @@ function filterVueComponent (component, vueInstance) {
   }
   return component
 }
-class GetReactRouterPropsCom extends React.Component {
-  constructor (props) {
-    super(props)
-    let { history, match, location } = props
-    // 设置react router属性绑定倒所有的vue的原型上
-    setReactRouterInVue({
-      history,
-      match,
-      location
-    })
-  }
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (nextProps === this.props) return true
-    let { history, match, location } = nextProps
-    updateReactRouterInVue({
-      history,
-      match,
-      location
-    })
-    return true
-  }
-  render () {
-    const { history, match, location, ...newProps } = this.props
-    return <VueComponentLoader {...newProps} ref={ this.props.forwardRef } />
-  }
+
+function ReactInterceptComponent({Loader, componentProps}) {
+  return <Loader {...componentProps}/>
 }
+
 const VueContainer = React.forwardRef((props, ref) => {
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
 
-  if (reactRouterInfo.withRouter) {
-    if (!VueContainer.RouterTargetComponent) {
-      VueContainer.RouterTargetComponent = reactRouterInfo.withRouter(GetReactRouterPropsCom)
-    }
-    return (
-        <VueContainer.RouterTargetComponent {...{...props, [optionsName]: globalOptions}} forwardRef={ref} />
-    )
-  } else {
-    return <VueComponentLoader {...{...props, [optionsName]: globalOptions}} ref={ref}/>
-  }
+  let ReactInjectionProps = props.component?.__veauryInjectPropsFromWrapper__?.(props)
+  return <VueComponentLoader {...{...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
 })
 
 export {

@@ -364,3 +364,59 @@ export default function () {
 }
 
 ```
+### API injectPropsFromWrapper
+In scenarios where Vue and React are developed at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
+For example, to get information from 'react-router' in Vue components, or to get state from 'vuex' in React components.  
+This API can be used for both Vue and React components.  
+
+```typescript
+// types
+interface propsFromWrapper {
+    [propName: string]: any;
+}
+type component = any
+type computedModeReturn = () => propsFromWrapper
+type defaultModeReturn = propsFromWrapper | Function
+type allModeReturn =  defaultModeReturn | computedModeReturn
+type injectPropsFromWrapper<T extends allModeReturn> = (injectionFunction: (props?: propsFromWrapper) => T, component:component) => component
+```
+#### Usage of injecting React hooks in Vue component
+```vue
+<template>
+  <div class="vue-component">
+    <h3>This is the Vue Component.</h3>
+    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span>
+  </div>
+</template>
+<script>
+// This Vue component will be used in the React app and needs to use the react-router hooks
+
+import { injectPropsFromWrapper } from 'veaury'
+import { useLocation } from 'react-router-dom'
+import React from 'react'
+
+function ReactInjectionHook (reactProps) {
+  // React hooks can be used in this function
+  // Use the hooks of react-router-dom
+  const reactRouterLocation = useLocation()
+  // The returned object will be passed to the Vue component as props
+  return {
+    pathname: reactRouterLocation.pathname,
+    search: reactRouterLocation.search
+  }
+}
+// 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
+// When the Vue component is applied to the React app by 'applyVueInReact',
+// InjectionHook will be executed first, otherwise InjectionHook will not be executed
+export default injectPropsFromWrapper(ReactInjectionHook, {
+  props: {
+    pathname: String,
+    search: String
+  }
+})
+</script>
+```
+> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+
+#### API interceptReactInVue
+

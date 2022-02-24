@@ -1,10 +1,9 @@
-import React, { version } from "react"
+import React from "react"
 import ReactDOM from "react-dom"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
-import { h as createElement } from 'vue'
+import { h as createElement, getCurrentInstance, reactive } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
-
 
 class FunctionComponentWrap extends React.Component {
   constructor(props) {
@@ -213,6 +212,21 @@ export default function applyReactInVue(component, options = {}) {
   options = setOptions(options, undefined, true)
   return {
     originReactComponent: component,
+    setup(props) {
+      let injectedProps = reactive({})
+      const instance = getCurrentInstance()
+      if (typeof component.__veauryInjectPropsFromWrapper__ === 'function') {
+        const injection = component.__veauryInjectPropsFromWrapper__?.call(instance.proxy, props)
+        if (typeof injection !== "function") {
+          Object.assign(injectedProps, injection)
+          return {
+            injectedProps
+          }
+        } else {
+          instance.proxy.injectedComputed = injection
+        }
+      }
+    },
     data() {
       return {
         portals: [],
@@ -221,6 +235,11 @@ export default function applyReactInVue(component, options = {}) {
       }
     },
     created() {
+    },
+    computed: {
+      injectedProps() {
+        return this.injectedComputed?.call(this)
+      }
     },
     render() {
       /**
@@ -232,7 +251,7 @@ export default function applyReactInVue(component, options = {}) {
        * resulting in reactdom 'container' on which render depends cannot be obtained.
        * Therefore,you can create a 'VNode' node first and then execute 'slotsInit', which effectively avoids this situation
        */
-      const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {} }, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
+      const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
       // this.slotsInit()
       return VNode
@@ -402,21 +421,17 @@ export default function applyReactInVue(component, options = {}) {
           compareLast.attrs()
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
-              {...this.$attrs}
-              {...{ children }}
-              {...lastNormalSlots}
-              {...scopedSlots}
-              {...(this.$attrs.class ? { className: this.$attrs.class } : {})}
-              {...hashMap}
-              hashList={hashList}
-              style={this.$attrs.style}
-              ref={(ref) => (this.reactInstance = ref)}
+            {...this.$attrs}
+            {...this.injectedProps}
+            {...{ children }}
+            {...lastNormalSlots}
+            {...scopedSlots}
+            {...(this.$attrs.class ? { className: this.$attrs.class } : {})}
+            {...hashMap}
+            hashList={hashList}
+            style={this.$attrs.style}
+            ref={(ref) => (this.reactInstance = ref)}
           />
-          // 必须通过ReactReduxContext连接context
-          if (this.$redux && this.$redux.store && this.$redux.ReactReduxContext) {
-            const ReduxContext = this.$redux.ReactReduxContext
-            reactRootComponent = <ReduxContext.Provider value={{ store: this.$redux.store }}>{reactRootComponent}</ReduxContext.Provider>
-          }
 
           const container = this.$refs.react
           let reactWrapperRef = options.wrapInstance
@@ -467,6 +482,7 @@ export default function applyReactInVue(component, options = {}) {
               })
               return {
                 ...this.cache,
+                ...this.injectedProps,
                 ...this.last.slot,
                 ...this.last.attrs,
               }
@@ -559,6 +575,12 @@ export default function applyReactInVue(component, options = {}) {
     inheritAttrs: false,
     watch: {
       $attrs: {
+        handler() {
+          this.mountReactComponent(true, {attrs: true})
+        },
+        deep: true,
+      },
+      injectedProps: {
         handler() {
           this.mountReactComponent(true, {attrs: true})
         },

@@ -25,5 +25,9 @@ export default [
   {
     path: '/context',
     element: asyncElement(() => import('../components/Context')),
+  },
+  {
+    path: '/inject',
+    element: asyncElement(() => import('../components/Inject')),
   }
 ]

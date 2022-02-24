@@ -1,62 +1,33 @@
 <template>
   <div class="vue-component">
-    {{bbb}}
     <h3>This is the Vue Component.</h3>
-    the router info from 'react-router': <br/>
-    {{$props.reactRouterLocation}}
+    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span>
   </div>
 </template>
 <script>
 // This Vue component will be used in the React app and needs to use the react-router hooks
 
-import { interceptVueInReact } from 'veaury'
+import { injectPropsFromWrapper } from 'veaury'
 import { useLocation } from 'react-router-dom'
 import React from 'react'
-import {getCurrentInstance, on} from 'vue'
 
-function Wrap(props) {
-  return React.createElement(Component, {
-    ...props,
-    propA: 'I am propA from a React HOC'
-  })
-}
-
-function ReactIntercept (reactProps) {
+function ReactInjectionHook (reactProps) {
   // React hooks can be used in this function
   // Use the hooks of react-router-dom
   const reactRouterLocation = useLocation()
   // The returned object will be passed to the Vue component as props
   return {
-    ...reactProps,
-    reactRouterLocation
+    pathname: reactRouterLocation.pathname,
+    search: reactRouterLocation.search
   }
 }
-// 'interceptVueInReact' returns the original Vue component and will register ReactIntercept.
+// 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
 // When the Vue component is applied to the React app by 'applyVueInReact',
-// ReactIntercept will be executed first, otherwise ReactIntercept will not be executed
-export default interceptVueInReact(ReactIntercept, {
+// InjectionHook will be executed first, otherwise InjectionHook will not be executed
+export default injectPropsFromWrapper(ReactInjectionHook, {
   props: {
-    reactRouterLocation: Object
-  },
-  data() {
-    return {
-      bbb: 2,
-    }
-  },
-  setup() {
-    const instance = getCurrentInstance()
-    return {
-      // bbb: 2
-    }
-  },
-  mounted() {
-    console.log(33333, this)
-    setTimeout(() => {this.bbb = 6}, 500)
-  },
-  watch: {
-    'bbb'(nv) {
-      console.log(nv)
-    }
+    pathname: String,
+    search: String
   }
 })
 </script>

@@ -1,8 +1,8 @@
-export default function(ReactInject, VueComponent) {
-  if (typeof ReactInject !== 'function') {
-    console.warn(`[veaury warn]: parameter 'ReactIntercept' is not a function`)
-    return VueComponent
+export default function(injectionHook, Component) {
+  if (typeof injectionHook !== 'function') {
+    console.warn(`[veaury warn]: parameter 'injectionHook' is not a function`)
+    return Component
   }
-  VueComponent.__veauryReactInject__ = ReactInject
-  return VueComponent
+  Component.__veauryInjectPropsFromWrapper__ = injectionHook
+  return Component
 }

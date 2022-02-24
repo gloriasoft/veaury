@@ -51,6 +51,11 @@ export default createRouter({
             component: () => import('../pages/lazyReactInVue')
         },
         {
+            name: 'injection',
+            path: '/injection',
+            component: () => import('../pages/injectPropsFromWrapper')
+        },
+        {
             name: 'introduce',
             path: '/:default(.*)',
             component: () => import('../pages/introduce')

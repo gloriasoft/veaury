@@ -55,7 +55,7 @@ export default function(hocOptions = {
     // Return to initialized state
     setupState: (vueWrapperRef, options) => {}
 }) {
-    return function withVuex (Component, options = hocOptions.defaultOptions) {
+    return function (Component, options = hocOptions.defaultOptions) {
         return React.forwardRef((props, ref) => (
             <Base __ref={ref} __component={Component} __options={options} __props={props} __hocOptions={hocOptions} />
         ))
