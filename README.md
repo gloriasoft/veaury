@@ -12,17 +12,11 @@
 
 ## Do you want to preconfigure your project in advance?
 
-In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do
-additional configuration in a Vue project to support React.  
-If the React or Vue component you want to convert comes from a npm package, or has already been built, you can
-use `applyReactInVue` or `applyVueInReact` directly.
-
-If you need to develop both Vue and React in a project, instead of just using an existing npm component, then you should
-do some configuration, usually configuring `webpack.config.js` and `babel.config.js`.
-
-The `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment
-of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively. You
-can refer to How the two projects are configured to support the other framework.
+In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do additional configuration in a Vue project to support React.  
+If the React or Vue component you want to convert comes from a npm package, or has already been built, you can use `applyReactInVue` or `applyVueInReact` directly.  
+If you need to develop both Vue and React in a project, instead of just using an existing npm component, then you should do some configuration, usually configuring `webpack.config.js` and `babel.config.js`.   
+The `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.  
+You can refer to How to configure the two projects to support the other framework.
 
 ## Use cases
 
@@ -365,8 +359,9 @@ export default function () {
 
 ```
 ### API injectPropsFromWrapper
-In scenarios where Vue and React are developed at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
-For example, to get information from 'react-router' in Vue components, or to get state from 'vuex' in React components.  
+`injectPropsFromWrapper` is a higher order component.  
+When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
+For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
 This API can be used for both Vue and React components.  
 
 ```typescript
@@ -377,32 +372,39 @@ interface propsFromWrapper {
 type component = any
 type computedModeReturn = () => propsFromWrapper
 type defaultModeReturn = propsFromWrapper | Function
-type allModeReturn =  defaultModeReturn | computedModeReturn
-type injectPropsFromWrapper<T extends allModeReturn> = (injectionFunction: (props?: propsFromWrapper) => T, component:component) => component
+type injectPropsFromWrapper<T extends defaultModeReturn | computedModeReturn = allModeReturn> = (injectionFunction: (props?: propsFromWrapper) => T, component:component) => component
 ```
 #### Usage of injecting React hooks in Vue component
+React application uses Vue component, example to get `react-router` inside Vue component.  
 ```vue
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span>
+    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span><br/><br/>
+    <button @click="changeQuery">change query</button>
   </div>
 </template>
 <script>
 // This Vue component will be used in the React app and needs to use the react-router hooks
 
 import { injectPropsFromWrapper } from 'veaury'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import React from 'react'
 
 function ReactInjectionHook (reactProps) {
   // React hooks can be used in this function
   // Use the hooks of react-router-dom
   const reactRouterLocation = useLocation()
+  const navigate = useNavigate()
+  function changeQuery() {
+    navigate(`?a=${Math.random()}`, {replace: true})
+  }
+
   // The returned object will be passed to the Vue component as props
   return {
     pathname: reactRouterLocation.pathname,
-    search: reactRouterLocation.search
+    search: reactRouterLocation.search,
+    changeQuery
   }
 }
 // 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
@@ -411,12 +413,82 @@ function ReactInjectionHook (reactProps) {
 export default injectPropsFromWrapper(ReactInjectionHook, {
   props: {
     pathname: String,
-    search: String
+    search: String,
+    changeQuery: Function
   }
 })
 </script>
 ```
-> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+#### Usage of injecting Vue hooks in React component
+Vue application uses React component, example to get `vue-router` and `vuex` inside React component.  
+There are two modes for injecting functions, 'setup' and 'computed' modes.  
+```jsx
+import {toRef} from 'vue'
+import {useStore} from 'vuex'
+import {useRoute, useRouter} from 'vue-router'
+import {injectPropsFromWrapper} from 'veaury'
 
-#### API interceptReactInVue
+// This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
+
+// setup mode
+function VueInjectionHookWithSetupMode(vueProps) {
+  // Vue hooks can be used in this function
+  // This function will be called in the 'setup' hook of the Vue wrapper component
+  const store = useStore()
+  const route = useRoute()
+  const router = useRouter()
+
+  // The returned object will be passed to the React component as props
+  return {
+    // In the composition API mode, you need to manually convert to proxy,
+    // otherwise it will not be responsive
+    fullPath: toRef(route, 'fullPath'),
+    count: toRef(store.state, 'count'),
+    changeQuery: () => router.replace({
+      query: {
+        a: Math.random()
+      }
+    }),
+    incrementCount: () => store.dispatch('increment')
+  }
+}
+
+// computed mode
+function VueInjectionHookWithComputedMode(vueProps) {
+  // The context of the function is binding with the proxy from the 'getCurrentInstance' hook
+  // Returning a function represents the computed of the options api
+  // All logic code should be written in this computed function.
+  // The lifecycle cannot be used in this function. If you want to use the lifecycle, you can only use the 'setup' mode
+  return function computedFunction() {
+    return {
+      fullPath: this.$route.fullPath,
+      count: this.$store.state.count,
+      changeQuery: () => this.$router.replace({
+        query: {
+          a: Math.random()
+        }
+      }),
+      incrementCount: () => this.$store.dispatch('increment')
+    }
+  }
+}
+
+// The first parameter is the injection function.
+// Vue's injection function has two modes: 'setup' and 'computed'.
+// Refer to the case of the above two injection function types.
+export default injectPropsFromWrapper(VueInjectionHookWithSetupMode, function (props) {
+  return (<div>
+    This is the React Component
+    <span>
+      the path info from 'vue-router': <span style={{fontWeight: 'bold'}}>{props.fullPath}</span><br/>
+      the count from 'vuex': <span style={{fontWeight: 'bold'}}>{props.count}</span>
+    </span><br/>
+    <button onClick={props.changeQuery}>change query</button> <button onClick={props.incrementCount}>increment count</button>
+  </div>)
+})
+
+```
+> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+> 
+> It should be ensured that the logic inside the injection function is a pure function, and business logic should not be added to the injection function. It is not recommended to use lifecycle or asynchronous calls in the injection function.
 
