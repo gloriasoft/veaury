@@ -34,4 +34,8 @@ export default [
     path: '/lazyVueInReact',
     element: asyncElement(() => import('../components/LazyVueInReact')),
   },
+  {
+    path: '*',
+    element: asyncElement(() => import('../components/Introduce')),
+  },
 ]

@@ -24,11 +24,6 @@ export default createRouter({
             component: () => import('../pages/context')
         },
         {
-            name: 'withVueRouter',
-            path: '/withVueRouter',
-            component: () => import('../pages/withVueRouter')
-        },
-        {
             name: 'routerView',
             path: '/routerView',
             component: () => import('../pages/routerView'),
@@ -39,11 +34,6 @@ export default createRouter({
                     component: () => import('../pages/routerView/Sub')
                 }
             ]
-        },
-        {
-            name: 'withVuex',
-            path: '/withVuex',
-            component: () => import('../pages/withVuex')
         },
         {
             name: 'lazyReactInVue',

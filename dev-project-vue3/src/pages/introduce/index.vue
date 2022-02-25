@@ -8,8 +8,7 @@
   <router-link to="/context">context</router-link>
   <router-link to="/lazyReactInVue">lazyReactInVue</router-link>
   <router-link to="/routerView">router-view</router-link>
-  <router-link to="/withVueRouter">withVueRouter</router-link>
-  <router-link to="/withVuex">withVuex</router-link>
+  <router-link to="/injection">injectPropsFromWrapper</router-link>
 </template>
 
 <script>

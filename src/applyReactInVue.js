@@ -22,9 +22,10 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
   setRef(ref) {
     if (!ref) return
-    // 使用reactRef属性保存目标react组件的实例，可以被父组setRef件的实例获取到
+    // Use the reactRef property to save the instance of the target react component,
+    // which can be obtained by the setRef instance of the parent component
     wrapInstance.reactRef = ref
-    // 将react实例的可枚举属性挂到vue实例中
+    // The enumerable properties of the react instance are linked to the vue instance
     Object.keys(ref).forEach((key) => {
       if (!wrapInstance[key]) {
         wrapInstance[key] = ref[key]
@@ -39,17 +40,18 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     })
 
 
-    // 兼容接收useRef类型的参数
+    // Compatible with receiving parameters of type useRef
     this.setRef.current = ref
 
-    // 并且将vue的中间件实例保存在react组件的实例中
-    // react组件可以通过这个属性来判断是否被包囊使用
+    // save the middleware instance of vue in the instance of the react component
+    // React components can use this property to determine whether they are used by encapsulation
     ref.vueWrapperRef = wrapInstance
   }
 
   constructor(props) {
     super(props)
-    // 将所有的属性全部寄存在中间件的状态中，原理是通过一个有状态的React组件作为中间件，触发目标组件的props
+    // All properties are stored in the state of the middleware.
+    // The principle is to use a stateful React component as the middleware to trigger the props of the target component
     this.state = {
       ...props,
       ...(options.isSlots ? { children: Component } : {}),
@@ -59,7 +61,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     this.vueWrapperRef = wrapInstance
   }
 
-  // 对于插槽的处理仍然需要将VNode转换成React组件
+  // Use the method of converting VNode to ReactNode to solve the problem of slot transmission
   createSlot(children) {
     return {
       originVNode: children,
@@ -70,15 +72,15 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         if (children instanceof Function) {
           children = children(this)
         }
-        // 有些react组件通过直接处理自身children的方式给children中的组件传递属性，会导致传递到包囊层中
-        // 这里对包囊层属性进行透传，透传条件为children中只有一个vnode
+        // Some react components pass properties to components in children by processing their own children,
+        // which will cause them to be passed to the wrapper layer
+        // Transparently transmit the properties of the wrapper layer.
+        // The transparent transmission condition is that there is only one vnode in children
         if (children?.length === 1 && children[0]?.data) {
-          // 过滤掉内部属性
+          // filter internal properties
           const {key, ...otherAttrs} = this.$attrs
           children[0].props = {...otherAttrs, ...children[0].props}
         }
-        // return createElement(options.react.slotWrap, { ...options.react.slotWrapAttrs }, children)
-        // vue3不再需要根节点
         return children
       },
     }
@@ -86,7 +88,8 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
   componentWillUnmount() {
     if (!wrapInstance.reactRef) return
-    // 垃圾回收，但是保留属性名，借鉴vue的refs对于组件销毁保留属性名的模式
+    // Garbage collection, but retain property names,
+    // vue's refs retain the mode of property names for component destruction
     wrapInstance.reactRef.vueWrapperRef = null
     wrapInstance.reactRef = null
   }
@@ -120,57 +123,54 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       hashList,
       ...props
     } = this.state
-    // 保留一份作用域和具名插槽，用于之后再透传给vue组件
     const $slots = {}
     const $scopedSlots = {}
-    // 插槽的解析
+    // parse slots
     for (const i in props) {
       if (!props.hasOwnProperty(i) || props[i] == null) continue
       if (props[i].__slot) {
         if (!props[i].reactSlot) {
           const vueSlot = props[i]
-          // 执行applyVueInReact方法将直接获得react组件对象，无需使用jsx
-          // props[i] = { ...applyVueInReact(this.createSlot(props[i]))() }
-          // 自定义插槽处理
-          // TODO: defaultSlotsFormatter后续考虑
-          if (options.defaultSlotsFormatter) {
-            props[i].__top__ = this.vueWrapperRef
-            props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
-            if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
-              props[i] = [...props[i]]
-            } else if (typeof props[i] === "object") {
-              props[i] = { ...props[i] }
-            }
-          } else {
+          // TODO: defaultSlotsFormatter
+          // if (options.defaultSlotsFormatter) {
+          //   props[i].__top__ = this.vueWrapperRef
+          //   props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
+          //   if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
+          //     props[i] = [...props[i]]
+          //   } else if (typeof props[i] === "object") {
+          //     props[i] = { ...props[i] }
+          //   }
+          // } else {
             props[i] = { ...applyVueInReact(this.createSlot(props[i]), { ...options, isSlots: true, wrapInstance }).render() }
-          }
+          // }
           props[i].vueSlot = vueSlot
         } else {
           props[i] = props[i].reactSlot
         }
         $slots[i] = props[i]
       } else if (props[i].__scopedSlot) {
-        // 作用域插槽是个纯函数，在react组件中需要传入作用域调用，然后再创建vue的插槽组件
+        // The scoped slot is a pure function. In the react component,
+        // you need to pass in the scoped call, and then create the vue slot component
         props[i] = props[i](this.createSlot)
         $scopedSlots[i] = props[i]
       }
     }
-    // 普通插槽
+    // parse normal slots
     if (children != null) {
       if (!children.reactSlot) {
         const vueSlot = children
-        // 自定义插槽处理
-        if (options.defaultSlotsFormatter) {
-          children.__top__ = this.vueWrapperRef
-          children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
-          if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
-            children = [...children]
-          } else if (typeof children === "object") {
-            children = { ...children }
-          }
-        } else {
+        // TODO: defaultSlotsFormatter
+        // if (options.defaultSlotsFormatter) {
+        //   children.__top__ = this.vueWrapperRef
+        //   children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
+        //   if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
+        //     children = [...children]
+        //   } else if (typeof children === "object") {
+        //     children = { ...children }
+        //   }
+        // } else {
           children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
-        }
+        // }
         children.vueSlot = vueSlot
       } else {
         children = children.reactSlot
@@ -183,13 +183,13 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       return this.state.children || this.props.children
     }
     let finalProps = props
-    // 自定义处理参数
-    if (options.defaultPropsFormatter) {
-      finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
-    }
+    // TODO: defaultPropsFormatter
+    // if (options.defaultPropsFormatter) {
+    //   finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
+    // }
     const newProps = { ...finalProps }
-    // 判断是否要通过一个class组件包装一下来获取ref
-    // 通过判断Component的原型是否不是Function原型
+    // Determine whether to get ref by wrapping it with a class component
+    // Whether the prototype of Component is not the prototype of Function
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
       return (
           <Component {...newProps} {...refInfo}>
@@ -201,14 +201,13 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
   }
 }
 export default function applyReactInVue(component, options = {}) {
-  // 兼容esModule
   if (component.__esModule && component.default) {
     component = component.default
   }
   if (options.isSlots) {
     component = component()
   }
-  // 处理附加参数
+  // additional options
   options = setOptions(options, undefined, true)
   return {
     originReactComponent: component,
@@ -275,34 +274,33 @@ export default function applyReactInVue(component, options = {}) {
         this.portalKeyPool.push(portalData.key)
         this.portals.splice(index, 1)
       },
-      // hack!!!! 一定要在render函数李触发，才能激活具名插槽
-      slotsInit(vnode) {
-        // TODO: 之后处理
-        // 针对pureTransformer类型的react组件进行兼容，解决具名插槽和作用域插槽不更新的问题
-        // if (vnode) {
-        //   if (vnode.componentOptions?.Ctor?.options && !vnode.componentOptions?.Ctor?.options.originReactComponent) return
-        //   if (vnode.data?.scopedSlots) {
-        //     Object.keys(vnode.data?.scopedSlots).forEach((key) => {
-        //       if (typeof vnode.data.scopedSlots[key] === "function") {
-        //         try {
-        //           vnode.data.scopedSlots[key]()
-        //         } catch (e) {}
-        //       }
-        //     })
-        //   }
-        //   const children = vnode.children || vnode.componentOptions?.children || []
-        //   children.forEach((subVnode) => {
-        //     this.slotsInit(subVnode)
-        //   })
-        //   return
-        // }
-        Object.keys(this.$slots).forEach((key) => {
-          try {
-            this.$slots[key]()
-          } catch (e) {}
-        })
-      },
-      // 用多阶函数解决作用域插槽的传递问题
+      // slotsInit(vnode) {
+      //   // TODO: It doesn't matter
+      //   // 针对pureTransformer类型的react组件进行兼容，解决具名插槽和作用域插槽不更新的问题
+      //   // if (vnode) {
+      //   //   if (vnode.componentOptions?.Ctor?.options && !vnode.componentOptions?.Ctor?.options.originReactComponent) return
+      //   //   if (vnode.data?.scopedSlots) {
+      //   //     Object.keys(vnode.data?.scopedSlots).forEach((key) => {
+      //   //       if (typeof vnode.data.scopedSlots[key] === "function") {
+      //   //         try {
+      //   //           vnode.data.scopedSlots[key]()
+      //   //         } catch (e) {}
+      //   //       }
+      //   //     })
+      //   //   }
+      //   //   const children = vnode.children || vnode.componentOptions?.children || []
+      //   //   children.forEach((subVnode) => {
+      //   //     this.slotsInit(subVnode)
+      //   //   })
+      //   //   return
+      //   // }
+      //   Object.keys(this.$slots).forEach((key) => {
+      //     try {
+      //       this.$slots[key]()
+      //     } catch (e) {}
+      //   })
+      // },
+      // parse scopedSlots
       getScopeSlot(slotFunction, hashList, originSlotFunction) {
         const _this = this
         function scopedSlotFunction(createReactSlot) {
@@ -339,17 +337,9 @@ export default function applyReactInVue(component, options = {}) {
         this.reactInstance && this.reactInstance.setState(extraData)
       },
       mountReactComponent(update, updateType, extraData = {}) {
-        // 先提取透传属性
-        // let {
-        //   $slots: __passedPropsSlots,
-        //   $scopedSlots: __passedPropsScopedSlots,
-        //   children,
-        //   ...__passedPropsRest
-        // } = (this.$props.dataPassedProps != null ? this.$props.dataPassedProps : {})
-
-        // 获取style scoped生成的hash
         const hashMap = {}
         const hashList = []
+        // get vue component scoped hash
         const scopedId = this.$.vnode.scopeId
         if (scopedId) {
           hashMap[scopedId] = ""
@@ -360,12 +350,11 @@ export default function applyReactInVue(component, options = {}) {
         const scopedSlots = {}
         let children
         if (!update || update && updateType?.slot) {
-          // 处理具名插槽，将作为属性被传递
-          // vue3所有插槽都函数（作用域插槽）
-          // 为了让react区分是renderProps还是reactNode，这里仍然要区分是作用域插槽还是具名插槽
-          // 约定以特殊的slots key的前缀作为具名插槽，处理方式就是直接执行函数
+          // vue3 all slots are functions
+          // In order for react to distinguish between renderProps and reactNode, it is still necessary to distinguish between scoped slots and named slots
+          // It is agreed that the prefix of the special slots key is used as the named slot, and the processing method is to directly execute the function
 
-          // 对插槽类型的属性做标记
+          // Mark the properties of the slot type
           for (let i in this.$slots || {}) {
             if (!this.$slots.hasOwnProperty(i) || this.$slots[i] == null) continue
             const prefix = options.react.vueNamedSlotsKey.find((prefix) => i.indexOf(prefix) === 0)
@@ -379,16 +368,6 @@ export default function applyReactInVue(component, options = {}) {
           }
         }
 
-        // 预生成react组件的透传属性
-        // const __passedProps = {
-        //   ...__passedPropsRest,
-        //   ...{ ...this.$attrs },
-        //   ...(!update || update && updateType?.slot ? {
-        //     $slots: normalSlots,
-        //     $scopedSlots: scopedSlots,
-        //     children,
-        //   } : {})
-        // }
         let lastNormalSlots
         if (!update || update && updateType?.slot) {
           lastNormalSlots = { ...normalSlots }
@@ -396,7 +375,7 @@ export default function applyReactInVue(component, options = {}) {
           delete lastNormalSlots.default
         }
 
-        // 存上一次
+        // cache last data
         this.last = this.last || {}
         this.last.slot = this.last.slot || {}
         this.last.attrs = this.last.attrs || {}
@@ -415,7 +394,7 @@ export default function applyReactInVue(component, options = {}) {
         if (updateType) {
           Object.keys(updateType).forEach((key) => compareLast[key]())
         }
-        // 如果不传入组件，就作为更新
+        // component creation
         if (!update) {
           compareLast.slot()
           compareLast.attrs()

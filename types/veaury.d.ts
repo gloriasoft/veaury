@@ -1,5 +1,5 @@
 type VueComponent = object;
-type ReactComponent = object | Function;
+type ReactComponent = Function;
 type options = object | null | undefined;
 interface defineAsyncComponentOptions {
     [key: string]: any

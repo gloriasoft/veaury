@@ -8,11 +8,6 @@ import parseVModel from "./parseVModel"
 
 const optionsName = 'vuereact-combined-options'
 
-// function toCamelCase(val) {
-//   const reg = /-(\w)/g
-//   return val.replace(reg, ($, $1) => $1.toUpperCase())
-// }
-
 // Get a random element id and ensure that it does not repeat
 function getRandomId (prefix) {
   const id = prefix + (Math.random() + '').substr(2)
@@ -86,11 +81,11 @@ class VueComponentLoader extends React.Component {
     this.vueRef && this.setState({ portals })
   }
 
-  // 这一步变的复杂是要判断插槽和组件的区别，如果是插槽则对wrapper传入原生事件和插槽相关的属性，如果是组件对wrapper不传入原生事件
   createVueComponentContainer () {
     let nativeProps = {}
     const options = this.props[optionsName]
     if (options.isSlots) {
+      // TODO: not necessarily required
       Object.keys(this.props).forEach((keyName) => {
         if (REACT_ALL_HANDLERS.has(keyName) && typeof this.props[keyName] === 'function') {
           nativeProps[keyName] = this.props[keyName]
@@ -151,7 +146,7 @@ class VueComponentLoader extends React.Component {
   }
 
   transferSlots ($slots) {
-    // 将$slots中的内容处理成函数，防止被vue的data进行observer处理
+    // Process the content in $slots into a function to prevent it from being processed by the observer of vue's data
     if ($slots) {
       Object.keys($slots).forEach((key) => {
         const originSlot = $slots[key]

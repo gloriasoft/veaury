@@ -26,15 +26,15 @@ const shared = {
       }
     })
   ],
-  external: ['react', 'react-dom', 'vue', 'portal-vue'],
+  external: ['react', 'react-dom', 'vue'],
 }
 
 export default [
   Object.assign({}, shared, {
     output: {
-      file: 'dist/vuereact.umd.js',
+      file: 'dist/veaury.umd.js',
       format: 'umd',
-      name: 'vuereact',
+      name: 'veaury',
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
@@ -44,9 +44,9 @@ export default [
   }),
   Object.assign({}, shared, {
     output: {
-      file: 'dist/vuereact.esm.js',
+      file: 'dist/veaury.esm.js',
       format: 'esm',
-      name: 'vuereact',
+      name: 'veaury',
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
