@@ -1,12 +1,8 @@
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
-<h1 align=center style="font-size: 90px; margin:0">Veaury</h1>
-<div align=center>
-  <p>
-  <h1>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h1>
-  <p>
-</div>  
+<h1 align=center>Veaury</h1>
+<h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2> 
 
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
