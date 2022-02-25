@@ -229,12 +229,11 @@ export default {
 
 ### Context
 
-Veaury will judge that if there is a wrapper layer of the same framework in the outer layer, Veaury will use
-React's `Portal` and Vue's `Teleport` instead of creating a new application instance every time.   
-It's a really awesome! Veaury can well pass the root node context to the child nodes, regardless of whether the node is
-wrapped or not.  
-This means that a React component is used in a Vue component, and then another Vue subcomponent is used in this React
-component. This Vue subcomponent can get the context of the outer Vue component.
+Veaury will judge that if there is a wrapper layer of the same framework in the outer layer, Veaury will use React's `Portal` and Vue's `Teleport` instead of creating a new application instance every time.   
+  
+It's a really awesome! Veaury can well pass the root node context to the child nodes, regardless of whether the node is wrapped or not.  
+  
+This means that a React component is used in a Vue component, and then another Vue subcomponent is used in this React component. This Vue subcomponent can get the context of the outer Vue component.  
 
 #### Vue in React - Usage of Provider / useContext
 
@@ -305,8 +304,8 @@ export default {
 ### Usage of VueContainer in React Component
 
 You can use the `VueContainer` component in a React component to display Vue components directly.  
-When React components in Vue components, `VueContainer` can display global Vue components registered in the upper-level
-Vue app.
+  
+When React components in Vue components, `VueContainer` can display global Vue components registered in the upper-level Vue app.  
 
 ```jsx
 import {VueContainer} from "veaury"
@@ -364,8 +363,11 @@ export default function () {
 ```
 ### API injectPropsFromWrapper
 `injectPropsFromWrapper` is a higher order component.  
+  
 When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
+  
 For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
+  
 This API can be used for both Vue and React components.  
 
 ```typescript
