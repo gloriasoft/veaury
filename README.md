@@ -19,7 +19,7 @@ The directories `dev-project-react` and `dev-project-vue3` in the project are th
 > 
 > **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects  
 > 
-> **Develop** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development
+> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development
   
 You can refer to How to configure the two projects to support the other framework.  
 [How to configure React in the Vue project from '@vue/cli' ](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
