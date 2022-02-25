@@ -1,23 +1,23 @@
-type VueComponent = any;
-type ReactComponent = any;
+type VueComponent = object;
+type ReactComponent = object | Function;
 type options = object | null | undefined;
-interface applyReduxOptions {
-    store: any;
-    ReactReduxContext: any;
-}
-interface vuexStore {
-    mapStateToProps?: null | undefined | ((state: any) => object);
-    mapGettersToProps?: null | undefined | ((getters: any) => object);
-    mapCommitToProps?: null | undefined | ((commit: any) => any);
-    mapDispatchToProps?: null | undefined | ( (dispatch: any) => any);
+interface defineAsyncComponentOptions {
+    [key: string]: any
 }
 export const applyReactInVue: (ReactComponent: ReactComponent, options?: options) => VueComponent;
 export const applyVueInReact: (VueComponent: ReactComponent, options?: options) => ReactComponent;
 export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => any;
-export const lazyReactInVue: (asyncImport: Promise<any>, options?: options) => any;
+export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 export const VueContainer: any;
-export const applyRedux: (applyReduxOptions: applyReduxOptions) => any;
-export const applyVuex: (vuexStore: any) => any;
-export const connectVuex: (vuexStore: vuexStore) => any;
-export const withVueRouter: (ReactComponent: ReactComponent) => ReactComponent;
-export const applyReactRouterInVue: (ReactRouterWithRouter: any) => any;
+interface propsFromWrapper {
+    [propName: string]: any;
+}
+type component = VueComponent | ReactComponent
+type computedModeReturn = () => propsFromWrapper
+type defaultModeReturn = propsFromWrapper | Function
+type allModeReturn = defaultModeReturn | computedModeReturn
+type injectionFunction<T = allModeReturn> = (props?: propsFromWrapper) => T
+interface injectPropsFromWrapper<T extends allModeReturn = allModeReturn>{
+    (injectionFunction: injectionFunction<T>, component:component): component
+}
+export const injectPropsFromWrapper: injectPropsFromWrapper

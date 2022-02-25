@@ -1,9 +1,7 @@
-# Veaury
-
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
-
+<h1 align=center style="font-size: 60px; margin:0">Veaury</h1>
 <div align=center>
   <p>
   <h1>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h1>
@@ -371,14 +369,19 @@ For example, to get information from `react-router` in Vue components, or to get
 This API can be used for both Vue and React components.  
 
 ```typescript
-// types
 interface propsFromWrapper {
     [propName: string]: any;
 }
-type component = any
+type component = object | Function
 type computedModeReturn = () => propsFromWrapper
 type defaultModeReturn = propsFromWrapper | Function
-type injectPropsFromWrapper<T extends defaultModeReturn | computedModeReturn = allModeReturn> = (injectionFunction: (props?: propsFromWrapper) => T, component:component) => component
+type allModeReturn = defaultModeReturn | computedModeReturn
+type injectionFunction<T = allModeReturn> = (props?: propsFromWrapper) => T
+
+// types of injectPropsFromWrapper
+interface injectPropsFromWrapper<T extends allModeReturn = allModeReturn>{
+    (injectionFunction: injectionFunction<T>, component:component): component
+}
 ```
 #### Usage of injecting React hooks in Vue component
 React application uses Vue component, example to get `react-router` inside Vue component.  
@@ -437,7 +440,7 @@ import {injectPropsFromWrapper} from 'veaury'
 // This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
 
 // setup mode
-function VueInjectionHookWithSetupMode(vueProps) {
+function VueInjectionHookInSetupMode(vueProps) {
   // Vue hooks can be used in this function
   // This function will be called in the 'setup' hook of the Vue wrapper component
   const store = useStore()
@@ -460,7 +463,7 @@ function VueInjectionHookWithSetupMode(vueProps) {
 }
 
 // computed mode
-function VueInjectionHookWithComputedMode(vueProps) {
+function VueInjectionHookInComputedMode(vueProps) {
   // The context of the function is binding with the proxy from the 'getCurrentInstance' hook
   // Returning a function represents the computed of the options api
   // All logic code should be written in this computed function.
@@ -482,7 +485,7 @@ function VueInjectionHookWithComputedMode(vueProps) {
 // The first parameter is the injection function.
 // Vue's injection function has two modes: 'setup' and 'computed'.
 // Refer to the case of the above two injection function types.
-export default injectPropsFromWrapper(VueInjectionHookWithSetupMode, function (props) {
+export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (props) {
   return (<div>
     This is the React Component
     <span>
@@ -496,5 +499,44 @@ export default injectPropsFromWrapper(VueInjectionHookWithSetupMode, function (p
 ```
 > **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
 > 
+> Injection functions in 'computed' mode only support synchronous code
+> 
 > It should be ensured that the logic inside the injection function is a pure function, and business logic should not be added to the injection function. It is not recommended to use lifecycle or asynchronous calls in the injection function.
 
+### Usage of lazyReactInVue
+```vue
+<template>
+  <Basic/>
+</template>
+
+<script>
+import { lazyReactInVue } from 'veaury'
+
+export default {
+  components: {
+    // import an async React component
+    // It is also possible to use the full parameter of the Vue3 API 'defineAsyncComponent'
+    // for example: lazyReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
+    Basic: lazyReactInVue(() => import('./react_app/Basic'))
+  },
+}
+</script>
+```
+```typescript
+// types
+type lazyReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
+```
+
+### Usage of lazyVueInReact
+```jsx
+import { lazyVueInReact } from 'veaury'
+
+const AsyncBasic = lazyVueInReact(() => import('./Basic'))
+export default function () {
+    return <AsyncBasic/>
+}
+```
+```typescript
+// types
+type lazyReactInVue = (asyncImport: Promise<any>, options?: options) => any
+```

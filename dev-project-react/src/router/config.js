@@ -29,5 +29,9 @@ export default [
   {
     path: '/inject',
     element: asyncElement(() => import('../components/Inject')),
-  }
+  },
+  {
+    path: '/lazyVueInReact',
+    element: asyncElement(() => import('../components/LazyVueInReact')),
+  },
 ]
