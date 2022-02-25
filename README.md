@@ -446,7 +446,7 @@ function VueInjectionHookWithSetupMode(vueProps) {
 
   // The returned object will be passed to the React component as props
   return {
-    // In the composition API mode, you need to manually convert to proxy,
+    // you need to manually convert to proxy with 'setup' mode
     // otherwise it will not be responsive
     fullPath: toRef(route, 'fullPath'),
     count: toRef(store.state, 'count'),
