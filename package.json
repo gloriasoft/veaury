@@ -17,23 +17,46 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devilwjp/combined.git"
+    "url": "git+https://github.com/devilwjp/veaury.git"
   },
-  "author": "Devle Wu",
+  "author": "天堂里的花大咩",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/devilwjp/vuereact-combined/issues"
+    "url": "https://github.com/devilwjp/veaury/issues"
   },
   "files": [
     "dist",
     "types"
   ],
-  "homepage": "https://github.com/devilwjp/vuereact-combined#readme",
+  "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
-    "react": ">= 16.3.0",
-    "react-dom": ">= 16.3.0",
-    "vue": "^3.0.0"
+    "react": ">= 16.4.0",
+    "react-dom": ">= 16.4.0",
+    "vue": "^3.2.0"
   },
-  "keywords": [],
-  "dependencies": {}
+  "keywords":  [
+    "vue",
+    "react",
+    "veaury",
+    "reactvue",
+    "vueinreact",
+    "reactinvue",
+    "vuereact"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-external-helpers": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "babel-preset-latest": "^6.24.1",
+    "cross-env": "^6.0.3",
+    "rollup": "^1.27.5",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.3"
+  }
 }
