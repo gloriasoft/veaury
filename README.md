@@ -232,8 +232,8 @@ export default {
 Veaury will judge that if there is a wrapper layer of the same framework in the outer layer, Veaury will use React's `Portal` and Vue's `Teleport` instead of creating a new application instance every time.   
   
 It's a really awesome! Veaury can well pass the root node context to the child nodes, regardless of whether the node is wrapped or not.  
-  
-This means that a React component is used in a Vue component, and then another Vue subcomponent is used in this React component. This Vue subcomponent can get the context of the outer Vue component.  
+
+This means that a Vue component used a React component, and then this React component used another Vue subcomponent. This Vue subcomponent can get the context of the outer Vue component.  
 
 #### Vue in React - Usage of Provider / useContext
 
