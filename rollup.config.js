@@ -1,5 +1,3 @@
-/* eslint-disable prefer-object-spread/prefer-object-spread */
-
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
 import {uglify} from 'rollup-plugin-uglify'
@@ -19,7 +17,6 @@ const shared = {
     commonjs(),
     uglify({
       compress: {
-          // 这个设置会导致压缩时一些不该被删的代码被误删
           // pure_getters: true,
           // unsafe: true,
           // unsafe_comps: true
