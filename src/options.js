@@ -19,9 +19,9 @@ const originOptions = {
     vueNamedSlotsKey: ['node:']
   },
   vue: {
-    // 组件wrapper
+    // wrapper
     componentWrapHOC: (VueComponentMountAt, nativeProps = []) => {
-      // 传入portals
+      // portals
       return function ({ portals = [] } = {}) {
         return (<Fragment>{VueComponentMountAt}{portals.map(({ Portal, key }) => <Portal key={key}/>)}</Fragment>)
       }
