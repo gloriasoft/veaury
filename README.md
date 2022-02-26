@@ -185,7 +185,7 @@ export default function () {
 
 Named slots & scoped slots of Vue = React render props.  
 Default slots $ children of Vue = React props.children.  
-A named slot has a name prefixed with `:node` = React Node  
+A named slot has a name prefixed with `node:` = React Node  
 ```vue
 <template>
   <Basic>
