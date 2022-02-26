@@ -4,6 +4,8 @@ type options = object | null | undefined;
 interface defineAsyncComponentOptions {
     [key: string]: any
 }
+export const veauryOptions: options;
+export const setVeauryOptions: (veauryOptions: options) => options;
 export const applyReactInVue: (ReactComponent: ReactComponent, options?: options) => VueComponent;
 export const applyVueInReact: (VueComponent: ReactComponent, options?: options) => ReactComponent;
 export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => any;
