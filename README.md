@@ -490,6 +490,7 @@ function VueInjectionHookInComputedMode(vueProps) {
 // The first parameter is the injection function.
 // Vue's injection function has two modes: 'setup' and 'computed'.
 // Refer to the case of the above two injection function types.
+// Also try replacing the first parameter with 'VueInjectionHookInComputedMode'
 export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (props) {
   return (<div>
     This is the React Component
