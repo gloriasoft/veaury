@@ -9,9 +9,9 @@ Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
 It is built on the Vue and React framework. It's use cases include using both Vue and React in one app, migrating from React to Vue or from Vue to React, and using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`.    
 
 ## The greatest feature  
-🌞 Support Vue3  
-🌈 Support Context - Share the context of all vue and react components.  
-💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.  
+- 🌞 Support Vue3  
+- 🌈 Support Context - Share the context of all vue and react components.  
+- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.  
 
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
