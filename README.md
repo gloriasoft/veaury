@@ -4,6 +4,18 @@
 <h1 align=center>Veaury</h1>
 <h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2> 
 
+## What is Veaury?  
+Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
+It is built on the Vue and React framework. It's use cases include using both Vue and React in one app, migrating from React to Vue or from Vue to React, and using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`.    
+
+## The greatest feature  
+- 🌞 Support Vue3   
+- 🌈 Support Context - Share the context of all vue and react components.  
+- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.
+
+## Legacy
+The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which can use React in Vue2 and Vue2 in React.  
+
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
 ## Do you want to preconfigure your project in advance?
@@ -26,7 +38,6 @@ You can refer to How to configure the two projects to support the other framewor
 [How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
 ## Use cases
-
 - 👨‍👩‍👧 Using both Vue and React in one app
 - 🏃 Migrating from React to Vue or from Vue to React
 - 📲 Using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`
