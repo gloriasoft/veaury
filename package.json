@@ -43,7 +43,9 @@
     "reactinvue",
     "vuereact"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/plugin-external-helpers": "^7.7.4",
