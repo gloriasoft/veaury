@@ -26,7 +26,8 @@
   },
   "files": [
     "dist",
-    "types"
+    "types",
+    "babel"
   ],
   "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
@@ -44,7 +45,8 @@
     "vuereact"
   ],
   "dependencies": {
-    "babel-plugin-transform-react-jsx": "^6.24.1"
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "@vue/babel-plugin-jsx": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",

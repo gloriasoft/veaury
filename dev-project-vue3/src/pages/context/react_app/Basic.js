@@ -1,9 +1,8 @@
 import React, { useRef } from 'react'
-import { withVueRouter } from 'veaury'
 
-export default withVueRouter(function(props) {
+export default function(props) {
     const style = useRef({
-        background: '#91e7fc',
+        background: '#917fc',
         width: 500,
         margin: 'auto',
         padding: 10
@@ -14,4 +13,4 @@ export default withVueRouter(function(props) {
             {props.children}
         </div>
     )
-})
+}
