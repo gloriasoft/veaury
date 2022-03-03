@@ -38,7 +38,7 @@ function vueInReact(options) {
             // default ignore node_modules
             if (filename.match(/[/\\]node_modules[\\/$]+/)) return
             // default pass vue file
-            if (filename.match(/[/\\]\.vue$/i)) return filename
+            if (filename.match(/\.vue$/i)) return filename
             // default pass vue_app path
             if (filename.match(/[/\\]vue_app[\\/$]+/)) return filename
             return

@@ -7,8 +7,9 @@
   </div>
 </template>
 <script>
+const aaa = <div>1212</div>
+console.log(aaa)
 export default {
-
 }
 </script>
 <style scoped>

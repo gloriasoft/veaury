@@ -45,8 +45,9 @@
     "vuereact"
   ],
   "dependencies": {
+    "@vue/babel-plugin-jsx": "^1.1.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "@vue/babel-plugin-jsx": "^1.1.1"
+    "vue-loader": "^17.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
@@ -61,6 +62,7 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-uglify": "^6.0.3"
+    "rollup-plugin-uglify": "^6.0.3",
+    "vue": "^3.2.31"
   }
 }
