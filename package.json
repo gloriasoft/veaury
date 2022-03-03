@@ -27,7 +27,8 @@
   "files": [
     "dist",
     "types",
-    "babel"
+    "babel",
+    "webpack"
   ],
   "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
