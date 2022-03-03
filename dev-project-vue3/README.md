@@ -21,3 +21,22 @@ module.exports = {
   ]
 }
 ```
+By default, js files in the 'react_app' directory can use the react type jsx.  
+The way to customize the file range supported by react type jsx:  
+```js
+module.exports = {
+  presets: [
+    // @vue/cli preset
+    '@vue/cli-plugin-babel/preset',
+    // veary babel preset
+    ['veaury/babel/ReactPreset', {
+      test (filename) {
+        // default ignore node_modules
+        if (filename.match(/[/\\]node_modules[\\/$]+/)) return
+        // default pass abc path
+        if (filename.match(/[/\\]abc[\\/$]+/)) return filename
+      },
+    }]
+  ]
+}
+```

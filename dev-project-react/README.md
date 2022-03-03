@@ -19,3 +19,33 @@ module.exports = {
   // ...
 }
 ```
+By default, all vue files and js files in the vue_app directory can use the vue type jsx.  
+The way to customize the file range supported by vue type jsx:  
+```js
+// webpack.config.js
+// ...
+const VeauryVuePlugin = require('veaury/webpack/VeauryVuePlugin')
+module.exports = {
+  // ...
+  plugins: [
+    new VeauryVuePlugin({
+      babelLoader: {
+        // Set all vue files and js files in the 'abc' directory to support vue type jsx
+        include(filename) {
+          // ignore node_modules
+          if (filename.match(/[/\\]node_modules[\\/$]+/)) return
+          // pass all vue file
+          if (filename.match(/\.(vue|vue\.js)$/i)){
+            return filename
+          }
+          // pass abc path
+          if (filename.match(/[/\\]abc[\\/$]+/)) return filename
+        },
+        // exclude() {}
+      }
+    }),
+    // ...
+  ]
+  // ...
+}
+```
