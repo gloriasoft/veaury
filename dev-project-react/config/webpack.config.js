@@ -563,8 +563,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
-      new (require('./VeauryVuePlugin')),
-      // new VueLoaderPlugin(),
+      new (require('veaury/webpack/VeauryVuePlugin')),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
