@@ -339,16 +339,11 @@ module.exports = function (webpackEnv) {
     module: {
       strictExportPresence: true,
       rules: [
-        //
-        { // add vue-loader
-          test: /\.vue$/,
-          loader: 'vue-loader',
-        },
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,
-          test: /\.(vue|js|mjs|jsx|ts|tsx|css)$/,
+          test: /\.(js|mjs|jsx|ts|tsx|css)$/,
           loader: require.resolve('source-map-loader'),
         },
         {
@@ -447,7 +442,7 @@ module.exports = function (webpackEnv) {
               loader: require.resolve('babel-loader'),
               options: {
                 babelrc: false,
-                // configFile: false,
+                configFile: false,
                 compact: false,
                 presets: [
                   [
@@ -568,7 +563,7 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
-      new VueLoaderPlugin(),
+      new (require('veaury/webpack/VeauryVuePlugin')),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(
