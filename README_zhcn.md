@@ -2,32 +2,27 @@
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
 <h1 align=center>Veaury</h1>
-<h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2> 
+<h2 align=center>Vue3应用可以使用React组件，React应用可以使用Vue3组件，并且非常完美！</h2> 
 
-## What is Veaury?  
-Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
-It is built on the Vue and React framework. It's use cases include using both Vue and React in one app, migrating from React to Vue or from Vue to React, and using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`.    
+## 什么是Veaury?  
+Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项目中公共使用的场景，主要运用在项目迁移、技术栈融合的开发模式、跨技术栈使用第三方组件的场景。  
 
-## The greatest feature  
-- 🌞 Support Vue3   
-- 🌈 Support Context - Share the context of all vue and react components.  
-- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.
+## 重要功能
+- 🌞 支持 Vue3   
+- 🌈 支持 Context - 同一个应用中出现的vue组件和react组件的context是共享的.  
+- 💗 支持跨框架的hooks调用 - 可以在react组件中使用vue的hooks，获取到vue组件或者应用的上下文数据，比如vue-router、vuex，也可以在vue组件中使用react的hooks，获取到react组件或者应用的上下文数据，比如react-router、provide、context等
 
-## Legacy
-The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which can use React in Vue2 and Vue2 in React.  
+## 支持Vue2？
+[完美支持react和vue2同时开发的工具库](https://github.com/devilwjp/vuereact-combined)  
 
-## Latest documentation  
-View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
-[中文文档](https://github.com/devilwjp/veaury/README_zhcn.md)
-## Do you want to preconfigure your project in advance?
+## 项目的预配置
+理论上，不需要在 React 项目中做额外的配置来支持 Vue，也不需要在 Vue 项目中做额外的配置来支持 React。  
 
-In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do additional configuration in a Vue project to support React.  
-  
-If the React or Vue component you want to convert comes from a npm package, or has already been built, you can use `applyReactInVue` or `applyVueInReact` directly.  
-  
-If you need to develop both Vue and React in a project, instead of just using an existing npm component, then you should do some configuration, usually configuring `webpack.config.js` and `babel.config.js`.   
-  
-The directories `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.  
+如果要转换的 React 或 Vue 组件来自 npm 包，或者已经经过构建（不是直接的vue文件以及不含有jsx），则可以直接使用 `applyReactInVue` 或 `applyVueInReact`。  
+
+如果需要在一个项目中同时开发 Vue 和 React，而不是仅仅使用现有的 npm 组件，那么应该做一些配置，通常配置 `webpack.config.js` 和 `babel.config.js`。  
+
+项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别是由`create-react-app`和`@vue/cli`创建的两个初始项目。  
 > **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`  
 > 
 > **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects  
