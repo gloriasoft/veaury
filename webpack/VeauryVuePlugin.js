@@ -18,6 +18,16 @@ class VeauryVuePlugin {
     const {babelLoader} = this.options
 
     const rules = compiler.options.module.rules
+    // find oneOf rule
+    const oneOfRule = rules.find((rule) => rule.oneOf)
+    // the last rule is file-loader
+    const fileLoaderRule = oneOfRule && oneOfRule.oneOf[oneOfRule.oneOf.length-1]
+
+    if (fileLoaderRule) {
+      // ignore vue type file
+      fileLoaderRule.exclude.push(/\.vue$/)
+    }
+
     const newRules = [
       {
         include: defaultBabelInclude,
