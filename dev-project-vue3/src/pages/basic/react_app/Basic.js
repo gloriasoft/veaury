@@ -3,7 +3,7 @@ import React, { useRef } from 'react'
 export default function(props) {
     const style = useRef({
         background: '#91e7fc',
-        width: 300,
+        width: 500,
         margin: 'auto',
         padding: 10
     })
