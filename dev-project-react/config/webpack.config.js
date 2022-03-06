@@ -442,6 +442,8 @@ module.exports = function (webpackEnv) {
               loader: require.resolve('babel-loader'),
               options: {
                 babelrc: false,
+                // If you want to develop veaury, it should be set to true
+                // And open the dev comment of the babel.config.js of the react project
                 configFile: false,
                 compact: false,
                 presets: [

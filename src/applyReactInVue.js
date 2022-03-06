@@ -408,7 +408,8 @@ export default function applyReactInVue(component, options = {}) {
             {...(this.$attrs.class ? { className: this.$attrs.class } : {})}
             {...hashMap}
             hashList={hashList}
-            style={this.$attrs.style}
+            {...(this.$attrs.style ? { style: this.$attrs.style } : {})}
+            // style={this.$attrs.style}
             ref={(ref) => (this.reactInstance = ref)}
           />
 
@@ -440,16 +441,16 @@ export default function applyReactInVue(component, options = {}) {
             this.parentReactWrapperRef = reactWrapperRef
             // Store 'portal' reference
             this.reactPortal = () => ReactDOM.createPortal(
-                reactRootComponent,
-                container,
+              reactRootComponent,
+              container,
             )
             reactWrapperRef.pushReactPortal(this.reactPortal)
             return
           }
 
-          const reactInstance = ReactDOM.render(
-              reactRootComponent,
-              container,
+          ReactDOM.render(
+            reactRootComponent,
+            container,
           )
         } else {
 
@@ -457,12 +458,13 @@ export default function applyReactInVue(component, options = {}) {
             this.reactInstance && this.reactInstance.setState((prevState) => {
               // Clear the previous 'state', preventing merging
               Object.keys(prevState).forEach((key) => {
+                if (options.isSlots && key === 'children') return
                 delete prevState[key]
               })
               return {
                 ...this.cache,
                 ...this.injectedProps,
-                ...this.last.slot,
+                ...!options.isSlots && this.last.slot,
                 ...this.last.attrs,
               }
             })
@@ -498,7 +500,8 @@ export default function applyReactInVue(component, options = {}) {
               ...(this.$attrs.class ? { className: this.$attrs.class } : {}),
               ...{ ...hashMap },
               hashList,
-              style: this.$attrs.style,
+              ...(this.$attrs.style ? { style: this.$attrs.style } : {}),
+              // style: this.$attrs.style,
             },
           }
 

@@ -1,7 +1,7 @@
 {
   "name": "veaury",
   "private": false,
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
   "main": "dist/veaury.umd.js",
   "module": "dist/veaury.esm.js",
@@ -33,8 +33,7 @@
   "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
     "react": ">= 16.4.0",
-    "react-dom": ">= 16.4.0",
-    "vue": "^3.2.0"
+    "react-dom": ">= 16.4.0"
   },
   "keywords": [
     "vue",
@@ -63,7 +62,6 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-uglify": "^6.0.3",
-    "vue": "^3.2.31"
+    "rollup-plugin-uglify": "^6.0.3"
   }
 }

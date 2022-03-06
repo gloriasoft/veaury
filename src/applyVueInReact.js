@@ -243,8 +243,8 @@ class VueComponentLoader extends React.Component {
         let { component,
           $slots,
           children,
-          'class': className = '',
-          style = '',
+          'class': className,
+          style,
           ...lastProps } = this.$data
 
         // Get slot data (including named slots)
@@ -265,8 +265,10 @@ class VueComponentLoader extends React.Component {
           {
             ...lastProps,
             ...lastAttrs,
-            'class': className || newClassName || newClassName1 || '',
-            style,
+            ...(className || newClassName || newClassName1? {'class': className || newClassName || newClassName1}: {}),
+            // 'class': className || newClassName || newClassName1 || '',
+            ...(style? {style}: {}),
+            // style,
             ref: 'use_vue_wrapper',
           },
           {
