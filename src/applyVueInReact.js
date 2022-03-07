@@ -116,6 +116,8 @@ class VueComponentLoader extends React.Component {
       this.updateVueComponent(component)
     }
     if (component.__fromReactSlot) return true
+    if (!this.vueInstance) return
+
     if (children) {
       if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
         $slots = children
