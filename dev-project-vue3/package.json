@@ -12,7 +12,7 @@
     "core-js": "^3.6.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "veaury": "^1.0.4-beta.1",
+    "veaury": "^1.0.5-beta.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
