@@ -13,7 +13,7 @@ Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项�
 - 💗 支持跨框架的hooks调用 - 可以在react组件中使用vue的hooks，获取到vue组件或者应用的上下文数据，比如vue-router、vuex，也可以在vue组件中使用react的hooks，获取到react组件或者应用的上下文数据，比如react-router、provide、context等
 
 ## 支持Vue2？
-[完美支持react和vue2同时开发的工具库](https://github.com/devilwjp/vuereact-combined)  
+[完美支持react和vue2同时开发的工具库vuereact-combined](https://github.com/devilwjp/vuereact-combined)  
 
 ## 项目的预配置
 理论上，不需要在 React 项目中做额外的配置来支持 Vue，也不需要在 Vue 项目中做额外的配置来支持 React。  
@@ -22,23 +22,23 @@ Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项�
 
 如果需要在一个项目中同时开发 Vue 和 React，而不是仅仅使用现有的 npm 组件，那么应该做一些配置，通常配置 `webpack.config.js` 和 `babel.config.js`。  
 
-项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别是由`create-react-app`和`@vue/cli`创建的两个初始项目。  
-> **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`  
+本项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别由`create-react-app`和`@vue/cli`创建的两个初始项目。  
+> **Note:** 在react项目中的`config/webpack.config.js`以及vue项目中的`vue.config.js`里，可以找到webpack的alias别名配置，将`veaury`的别名注释解开，就可以对根项目中`src`目录里的`veaury`源代码进行开发调试了
 > 
-> **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects  
+> **Setup:** 在主项目的根目录下运行命令行`npm run setup:yarn` 或者 `npm run setup:npm`，可以整体安装主项目和两个调试用的子项目
 > 
-> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development
-  
-You can refer to How to configure the two projects to support the other framework.  
-[How to configure React in the Vue project from '@vue/cli' ](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
-[How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
+> **Develop:** 在主项目的根目录下运行命令行`npm run dev:vue` 以及 `npm run setup:npm`就可以对子项目进行开发调试
+   
+以下信息可以作为如何配置react和vue项目以支持另一种框架的参考  
+[如何配置由'@vue/cli'创建的vue项目支持开发react](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
+[如何配置由'create-react-app'创建的react项目支持开发vue](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
-## Use cases
-- 👨‍👩‍👧 Using both Vue and React in one app
-- 🏃 Migrating from React to Vue or from Vue to React
-- 📲 Using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`
+## 使用场景
+- 👨‍👩‍👧 在一个应用中同时开发React和Vue
+- 🏃 从Vue项目迁移到React项目，或者从React项目迁移到Vue项目
+- 📲 在一个应用中可以随意使用React或者Vue的第三方组件, 比如 `antd`, `element-ui`, `vuetify`
 
-## Installation
+## 安装
 
 ```sh
 # Install with yarn:
@@ -47,47 +47,47 @@ $ yarn add veaury
 $ npm i veaury -S
 ```
 
-## Usage
+## 用法
 
-### Vue in React - Basic usage
+### 在Vue组件中使用React组件 - 基本用法
 
 ```jsx
 import {applyVueInReact} from 'veaury'
-// This is a Vue component
+// 这是一个Vue组件
 import BasicVueComponent from './Basic.vue'
 import {useState} from 'react'
-// Use HOC 'applyVueInReact'
+// 使用高阶组件 'applyVueInReact'
 const Basic = applyVueInReact(BasicVueComponent)
 export default function () {
   const [foo] = useState('Hello!')
   return <Basic foo={foo}>
     <div>
-      the default slot
+      默认的slot
     </div>
   </Basic>
 }
 ```  
 
-### React in Vue - Basic usage
+### 在React组件中使用Vue组件 - 基本用法
 
 ```vue
 
 <template>
   <Basic :foo="foo">
     <div>
-      the children
+      children内容
     </div>
   </Basic>
 </template>
 <script>
 import {applyReactInVue} from 'veaury'
-// This is a React component
+// 这是一个React组件
 import BasicReactComponent from './react_app/Basic.jsx'
 import {ref} from 'vue'
 
 export default {
   components: {
-    // Use HOC 'applyReactInVue'
+    // 使用高阶组件 'applyReactInVue'
     Basic: applyReactInVue(BasicReactComponent)
   },
   setup() {
@@ -99,7 +99,7 @@ export default {
 </script>
 ```
 
-### Vue in React - Usage of events
+### 在React组件中使用Vue组件 - 事件的用法
 
 ```jsx
 import {applyVueInReact} from 'veaury'
@@ -113,25 +113,24 @@ export default function () {
   }
 
   return <div>
-    {/*Trigger with $emit('click') in Vue component*/}
+    {/*在Vue组件Basic中可以使用$emit('click')触发这个事件绑定的函数*/}
     <Basic onClick={onClickForVue}/>
   </div>
 }
 ```
 
-### React in Vue - Usage of events
+### 在Vue组件中使用React组件 - 事件的用法
 
 ```vue
 
 <template>
-  <!-- Trigger with 'props.onClick()' in React component -->
+  <!-- 在React组件ReactButton中可以使用props.onClick()触发这个事件绑定的函数 -->
   <ReactButton @click="onClickForReact"/>
 </template>
 
 <script>
-import {ref} from 'vue'
 import {applyReactInVue} from 'veaury'
-// This is a React Component
+// React组件ReactButton
 import ReactButton from "./react_app/Button.jsx"
 
 export default {
@@ -151,9 +150,9 @@ export default {
 </script>
 ```
 
-### Vue in React - Usage of slots
+### 在React组件中使用Vue组件 - 插槽的用法
 
-The usage of 'slots' is similar to the usage of 'v-slots' of Vue's jsx.
+这个插槽的用法与Vue的jsx传递插槽的用法非常相似
 
 ```jsx
 import {applyVueInReact} from 'veaury'
@@ -162,21 +161,21 @@ import BasicVue from './Basic.vue'
 const Basic = applyVueInReact(BasicVue)
 export default function () {
   return <div>
-    {/*just send children*/}
+    {/*只传递children*/}
     <Basic>
-      {/* Render with '<slot/>' in Vue Component */}
+      {/* 在Vue组件的template内使用'<slot/>'进行渲染 */}
       <div>this is children</div>
     </Basic>
-    {/*send v-slots*/}
+    {/*传递 v-slots*/}
     <Basic v-slots={{
-      // Render with '<slot name="slot1" />' in Vue Component
+      // 在Vue组件的template内使用'<slot name="slot1" />'进行渲染
       slot1: <div>this is slot1(namedSlot)</div>,
-      // Render with '<slot name="slot2" value="xxxxxx"/>' in Vue Component
+      // 在Vue组件的template内使用'<slot name="slot2" value="xxxxxx"/>'进行渲染
       slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-      // Render with '<slot/>' in Vue Component
+      // 在Vue组件的template内使用'<slot/>'进行渲染
       default: <div>this is children</div>
     }}/>
-    {/*another usage*/}
+    {/*另一种用法*/}
     <Basic>
       {{
         slot1: <div>this is slot1(namedSlot)</div>,
@@ -188,43 +187,43 @@ export default function () {
 }
 ```
 
-### React in Vue - Usage of render props and React node
+### 在Vue组件中使用React组件 - 传递render props 和 React node 的用法
 
-Named slots & scoped slots of Vue = React render props.  
-Default slots $ children of Vue = React props.children.  
-A named slot has a name prefixed with `node:` = React Node  
+Vue3的具名插槽和作用域插槽 = React render props.  
+Vue3的默认插槽和children = React props.children.  
+一个带有`node:`前缀的具名插槽 = React Node  
 ```vue
 <template>
   <Basic>
-    <!--  Render with 'props.slot1()' in React component  -->
+    <!--  在React组件里使用'props.slot1()'进行渲染  -->
     <template v-slot:slot1>
       <div>
-        this is slot1 (render props)
+        插槽1 (render props)
       </div>
     </template>
-    <!--  Render with 'props.slot2("xxxxx")' in React component  -->
+    <!--  在React组件里使用'props.slot2("xxxxx")'进行渲染  -->
     <template v-slot:slot2="bar">
       <div>
-        this is slot2 (render props)<br/>
-        this content is passed from React: {{bar}}
+        插槽2 (render props)<br/>
+        从React组件传递的内容: {{bar}}
       </div>
     </template>
-    <!--  Render with 'props.slot3' in React component  -->
+    <!--  在React组件里使用'props.slot3'进行渲染  -->
     <template v-slot:node:slot3>
       <div>
-        this is slot3 (react node)
+        插槽3 (react node)
       </div>
     </template>
-    <!--  Render with 'props.children' in React component  -->
+    <!--  在React组件里使用'props.children'进行渲染  -->
     <div>
-      this is children (react node)
+      默认插槽children (react node)
     </div>
   </Basic>
 </template>
 
 <script>
 import {applyReactInVue} from 'veaury'
-// This is a React Component
+// 这是一个React组件
 import ReactBasic from "./react_app/Slots.jsx"
 
 export default {
@@ -235,15 +234,15 @@ export default {
 </script>
 ```
 
-### Context
+### Context(上下文)
 
-Veaury will judge that if there is a wrapper layer of the same framework in the outer layer, Veaury will use React's `Portal` and Vue's `Teleport` instead of creating a new application instance every time.   
+Veaury 会判断如果一个组件的外层有同一个框架的组件存在，那么Veaury 就会使用 React 的 `Portal` 或者 Vue 的 `Teleport`创建被高阶组件包装的目标组件，而不是每次都创建一个新的应用实例。   
   
-It's a really awesome! Veaury can well pass the root node context to the child nodes, regardless of whether the node is wrapped or not.  
+这是非常牛逼的做法! Veaury 可以很好地将根节点的上下文跨过不同的框架组件传递给内部与根节点相同框架的组件.  
 
-This means that a Vue component used a React component, and then this React component used another Vue subcomponent. This Vue subcomponent can get the context of the outer Vue component.  
+这意味着一个 Vue 组件使用了一个 React 组件，然后这个 React 组件使用了另一个 Vue 子组件。 这个 Vue 子组件可以获取外部 Vue 组件的上下文。  
 
-#### Vue in React - Usage of Provider / useContext
+#### React组件使用Vue组件 - Provider / useContext 的用法
 
 ```jsx
 import {applyVueInReact} from 'veaury'
@@ -251,33 +250,35 @@ import BasicVue from './Basic.vue'
 import {createContext, useContext} from 'react'
 
 const Basic = applyVueInReact(BasicVue)
-// Create React context object
+// 创建 React context 对象
 const Context = createContext({})
 
+// React子组件
 function SubReactComponent() {
-  // Get context value
+  // 获取 context 值
   const {bossName} = useContext(Context)
   return <div className="slot">bossName from Context: {bossName}</div>
 }
 
 export default function () {
-  // Set context value
+  // 设置 context 值
   return <Context.Provider value={{bossName: 'God'}}>
+    {/* Vue组件Basic */}
     <Basic>
-      {/* This React component can get the context value from 'Provider' */}
+      {/* 在Vue组件的children里, React子组件可以获得从外层Provider传入的context的值 */}
       <SubReactComponent/>
     </Basic>
   </Context.Provider>
 }
 ```
 
-#### React in Vue - Usage of Provide / Inject
+#### Vue组件使用React组件 - Provide / Inject 的用法
 
 ```vue
 
 <template>
   <Basic>
-    <!--  This Vue component can get the injection value from 'provide'  -->
+    <!--  在这个Vue组件里可以通过inject获得从外层provide传入的值  -->
     <SubVueComponent/>
   </Basic>
 </template>
@@ -285,9 +286,9 @@ export default function () {
 <script>
 import {provide, inject, h} from 'vue'
 import {applyReactInVue} from 'veaury'
-// This is a React component
+// 这是一个React组件
 import ReactBasic from "./react_app/Basic"
-// This is a Vue component
+// 这是一个Vue组件
 const SubVueComponent = {
   setup() {
     // get bossName from injection
@@ -309,11 +310,11 @@ export default {
 </script>
 ```
 
-### Usage of VueContainer in React Component
+### 在React组件中使用 VueContainer 组件的用法
 
-You can use the `VueContainer` component in a React component to display Vue components directly.  
-  
-When React components in Vue components, `VueContainer` can display global Vue components registered in the upper-level Vue app.  
+可以在React组件中直接使用 `VueContainer` 组件动态展示一个Vue组件  
+
+当这个React组件存在于某个Vue组件中时， 此时React组件中使用`VueContainer` 可以显示在上层 Vue 应用中注册的全局 Vue 组件。  
 
 ```jsx
 import {VueContainer} from "veaury"
@@ -323,13 +324,13 @@ export default function () {
   const passedProps = {
     name: 'Mike'
   }
-  // Render '<router-view>' if 'vue-router' exists, You can use '<VueContainer component="RouterView"/>'
+  // 如果 'vue-router' 存在，则渲染 '<router-view>' 可以使用 '<VueContainer component="RouterView"/>'
   return <VueContainer component={BasicVue} {...passedProps}/>
 }
 ```
 
-### Vue in React, Usage of v-model / v-models
-The usage of 'v-model' is similar to the usage of 'v-model' of Vue's jsx.  
+### 在React组件中使用Vue组件, v-model / v-models 的用法
+'v-model' 的用法与Vue的jsx中的'v-model'用法相似  
 The value type of the `v-model` property should be  
 `[ modelValue, modelSetter, argumentKey, argumentModifiers ]`  
 `[ modelValue, modelSetter, argumentModifiers ]`  
