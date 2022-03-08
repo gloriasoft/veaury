@@ -18,6 +18,7 @@ The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which 
 
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
+[中文文档](https://github.com/devilwjp/veaury/README_zhcn.md)
 ## Do you want to preconfigure your project in advance?
 
 In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do additional configuration in a Vue project to support React.  
@@ -373,14 +374,14 @@ export default function () {
 }
 
 ```
-### API injectPropsFromWrapper
+### HOC injectPropsFromWrapper
 `injectPropsFromWrapper` is a higher order component.  
   
 When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
   
 For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
   
-This API can be used for both Vue and React components.  
+This HOC can be used for both Vue and React components.  
 
 ```typescript
 interface propsFromWrapper {
@@ -512,7 +513,7 @@ export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (pro
 })
 
 ```
-> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+> **Note:** If you use injection function to wrap the same component multiple times, the previous injection function will be overwritten.  
 > 
 > Injection functions in 'computed' mode only support synchronous code
 > 
