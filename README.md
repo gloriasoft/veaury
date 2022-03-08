@@ -18,7 +18,7 @@ The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which 
 
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
-[中文文档](https://github.com/devilwjp/veaury/README_zhcn.md)
+[中文文档](https://github.com/devilwjp/veaury/blob/master/README_zhcn.md)
 ## Do you want to preconfigure your project in advance?
 
 In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do additional configuration in a Vue project to support React.  
