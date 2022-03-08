@@ -49,7 +49,7 @@ $ npm i veaury -S
 
 ## 用法
 
-### 在Vue组件中使用React组件 - 基本用法
+### 在React组件中使用Vue组件 - 基本用法
 
 ```jsx
 import {applyVueInReact} from 'veaury'
@@ -68,7 +68,7 @@ export default function () {
 }
 ```  
 
-### 在React组件中使用Vue组件 - 基本用法
+### 在Vue组件中使用React组件 - 基本用法
 
 ```vue
 
