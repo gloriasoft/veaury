@@ -374,14 +374,14 @@ export default function () {
 }
 
 ```
-### API injectPropsFromWrapper
+### HOC injectPropsFromWrapper
 `injectPropsFromWrapper` is a higher order component.  
   
 When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
   
 For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
   
-This API can be used for both Vue and React components.  
+This HOC can be used for both Vue and React components.  
 
 ```typescript
 interface propsFromWrapper {
@@ -513,7 +513,7 @@ export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (pro
 })
 
 ```
-> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+> **Note:** If you use injection function to wrap the same component multiple times, the previous injection function will be overwritten.  
 > 
 > Injection functions in 'computed' mode only support synchronous code
 > 

@@ -331,11 +331,11 @@ export default function () {
 
 ### 在React组件中使用Vue组件, v-model / v-models 的用法
 'v-model' 的用法与Vue的jsx中的'v-model'用法相似  
-The value type of the `v-model` property should be  
+在React jsx中使用 `v-model` 属性, 可以有如下格式:      
 `[ modelValue, modelSetter, argumentKey, argumentModifiers ]`  
 `[ modelValue, modelSetter, argumentModifiers ]`  
 `[ modelValue, modelSetter ]`  
-Additional 'argumentKey' attached property, such as `v-model-god={[godValue, setGodValue]}` = `v-model={[godValue, setGodValue, 'god']}`
+'argumentKey'代表了v-model的自定义参数名, 默认情况下, v-model的参数名时modelValue, 也可以将'argumentKey'设置在v-model属性之后的附加后缀上, 比如 `v-model-god={[godValue, setGodValue]}` = `v-model={[godValue, setGodValue, 'god']}`
 ```typescript
 // types
 type modelValue = any
@@ -362,22 +362,22 @@ export default function () {
     {/*<Basic1 v-model={[zoo, setZoo, 'zoo', ['number']]}/>*/}
     {/*<Basic1 v-model-zoo={[zoo, setZoo, ['number']]}/>*/}
     <Basic1 v-models={{
-      // The key value of 'modelValue' is equivalent to 'v-model'
+      // v-models对象中的key设置为'modelValue'时, 等同于默认的v-model属性
       modelValue: [zoo, setZoo],
-      //...otherModels
+      //...可以设置其他的自定义v-model的key
     }} />
   </div>
 }
 
 ```
-### API injectPropsFromWrapper
-`injectPropsFromWrapper` is a higher order component.  
+### HOC injectPropsFromWrapper
+`injectPropsFromWrapper` 是一个高阶组件.  
+
+在同时开发 Vue 和 React 应用时，有时需要在 Vue 组件内部获取 React 应用的上下文(或者一些hooks)，反之亦然。    
+
+例如，一个Vue组件被React应用使用, 在这个Vue组件内部要获得 `react-router` 的信息，或者在 React 组件中获得 `vuex` 的状态。   
   
-When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
-  
-For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
-  
-This API can be used for both Vue and React components.  
+这个高阶组件可以同时使用与Vue和React组件
 
 ```typescript
 interface propsFromWrapper {
@@ -394,7 +394,7 @@ interface injectPropsFromWrapper<T extends allModeReturn = allModeReturn>{
     (injectionFunction: injectionFunction<T>, component:component): component
 }
 ```
-#### Usage of injecting React hooks in Vue component
+#### 在Vue组件中注入React hooks的用法
 React application uses Vue component, example to get `react-router` inside Vue component.  
 ```vue
 <template>
@@ -405,31 +405,30 @@ React application uses Vue component, example to get `react-router` inside Vue c
   </div>
 </template>
 <script>
-// This Vue component will be used in the React app and needs to use the react-router hooks
+// 这个 Vue 组件将在 React 应用程序中使用，并且可以使用 react-router hooks
 
 import { injectPropsFromWrapper } from 'veaury'
 import { useLocation, useNavigate } from 'react-router-dom'
 import React from 'react'
 
 function ReactInjectionHook (reactProps) {
-  // React hooks can be used in this function
-  // Use the hooks of react-router-dom
+  // React hooks 可以在这个函数中被使用
+  // 使用react-router-dom的hooks
   const reactRouterLocation = useLocation()
   const navigate = useNavigate()
   function changeQuery() {
     navigate(`?a=${Math.random()}`, {replace: true})
   }
-
-  // The returned object will be passed to the Vue component as props
+  
+  // 返回的对象会作为 props 传递给 Vue 组件  
   return {
     pathname: reactRouterLocation.pathname,
     search: reactRouterLocation.search,
     changeQuery
   }
 }
-// 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
-// When the Vue component is applied to the React app by 'applyVueInReact',
-// InjectionHook will be executed first, otherwise InjectionHook will not be executed
+// 'injectPropsFromWrapper' 会返回原始的 Vue 组件并将注册 ReactInjectionHook函数.
+// 只有当 Vue 组件通过 'applyVueInReact' 应用到 React 应用时，才会先执行 ReactInjectionHook函数，否则不会执行 ReactInjectionHook。
 export default injectPropsFromWrapper(ReactInjectionHook, {
   props: {
     pathname: String,
@@ -439,29 +438,32 @@ export default injectPropsFromWrapper(ReactInjectionHook, {
 })
 </script>
 ```
-#### Usage of injecting Vue hooks in React component
-Vue application uses React component, example to get `vue-router` and `vuex` inside React component.  
+#### 在React组件中注入Vue hooks的用法
+Vue 应用使用 React 组件，例如, 在 React 组件中获取 `vue-router` 和 `vuex`。  
 There are two modes for injecting functions, 'setup' and 'computed' modes.  
+'injectPropsFromWrapper'高阶组件使用在React组件时, 第一个参数的注入函数可以有两种模式, 分别是'setup'和'computed'模式  
+'setup'模式对应的就是Vue3的composition API, 意思就是可以在这种模式的注入函数内使用Vue3的composition API  
+'computed'模式对应的是Vue3的options API的computed属性, 这种模式的注入函数其实就是返回了一个Vue的计算属性  
 ```jsx
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
 import {injectPropsFromWrapper} from 'veaury'
 
-// This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
+// 这个 React 组件将在 Vue 应用程序中被使用，需要使用 vue-router 和 vuex hooks 获得相关的状态
 
-// setup mode
+// 'setup' 模式的注入函数
 function VueInjectionHookInSetupMode(vueProps) {
-  // Vue hooks can be used in this function
-  // This function will be called in the 'setup' hook of the Vue wrapper component
+  // Vue hooks 可以被使用在这个函数内
+  // 这个函数将在 applpReactInVue高阶组件的Vue包装层的 'setup' 钩子中被调用
   const store = useStore()
   const route = useRoute()
   const router = useRouter()
 
-  // The returned object will be passed to the React component as props
+  // 返回的对象将作为 props 传递给 React 组件
   return {
-    // you need to manually convert to proxy with 'setup' mode
-    // otherwise it will not be responsive
+    // 在 'setup' 模式中, 返回的每个属性都需要确保进行了Proxy的处理(遵循Vue3的规范),  
+    // 否则数据将不是响应式的
     fullPath: toRef(route, 'fullPath'),
     count: toRef(store.state, 'count'),
     changeQuery: () => router.replace({
@@ -473,12 +475,12 @@ function VueInjectionHookInSetupMode(vueProps) {
   }
 }
 
-// computed mode
+// 'computed' 模式
 function VueInjectionHookInComputedMode(vueProps) {
-  // The context of the function is binding with the proxy from the 'getCurrentInstance' hook
-  // Returning a function represents the computed of the options api
-  // All logic code should be written in this computed function.
-  // The lifecycle cannot be used in this function. If you want to use the lifecycle, you can only use the 'setup' mode
+  // 函数的上下文与来自 Vue3 hooks 'getCurrentInstance' 的'proxy'属性
+  // 返回一个函数表示计算属性的返回结果
+  // 所有逻辑代码都应该写在这个计算函数中, 在函数之外的逻辑将享受不到状态变更的响应式
+  // 此函数中不能使用生命周期。 如果要使用生命周期，只能使用'setup'模式
   return function computedFunction() {
     return {
       fullPath: this.$route.fullPath,
@@ -493,10 +495,10 @@ function VueInjectionHookInComputedMode(vueProps) {
   }
 }
 
-// The first parameter is the injection function.
-// Vue's injection function has two modes: 'setup' and 'computed'.
-// Refer to the case of the above two injection function types.
-// Also try replacing the first parameter with 'VueInjectionHookInComputedMode'
+// 第一个参数是注入函数。
+// Vue 的注入函数有两种模式：'setup' 和 'computed'。
+// 参考上述两种注入函数类型的情况。
+// 尝试使用 'VueInjectionHookInComputedMode' 替换第一个参数 
 export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (props) {
   return (<div>
     This is the React Component
@@ -509,13 +511,13 @@ export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (pro
 })
 
 ```
-> **Note:** If you use interception to wrap the same component multiple times, the previous interception function will be overwritten.  
+> **Note:** 如果多次使用注入函数对同一个组件进行包装，之前的注入函数会被覆盖。  
 > 
-> Injection functions in 'computed' mode only support synchronous code
+> 'computed' 模式下的注入函数仅支持同步代码
 > 
-> It should be ensured that the logic inside the injection function is a pure function, and business logic should not be added to the injection function. It is not recommended to use lifecycle or asynchronous calls in the injection function.
+> 需要保证注入函数内部的逻辑是纯函数，尽量不要在注入函数中加入业务逻辑。 不建议在注入函数中使用生命周期或异步调用。
 
-### Usage of lazyReactInVue
+### lazyReactInVue的用法(在Vue组件中使用异步的React组件)
 ```vue
 <template>
   <Basic/>
@@ -539,7 +541,7 @@ export default {
 type lazyReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 ```
 
-### Usage of lazyVueInReact
+### lazyVueInReact的用法(在React组件中使用异步的Vue组件)
 ```jsx
 import { lazyVueInReact } from 'veaury'
 
