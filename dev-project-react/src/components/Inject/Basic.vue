@@ -36,7 +36,7 @@ export default injectPropsFromWrapper(ReactInjectionHook, {
     pathname: String,
     search: String,
     changeQuery: Function
-  }
+  },
 })
 </script>
 <style scoped>

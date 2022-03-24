@@ -5,14 +5,14 @@ function resolve (dir) {
 
 module.exports = {
     // for dev only
-    // overrides: [
-    //     {
-    //         test:function(filename) {
-    //             if (filename?.startsWith(resolve('../src'))) return filename
-    //         },
-    //         plugins: [
-    //             'transform-react-jsx'
-    //         ]
-    //     }
-    // ]
+    overrides: [
+        {
+            test:function(filename) {
+                if (filename?.startsWith(resolve('../src'))) return filename
+            },
+            plugins: [
+                'transform-react-jsx'
+            ]
+        }
+    ]
 }

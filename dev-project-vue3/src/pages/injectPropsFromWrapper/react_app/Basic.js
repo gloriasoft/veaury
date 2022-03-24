@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useImperativeHandle, forwardRef} from 'react'
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
@@ -52,7 +52,7 @@ function VueInjectionHookWithComputedMode(vueProps) {
 // The first parameter is the injection function.
 // Vue's injection function has two modes: 'setup' and 'computed'.
 // Refer to the case of the above two injection function types.
-export default injectPropsFromWrapper(VueInjectionHookWithSetupMode, function (props) {
+export default injectPropsFromWrapper(VueInjectionHookWithSetupMode, function (props, ref) {
   const style = useRef({
     background: '#91e7fc',
     width: 500,

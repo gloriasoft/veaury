@@ -49,17 +49,17 @@ class VueComponentLoader extends React.Component {
     this.state = {
       portals: [],
     }
-    this.portalKeyPool = []
-    this.maxPortalCount = 0
+    this.__veauryPortalKeyPool__ = []
+    this.__veauryMaxPortalCount__ = 0
     // Capture vue component
-    this.currentVueComponent = props.component
-    this.createVueInstance = this.createVueInstance.bind(this)
-    this.vueComponentContainer = this.createVueComponentContainer()
+    this.__veauryCurrentVueComponent__ = props.component
+    this.__veauryCreateVueInstance__ = this.__veauryCreateVueInstance__.bind(this)
+    this.__veauryVueComponentContainer__ = this.createVueComponentContainer()
   }
 
   pushReactPortal (reactPortal) {
     let { portals } = this.state
-    const key = this.portalKeyPool.shift() || this.maxPortalCount++
+    const key = this.__veauryPortalKeyPool__.shift() || this.__veauryMaxPortalCount__++
     portals.push({
       Portal: reactPortal,
       key
@@ -76,9 +76,9 @@ class VueComponentLoader extends React.Component {
         return true
       }
     })
-    this.portalKeyPool.push(portalData.key)
+    this.__veauryPortalKeyPool__.push(portalData.key)
     portals.splice(index, 1)
-    this.vueRef && this.setState({ portals })
+    this.__veauryVueRef__ && this.setState({ portals })
   }
 
   createVueComponentContainer () {
@@ -106,17 +106,17 @@ class VueComponentLoader extends React.Component {
       }
     }
 
-    return options.vue.componentWrapHOC(<div {...options.vue.componentWrapAttrs} ref={this.createVueInstance} key={null} />, nativeProps)
+    return options.vue.componentWrapHOC(<div {...options.vue.componentWrapAttrs} ref={this.__veauryCreateVueInstance__} key={null} />, nativeProps)
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     if (nextProps === this.props) return true
     let { component, [optionsName]: options, 'v-slots': $slots = {}, children, ...props } = nextProps
-    if (this.currentVueComponent !== component) {
+    if (this.__veauryCurrentVueComponent__ !== component) {
       this.updateVueComponent(component)
     }
     if (component.__fromReactSlot) return true
-    if (!this.vueInstance) return
+    if (!this.__veauryVueInstance__) return
 
     if (children) {
       if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
@@ -129,22 +129,22 @@ class VueComponentLoader extends React.Component {
       props.$slots = this.transferSlots($slots)
     }
     // delete all keys
-    Object.keys(this.vueInstance.$data).forEach((key) => {
-      delete this.vueInstance.$data[key]
+    Object.keys(this.__veauryVueInstance__.$data).forEach((key) => {
+      delete this.__veauryVueInstance__.$data[key]
     })
     // update vue $data
-    this.vueInstance && Object.assign(this.vueInstance.$data, parseVModel(props))
+    this.__veauryVueInstance__ && Object.assign(this.__veauryVueInstance__.$data, parseVModel(props))
     return true
   }
 
   componentWillUnmount () {
     // remove portal
     if (this.vuePortal) {
-      this.parentVueWrapperRef.removeVuePortal(this.vuePortal)
+      this.parentVueWrapperRef.__veauryRemoveVuePortal__(this.vuePortal)
       return
     }
-    this.vueInstance && this.vueInstance.$.appContext.app.unmount()
-    getRandomId.pool.delete(this.vueTargetId)
+    this.__veauryVueInstance__ && this.__veauryVueInstance__.$.appContext.app.unmount()
+    getRandomId.pool.delete(this.__veauryVueTargetId__)
   }
 
   transferSlots ($slots) {
@@ -164,7 +164,7 @@ class VueComponentLoader extends React.Component {
   }
   // The dom object of the component will be received through the ref callback of the react component,
   // and the context has been bound in the constructor of the class
-  createVueInstance (targetElement) {
+  __veauryCreateVueInstance__ (targetElement) {
     const VueContainerInstance = this
     let { component, [optionsName]: options, children, 'v-slots': $slots = {}, ...props } = this.props
     if (children) {
@@ -180,15 +180,15 @@ class VueComponentLoader extends React.Component {
     }
 
     function setVueInstance(instance) {
-      if (!this.vueInstance) {
-        this.vueInstance = instance
+      if (!this.__veauryVueInstance__) {
+        this.__veauryVueInstance__ = instance
       }
     }
     setVueInstance = setVueInstance.bind(this)
     const vueOptionsData = { ...parseVModel(props) }
     const vueOptions = {
       data() {
-        return options.isSlots? { children: VueContainerInstance.currentVueComponent.originVNode }: vueOptionsData
+        return options.isSlots? { children: VueContainerInstance.__veauryCurrentVueComponent__.originVNode }: vueOptionsData
       },
       created() {
         this.reactWrapperRef = VueContainerInstance
@@ -210,12 +210,12 @@ class VueComponentLoader extends React.Component {
                 }
                 // cache vnode
                 let newSlot
-                if (!this.getScopedSlots.__scopeSlots[i]?.component?.ctx?.reactInstance) {
+                if (!this.getScopedSlots.__scopeSlots[i]?.component?.ctx?.__veauryReactInstance__) {
                   newSlot = createElement(applyReactInVue(() => scopedSlot.apply(this, args), { ...options, isSlots: true, wrapInstance: VueContainerInstance }))
                   this.getScopedSlots.__scopeSlots[i] = newSlot
                 } else {
                   newSlot = this.getScopedSlots.__scopeSlots[i]
-                  newSlot?.component?.ctx?.reactInstance?.setState({ children: scopedSlot.apply(this, args) })
+                  newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
                 }
                 return newSlot
               }
@@ -228,8 +228,8 @@ class VueComponentLoader extends React.Component {
       mounted () {
         // hide id
         targetElement.removeAttribute('id')
-        // In the react wrapper instance, use vueRef to save the target component instance of vue
-        VueContainerInstance.vueRef = this.$refs.use_vue_wrapper
+        // In the react wrapper instance, use __veauryVueRef__ to save the target component instance of vue
+        VueContainerInstance.__veauryVueRef__ = this.$refs.use_vue_wrapper
         // In the target component instance of vue,
         // use reactWrapperRef to save the react wrapper instance.
         // The vue component can use this property to determine whether it is wrapped
@@ -237,7 +237,7 @@ class VueComponentLoader extends React.Component {
       },
       beforeUnmount () {
         // garbage collection
-        VueContainerInstance.vueRef = null
+        VueContainerInstance.__veauryVueRef__ = null
         this.$refs.use_vue_wrapper.reactWrapperRef = null
       },
       render () {
@@ -263,7 +263,7 @@ class VueComponentLoader extends React.Component {
           }
         })
         return createElement(
-          filterVueComponent(VueContainerInstance.currentVueComponent, this),
+          filterVueComponent(VueContainerInstance.__veauryCurrentVueComponent__, this),
           {
             ...lastProps,
             ...lastAttrs,
@@ -288,7 +288,7 @@ class VueComponentLoader extends React.Component {
 
     const targetId = getRandomId('__vue_wrapper_container_')
     targetElement.id = targetId
-    this.vueTargetId = targetId
+    this.__veauryVueTargetId__ = targetId
     // get react fiberNode
     let vueWrapperRef = options.wrapInstance
     if (!vueWrapperRef) {
@@ -305,29 +305,29 @@ class VueComponentLoader extends React.Component {
 
       // Store a reference to 'teleport'
       this.vuePortal = (createElement, key) => createElement(Teleport, {to: '#' + targetId, key: targetId}, [createElement(Object.assign(vueOptions, {router: this._router}))])
-      vueWrapperRef.pushVuePortal(this.vuePortal)
+      vueWrapperRef.__veauryPushVuePortal__(this.vuePortal)
       return
     }
 
-    this.vueInstance = createApp(vueOptions).mount(targetElement)
+    this.__veauryVueInstance__ = createApp(vueOptions).mount(targetElement)
   }
 
   updateVueComponent (nextComponent) {
-    if (!this.vueInstance) return
+    if (!this.__veauryVueInstance__) return
 
     if (nextComponent.__fromReactSlot) {
-      this.vueInstance.children = typeof nextComponent.originVNode === 'function'? nextComponent.originVNode: () => nextComponent.originVNode
+      this.__veauryVueInstance__.children = typeof nextComponent.originVNode === 'function'? nextComponent.originVNode: () => nextComponent.originVNode
     } else {
-      this.currentVueComponent = nextComponent
+      this.__veauryCurrentVueComponent__ = nextComponent
       // Use $forceUpdate to force the vue instance to re-render,
       // because this method will only re-render the current instance and slot,
       // not sub-components, so it won't cause performance problems
-      this.vueInstance.$forceUpdate()
+      this.__veauryVueInstance__.$forceUpdate()
     }
   }
 
   render () {
-    return <this.vueComponentContainer portals={this.state.portals}/>
+    return <this.__veauryVueComponentContainer__ portals={this.state.portals}/>
   }
 }
 

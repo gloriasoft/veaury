@@ -5,7 +5,7 @@
   <h4>
     Using React components in Vue components.
   </h4>
-  <Basic/>
+  <Basic ref="aaa"/>
 </template>
 
 <script>
@@ -16,6 +16,10 @@ import ReactBasic from "./react_app/Basic"
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic)
+  },
+  mounted() {
+    console.log(11111, this.$refs.aaa)
+
   }
 }
 </script>
