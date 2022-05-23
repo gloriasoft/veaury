@@ -6,38 +6,22 @@
   </div>
 </template>
 <script>
-// This Vue component will be used in the React app and needs to use the react-router hooks
-
-import { injectPropsFromWrapper } from 'veaury'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useReactRouterForVue } from './reactRouterCrossingProvider'
 import React from 'react'
 
-function ReactInjectionHook (reactProps) {
-  // React hooks can be used in this function
-  // Use the hooks of react-router-dom
-  const reactRouterLocation = useLocation()
-  const navigate = useNavigate()
-  function changeQuery() {
-    navigate(`?a=${Math.random()}`, {replace: true})
-  }
-
-  // The returned object will be passed to the Vue component as props
-  return {
-    pathname: reactRouterLocation.pathname,
-    search: reactRouterLocation.search,
-    changeQuery
+export default {
+  setup() {
+    const { location, navigate } = useReactRouterForVue()
+    function changeQuery() {
+      navigate(`?a=${Math.random()}`, {replace: true})
+    }
+    return {
+      pathname: location.pathname,
+      search: location.search,
+      changeQuery
+    }
   }
 }
-// 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
-// When the Vue component is applied to the React app by 'applyVueInReact',
-// InjectionHook will be executed first, otherwise InjectionHook will not be executed
-export default injectPropsFromWrapper(ReactInjectionHook, {
-  props: {
-    pathname: String,
-    search: String,
-    changeQuery: Function
-  },
-})
 </script>
 <style scoped>
 

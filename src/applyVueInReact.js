@@ -1,24 +1,16 @@
-import React from 'react'
+import * as React from 'react'
 import {Teleport, h as createElement, createApp} from 'vue'
 import applyReactInVue from './applyReactInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
 import parseVModel from "./parseVModel"
+import RandomId from './getRandomId'
 
-const optionsName = 'vuereact-combined-options'
+const optionsName = 'veaury-options'
 
 // Get a random element id and ensure that it does not repeat
-function getRandomId (prefix) {
-  const id = prefix + (Math.random() + '').substr(2)
-  // Recreate random numbers if duplicate data is generated
-  if (getRandomId.pool.has(id)) {
-    return getRandomId(prefix)
-  }
-  getRandomId.pool.add(id)
-  return id
-}
-getRandomId.pool = new Set()
+const random = new RandomId()
 
 // According to whether the incoming parameter is a string, determine whether it is necessary to obtain the global component of Vue
 function filterVueComponent (component, vueInstance) {
@@ -35,8 +27,15 @@ function ReactInterceptComponent({Loader, componentProps}) {
 
 const VueContainer = React.forwardRef((props, ref) => {
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
+  const injection = globalOptions.injectPropsFromWrapper || props.component?.__veauryInjectPropsFromWrapper__
 
-  let ReactInjectionProps = props.component?.__veauryInjectPropsFromWrapper__?.(props)
+  let ReactInjectionProps
+  // If it is a slot, injectPropsFromWrapper is not executed
+  if (!globalOptions.isSlots) {
+    if (typeof injection === 'function') {
+      ReactInjectionProps = injection(props)
+    }
+  }
   return <VueComponentLoader {...{...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
 })
 
@@ -144,7 +143,7 @@ class VueComponentLoader extends React.Component {
       return
     }
     this.__veauryVueInstance__ && this.__veauryVueInstance__.$.appContext.app.unmount()
-    getRandomId.pool.delete(this.__veauryVueTargetId__)
+    random.pool.delete(this.__veauryVueTargetId__)
   }
 
   transferSlots ($slots) {
@@ -286,7 +285,7 @@ class VueComponentLoader extends React.Component {
 
     if (!targetElement) return
 
-    const targetId = getRandomId('__vue_wrapper_container_')
+    const targetId = random.getRandomId('__vue_wrapper_container_')
     targetElement.id = targetId
     this.__veauryVueTargetId__ = targetId
     // get react fiberNode
@@ -309,7 +308,11 @@ class VueComponentLoader extends React.Component {
       return
     }
 
-    this.__veauryVueInstance__ = createApp(vueOptions).mount(targetElement)
+    const app = createApp(vueOptions)
+    if (typeof options.beforeVueAppMount === 'function') {
+      options.beforeVueAppMount(app)
+    }
+    this.__veauryVueInstance__ = app.mount(targetElement)
   }
 
   updateVueComponent (nextComponent) {

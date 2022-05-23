@@ -1,9 +1,22 @@
-import React from "react"
-import ReactDOM from "react-dom"
+import * as React from "react"
+import * as ReactDOM from "react-dom"
+// TODO: react 18
+// import { createRoot } from "react-dom/client"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
+
+function toRaws(obj) {
+  return obj;
+  // TODO: Use toRaw to transform property values passed to react components
+  // if (!obj) return obj
+  // const newObj = {}
+  // Object.keys(obj).forEach((key) => {
+  //   newObj[key] = toRaw(obj[key])
+  // })
+  // return newObj
+}
 
 class FunctionComponentWrap extends React.Component {
   constructor(props) {
@@ -224,22 +237,37 @@ export default function applyReactInVue(component, options = {}) {
   }
   // additional options
   options = setOptions(options, undefined, true)
+
   return {
     originReactComponent: component,
     setup(props) {
-      let __veauryInjectedProps__ = reactive({})
+      // If it is a slot, injectPropsFromWrapper is not executed
+      if (options.isSlots) return
+      const setupResult = {}
+      const injectedProps = reactive({})
       const instance = getCurrentInstance()
-      if (typeof component.__veauryInjectPropsFromWrapper__ === 'function') {
-        const injection = component.__veauryInjectPropsFromWrapper__?.call(instance.proxy, props)
-        if (typeof injection !== "function") {
-          Object.assign(__veauryInjectedProps__, injection)
-          return {
-            __veauryInjectedProps__
-          }
+
+      const injection = options.injectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
+      if (typeof injection === 'function') {
+        const injectionResult = injection.call(instance.proxy, props)
+        if (typeof injectionResult !== "function") {
+          Object.assign(injectedProps, injectionResult)
+          setupResult.__veauryInjectedProps__ = injectedProps
         } else {
-          instance.proxy.__veauryInjectedComputed__ = injection
+          instance.proxy.__veauryInjectedComputed__ = injectionResult
         }
       }
+      // setupResult.__veauryVueProviderList__ = vueProviderFunctionList
+      // createProviderFromVueWrapper
+      // if (vueProviderFunctionList.length > 0) {
+      //   const vueProviderList = []
+      //   vueProviderFunctionList.forEach((vueProviderFunction) => {
+      //
+      //   })
+      // }
+      // vueProviderFunctionList.forEach(() => {})
+
+      return setupResult
     },
     data() {
       return {
@@ -415,8 +443,9 @@ export default function applyReactInVue(component, options = {}) {
           compareLast.attrs()
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
-            {...this.$attrs}
-            {...this.__veauryInjectedProps__}
+            // __veauryVueProviderList__={this.__veauryVueProviderList__}
+            {...toRaws(this.$attrs)}
+            {...toRaws(this.__veauryInjectedProps__)}
             {...{ children }}
             {...lastNormalSlots}
             {...scopedSlots}
@@ -467,6 +496,9 @@ export default function applyReactInVue(component, options = {}) {
             reactRootComponent,
             container,
           )
+          // TODO: react 18
+          // this.__veauryReactApp__ = createRoot(container)
+          // this.__veauryReactApp__.render(reactRootComponent)
         } else {
 
           const setReactState = () => {
@@ -478,9 +510,10 @@ export default function applyReactInVue(component, options = {}) {
               })
               return {
                 ...this.__veauryCache__,
-                ...this.__veauryInjectedProps__,
+                ...toRaws(this.__veauryInjectedProps__),
                 ...!options.isSlots && this.__veauryLast__.slot,
-                ...this.__veauryLast__.attrs,
+                ...toRaws(this.__veauryLast__.attrs),
+                // '__veauryVueProviderList__': this. __veauryVueProviderList__
               }
             })
             this.__veauryCache__ = null
@@ -553,6 +586,8 @@ export default function applyReactInVue(component, options = {}) {
       overwriteDomMethods(this.$refs.react)
       // Destroy the React root node
       ReactDOM.unmountComponentAtNode(this.$refs.react)
+      // TODO: react 18
+      // this.__veauryReactApp__.unmount()
       // restore native method
       recoverDomMethods()
     },
@@ -582,7 +617,13 @@ export default function applyReactInVue(component, options = {}) {
           this.__veauryMountReactComponent__(true, {attrs: true})
         },
         deep: true,
-      }
+      },
+      // __veauryVueProviderList__: {
+      //   handler() {
+      //     this.__veauryMountReactComponent__(true, {attrs: true})
+      //   },
+      //   deep: true,
+      // },
     },
   }
 }
