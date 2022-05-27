@@ -12,7 +12,7 @@ export function overwriteDomMethods(refDom) {
             domTopObject[key][method] = old
             window[key].prototype[method] = function (...args) {
                 const oldResult = old.apply(this, args)
-                if ((oldResult && oldResult.constructor !== NodeList) || (oldResult.constructor === NodeList && oldResult.length > 0)) return oldResult
+                if (oldResult && (oldResult.constructor !== NodeList || (oldResult.constructor === NodeList && oldResult.length > 0))) return oldResult
                 return Element.prototype[method].apply(refDom, args)
             }
         })
