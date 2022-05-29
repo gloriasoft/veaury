@@ -13,7 +13,8 @@ export default function introduce() {
     <NavLink to={'/slots'} style={style}>slots</NavLink>
     <NavLink to={'/v-model'} style={style}>v-model</NavLink>
     <NavLink to={'/context'} style={style}>context</NavLink>
-    <NavLink to={'/inject'} style={style}>injectPropsFromWrapper</NavLink>
+    <NavLink to={'/useInjectPropsFromWrapper'} style={style}>useInjectPropsFromWrapper</NavLink>
+    <NavLink to={'/CrossingProvider'} style={style}>CrossingProvider</NavLink>
     <NavLink to={'/lazyVueInReact'} style={style}>lazyVueInReact</NavLink>
   </Fragment>
 }

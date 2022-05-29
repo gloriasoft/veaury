@@ -1,21 +1,29 @@
 <template>
   <h3>
-    This example shows the basic usage of `injectPropsFromWrapper` with React component.
+    This example shows the basic usage of `createCrossingProviderForReactInVue`.
   </h3>
   <h4>
     Using React components in Vue components.
   </h4>
-  <Basic/>
+  <ProviderInVue>
+    <Basic/>
+  </ProviderInVue>
 </template>
 
 <script>
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
+import {ProviderInVue} from "./vueRouterAndVuexCrossingProvider";
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    ProviderInVue,
+    Basic: applyReactInVue(ReactBasic),
+  },
+  mounted() {
+    // console.log(11111, this.$refs.aaa)
+
   }
 }
 </script>

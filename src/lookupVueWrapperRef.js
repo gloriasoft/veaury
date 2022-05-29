@@ -5,7 +5,7 @@ export default function (reactInstance) {
     // Look up the vueWrapperRef
     while (parentInstance) {
         const parentFiberNode = parentInstance.stateNode
-        vueWrapperRef = parentFiberNode?.parentVueWrapperRef || parentFiberNode?.vueWrapperRef
+        vueWrapperRef = parentFiberNode?.parentVueWrapperRef || parentFiberNode?.__veauryVueWrapperRef__
         if (vueWrapperRef) return vueWrapperRef
         parentInstance = parentInstance.return
     }

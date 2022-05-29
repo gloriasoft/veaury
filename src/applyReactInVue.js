@@ -1,9 +1,22 @@
-import React from "react"
-import ReactDOM from "react-dom"
+import * as React from "react"
+import * as ReactDOM from "react-dom"
+// TODO: react 18
+// import { createRoot } from "react-dom/client"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
+
+function toRaws(obj) {
+  return obj;
+  // TODO: Use toRaw to transform property values passed to react components
+  // if (!obj) return obj
+  // const newObj = {}
+  // Object.keys(obj).forEach((key) => {
+  //   newObj[key] = toRaw(obj[key])
+  // })
+  // return newObj
+}
 
 class FunctionComponentWrap extends React.Component {
   constructor(props) {
@@ -24,15 +37,26 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     if (!ref) return
     // Use the reactRef property to save the instance of the target react component,
     // which can be obtained by the setRef instance of the parent component
-    wrapInstance.reactRef = ref
+    wrapInstance.__veauryReactRef__ = ref
     // The enumerable properties of the react instance are linked to the vue instance
     Object.keys(ref).forEach((key) => {
       if (!wrapInstance[key]) {
         wrapInstance[key] = ref[key]
       }
     })
+    // Iterate over all properties on the __proto__ object, except for 'render' and 'constructor'
+    Object.getOwnPropertyNames(ref.__proto__).filter((key) => ['constructor', 'render'].indexOf(key) < 0).forEach((key) => {
+      if (!wrapInstance[key]) {
+        wrapInstance[key] = ref[key]
+      }
+    })
     Promise.resolve().then(() => {
       Object.keys(ref).forEach((key) => {
+        if (!wrapInstance[key]) {
+          wrapInstance[key] = ref[key]
+        }
+      })
+      Object.getOwnPropertyNames(ref.__proto__).filter((key) => ['constructor', 'render'].indexOf(key) < 0).forEach((key) => {
         if (!wrapInstance[key]) {
           wrapInstance[key] = ref[key]
         }
@@ -45,7 +69,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
     // save the middleware instance of vue in the instance of the react component
     // React components can use this property to determine whether they are used by encapsulation
-    ref.vueWrapperRef = wrapInstance
+    ref.__veauryVueWrapperRef__ = wrapInstance
   }
 
   constructor(props) {
@@ -58,7 +82,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     }
     this.setRef = this.setRef.bind(this)
     this.vueInReactCall = this.vueInReactCall.bind(this)
-    this.vueWrapperRef = wrapInstance
+    this.__veauryVueWrapperRef__ = wrapInstance
   }
 
   // Use the method of converting VNode to ReactNode to solve the problem of slot transmission
@@ -87,11 +111,11 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
   }
 
   componentWillUnmount() {
-    if (!wrapInstance.reactRef) return
+    if (!wrapInstance.__veauryReactRef__) return
     // Garbage collection, but retain property names,
     // vue's refs retain the mode of property names for component destruction
-    wrapInstance.reactRef.vueWrapperRef = null
-    wrapInstance.reactRef = null
+    wrapInstance.__veauryReactRef__.__veauryVueWrapperRef__ = null
+    wrapInstance.__veauryReactRef__ = null
   }
 
   static catchVueRefs() {
@@ -133,7 +157,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
           // if (options.defaultSlotsFormatter) {
-          //   props[i].__top__ = this.vueWrapperRef
+          //   props[i].__top__ = this.__veauryVueWrapperRef__
           //   props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
           //   if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
           //     props[i] = [...props[i]]
@@ -161,7 +185,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         const vueSlot = children
         // TODO: defaultSlotsFormatter
         // if (options.defaultSlotsFormatter) {
-        //   children.__top__ = this.vueWrapperRef
+        //   children.__top__ = this.__veauryVueWrapperRef__
         //   children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
         //   if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
         //     children = [...children]
@@ -188,9 +212,13 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     //   finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
     // }
     const newProps = { ...finalProps }
-    // Determine whether to get ref by wrapping it with a class component
-    // Whether the prototype of Component is not the prototype of Function
+    // class components and object components and components that can pass catchVueRef
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
+      // If it is a function component (indicates that the catchVueRef is passed), remove the ref
+      // Avoid react component warning that ref cannot be used
+      if (Object.getPrototypeOf(Component) === Function.prototype) {
+        delete refInfo.ref
+      }
       return (
           <Component {...newProps} {...refInfo}>
             {children}
@@ -209,35 +237,50 @@ export default function applyReactInVue(component, options = {}) {
   }
   // additional options
   options = setOptions(options, undefined, true)
+
   return {
     originReactComponent: component,
     setup(props) {
-      let injectedProps = reactive({})
+      // If it is a slot, useInjectPropsFromWrapper is not executed
+      if (options.isSlots) return
+      const setupResult = {}
+      const injectedProps = reactive({})
       const instance = getCurrentInstance()
-      if (typeof component.__veauryInjectPropsFromWrapper__ === 'function') {
-        const injection = component.__veauryInjectPropsFromWrapper__?.call(instance.proxy, props)
-        if (typeof injection !== "function") {
-          Object.assign(injectedProps, injection)
-          return {
-            injectedProps
-          }
+
+      const injection = options.useInjectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
+      if (typeof injection === 'function') {
+        const injectionResult = injection.call(instance.proxy, props)
+        if (typeof injectionResult !== "function") {
+          Object.assign(injectedProps, injectionResult)
+          setupResult.__veauryInjectedProps__ = injectedProps
         } else {
-          instance.proxy.injectedComputed = injection
+          instance.proxy.__veauryInjectedComputed__ = injectionResult
         }
       }
+      // setupResult.__veauryVueProviderList__ = vueProviderFunctionList
+      // createProviderFromVueWrapper
+      // if (vueProviderFunctionList.length > 0) {
+      //   const vueProviderList = []
+      //   vueProviderFunctionList.forEach((vueProviderFunction) => {
+      //
+      //   })
+      // }
+      // vueProviderFunctionList.forEach(() => {})
+
+      return setupResult
     },
     data() {
       return {
-        portals: [],
-        portalKeyPool: [],
-        maxPortalCount: 0,
+        VEAURY_Portals: []
       }
     },
     created() {
+      this.__veauryPortalKeyPool__ = []
+      this.__veauryMaxPortalCount__ = 0
     },
     computed: {
-      injectedProps() {
-        return this.injectedComputed?.call(this)
+      __veauryInjectedProps__() {
+        return this.__veauryInjectedComputed__?.call(this)
       }
     },
     render() {
@@ -250,29 +293,29 @@ export default function applyReactInVue(component, options = {}) {
        * resulting in reactdom 'container' on which render depends cannot be obtained.
        * Therefore,you can create a 'VNode' node first and then execute 'slotsInit', which effectively avoids this situation
        */
-      const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.portals.map(({ Portal, key }) => Portal(createElement, key)))
+      const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
       // this.slotsInit()
       return VNode
     },
     methods: {
-      pushVuePortal(vuePortal) {
-        const key = this.portalKeyPool.shift() || this.maxPortalCount++
-        this.portals.push({
+      __veauryPushVuePortal__(vuePortal) {
+        const key = this.__veauryPortalKeyPool__.shift() || this.__veauryMaxPortalCount__++
+        this.VEAURY_Portals.push({
           Portal: vuePortal,
           key,
         })
       },
-      removeVuePortal(vuePortal) {
+      __veauryRemoveVuePortal__(vuePortal) {
         let index
-        const portalData = this.portals.find((obj, i) => {
+        const portalData = this.VEAURY_Portals.find((obj, i) => {
           if (obj.Portal === vuePortal) {
             index = i
             return true
           }
         })
-        this.portalKeyPool.push(portalData.key)
-        this.portals.splice(index, 1)
+        this.__veauryPortalKeyPool__.push(portalData.key)
+        this.VEAURY_Portals.splice(index, 1)
       },
       // slotsInit(vnode) {
       //   // TODO: It doesn't matter
@@ -301,7 +344,7 @@ export default function applyReactInVue(component, options = {}) {
       //   })
       // },
       // parse scopedSlots
-      getScopeSlot(slotFunction, hashList, originSlotFunction) {
+      __veauryGetScopeSlot__(slotFunction, hashList, originSlotFunction) {
         const _this = this
         function scopedSlotFunction(createReactSlot) {
           function getSlot(...args) {
@@ -332,11 +375,11 @@ export default function applyReactInVue(component, options = {}) {
         return scopedSlotFunction
       },
       // used by 'pureTransformer'
-      __syncUpdateProps(extraData) {
-        // this.mountReactComponent(true, false, extraData)
-        this.reactInstance && this.reactInstance.setState(extraData)
+      __veaurySyncUpdateProps__(extraData) {
+        // this.__veauryMountReactComponent__(true, false, extraData)
+        this.__veauryReactInstance__ && this.__veauryReactInstance__.setState(extraData)
       },
-      mountReactComponent(update, updateType, extraData = {}) {
+      __veauryMountReactComponent__(update, updateType, extraData = {}) {
         const hashMap = {}
         const hashList = []
         // get vue component scoped hash
@@ -364,7 +407,7 @@ export default function applyReactInVue(component, options = {}) {
               normalSlots[newKey].__slot = true
               continue
             }
-            scopedSlots[i] = this.getScopeSlot(this.$slots[i], hashList, this.$.vnode?.children?.[i])
+            scopedSlots[i] = this.__veauryGetScopeSlot__(this.$slots[i], hashList, this.$.vnode?.children?.[i])
           }
         }
 
@@ -376,19 +419,19 @@ export default function applyReactInVue(component, options = {}) {
         }
 
         // cache last data
-        this.last = this.last || {}
-        this.last.slot = this.last.slot || {}
-        this.last.attrs = this.last.attrs || {}
+        this.__veauryLast__ = this.__veauryLast__ || {}
+        this.__veauryLast__.slot = this.__veauryLast__.slot || {}
+        this.__veauryLast__.attrs = this.__veauryLast__.attrs || {}
         const compareLast = {
           slot: () => {
-            this.last.slot = {
+            this.__veauryLast__.slot = {
               ...(children ? { children } : {children: null}),
               ...lastNormalSlots,
               ...scopedSlots,
             }
           },
           attrs: () => {
-            this.last.attrs = this.$attrs
+            this.__veauryLast__.attrs = this.$attrs
           }
         }
         if (updateType) {
@@ -400,8 +443,9 @@ export default function applyReactInVue(component, options = {}) {
           compareLast.attrs()
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
-            {...this.$attrs}
-            {...this.injectedProps}
+            // __veauryVueProviderList__={this.__veauryVueProviderList__}
+            {...toRaws(this.$attrs)}
+            {...toRaws(this.__veauryInjectedProps__)}
             {...{ children }}
             {...lastNormalSlots}
             {...scopedSlots}
@@ -410,7 +454,7 @@ export default function applyReactInVue(component, options = {}) {
             hashList={hashList}
             {...(this.$attrs.style ? { style: this.$attrs.style } : {})}
             // style={this.$attrs.style}
-            ref={(ref) => (this.reactInstance = ref)}
+            ref={(ref) => (this.__veauryReactInstance__ = ref)}
           />
 
           const container = this.$refs.react
@@ -432,7 +476,7 @@ export default function applyReactInVue(component, options = {}) {
             }
           } else {
             reactWrapperRef = options.wrapInstance
-            reactWrapperRef.vueWrapperRef = this
+            reactWrapperRef.__veauryVueWrapperRef__ = this
           }
 
           // If there is a React component in the outer component, use 'Portal' to open up the React scope
@@ -452,30 +496,34 @@ export default function applyReactInVue(component, options = {}) {
             reactRootComponent,
             container,
           )
+          // TODO: react 18
+          // this.__veauryReactApp__ = createRoot(container)
+          // this.__veauryReactApp__.render(reactRootComponent)
         } else {
 
           const setReactState = () => {
-            this.reactInstance && this.reactInstance.setState((prevState) => {
+            this.__veauryReactInstance__ && this.__veauryReactInstance__.setState((prevState) => {
               // Clear the previous 'state', preventing merging
               Object.keys(prevState).forEach((key) => {
                 if (options.isSlots && key === 'children') return
                 delete prevState[key]
               })
               return {
-                ...this.cache,
-                ...this.injectedProps,
-                ...!options.isSlots && this.last.slot,
-                ...this.last.attrs,
+                ...this.__veauryCache__,
+                ...toRaws(this.__veauryInjectedProps__),
+                ...!options.isSlots && this.__veauryLast__.slot,
+                ...toRaws(this.__veauryLast__.attrs),
+                // '__veauryVueProviderList__': this. __veauryVueProviderList__
               }
             })
-            this.cache = null
+            this.__veauryCache__ = null
           }
 
 
           // do the micro task update
           if (this.microTaskUpdate) {
             // 'Promise' asynchronous merge update
-            if (!this.cache) {
+            if (!this.__veauryCache__) {
               this.$nextTick(() => {
                 setReactState()
                 this.microTaskUpdate = false
@@ -493,8 +541,8 @@ export default function applyReactInVue(component, options = {}) {
             })
           }
 
-          this.cache = {
-            ...this.cache || {},
+          this.__veauryCache__ = {
+            ...this.__veauryCache__ || {},
             ...{
               ...extraData,
               ...(this.$attrs.class ? { className: this.$attrs.class } : {}),
@@ -513,12 +561,12 @@ export default function applyReactInVue(component, options = {}) {
       },
     },
     mounted() {
-      this.IGNORE_STRANGE_UPDATE = true
+      this.__VEAURY_IGNORE_STRANGE_UPDATE__ = true
       Promise.resolve().then(() => {
-        this.IGNORE_STRANGE_UPDATE = false
+        this.__VEAURY_IGNORE_STRANGE_UPDATE__ = false
       })
       clearTimeout(this.updateTimer)
-      this.mountReactComponent()
+      this.__veauryMountReactComponent__()
     },
     beforeUnmount() {
       clearTimeout(this.updateTimer)
@@ -538,6 +586,8 @@ export default function applyReactInVue(component, options = {}) {
       overwriteDomMethods(this.$refs.react)
       // Destroy the React root node
       ReactDOM.unmountComponentAtNode(this.$refs.react)
+      // TODO: react 18
+      // this.__veauryReactApp__.unmount()
       // restore native method
       recoverDomMethods()
     },
@@ -550,24 +600,30 @@ export default function applyReactInVue(component, options = {}) {
        *  and the scope of 'Teleport' is integrated with the outer Vue component ,
        *  will cause the outer Vue component to trigger an 'updated' life cycle by default
        **/
-      if (this.IGNORE_STRANGE_UPDATE) return
+      if (this.__VEAURY_IGNORE_STRANGE_UPDATE__) return
 
-      this.mountReactComponent(true, {slot: true})
+      this.__veauryMountReactComponent__(true, {slot: true})
     },
     inheritAttrs: false,
     watch: {
       $attrs: {
         handler() {
-          this.mountReactComponent(true, {attrs: true})
+          this.__veauryMountReactComponent__(true, {attrs: true})
         },
         deep: true,
       },
-      injectedProps: {
+      __veauryInjectedProps__: {
         handler() {
-          this.mountReactComponent(true, {attrs: true})
+          this.__veauryMountReactComponent__(true, {attrs: true})
         },
         deep: true,
-      }
+      },
+      // __veauryVueProviderList__: {
+      //   handler() {
+      //     this.__veauryMountReactComponent__(true, {attrs: true})
+      //   },
+      //   deep: true,
+      // },
     },
   }
 }
