@@ -725,7 +725,7 @@ const Basic = applyVueInReact(BasicVue)
 export default function () {
   const basicInstance = createRef(null)
   useEffect(() => {
-    // Get the real react instance through `__veauryVueRef__`
+    // Get the real vue instance through `__veauryVueRef__`
     console.log(basicInstance.current.__veauryVueRef__)
   }, [])
   return <Basic ref={basicInstance}/>
