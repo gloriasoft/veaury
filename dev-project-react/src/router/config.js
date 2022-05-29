@@ -27,8 +27,12 @@ export default [
     element: asyncElement(() => import('../components/Context')),
   },
   {
-    path: '/inject',
-    element: asyncElement(() => import('../components/Inject')),
+    path: '/useInjectPropsFromWrapper',
+    element: asyncElement(() => import('../components/useInjectPropsFromWrapper')),
+  },
+  {
+    path: '/CrossingProvider',
+    element: asyncElement(() => import('../components/CrossProvider')),
   },
   {
     path: '/lazyVueInReact',

@@ -2,6 +2,7 @@ import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
 import {applyReactInVue} from 'veaury'
+import React, {useRef} from 'react'
 
 // This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
 
@@ -49,7 +50,14 @@ function VueInjectionHookInComputedMode(vueProps) {
 }
 
 function ReactComponent (props) {
-  return (<div>
+  const style = useRef({
+    background: '#91e7fc',
+    width: 500,
+    margin: 'auto',
+    padding: 10,
+    lineHeight: '30px'
+  })
+  return (<div style={style.current}>
     This is the React Component
     <span>
       the path info from 'vue-router': <span style={{fontWeight: 'bold'}}>{props.fullPath}</span><br/>

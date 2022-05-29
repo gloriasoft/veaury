@@ -42,8 +42,13 @@ export default createRouter({
         },
         {
             name: 'injection',
-            path: '/injection',
-            component: () => import('../pages/injectPropsFromWrapper')
+            path: '/useInjectPropsFromWrapper',
+            component: () => import('../pages/useInjectPropsFromWrapper')
+        },
+        {
+            name: 'crossingProvider',
+            path: '/crossingProvider',
+            component: () => import('../pages/crossProvider')
         },
         {
             name: 'introduce',

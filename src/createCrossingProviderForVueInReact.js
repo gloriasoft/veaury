@@ -11,7 +11,7 @@ export default function createCrossingProviderForVueInReact(reactInjection, prov
       return () => h(context.slots.default)
     }
   }, {
-    injectPropsFromWrapper: reactInjection
+    useInjectPropsFromWrapper: reactInjection
   })
   function useReactHooksInVue() {
     return inject(providerName)

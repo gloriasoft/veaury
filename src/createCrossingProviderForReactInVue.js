@@ -11,7 +11,7 @@ export default function createCrossingProviderForReactInVue(vueInjection) {
       {children}
     </context.Provider>
   }, {
-    injectPropsFromWrapper: vueInjection
+    useInjectPropsFromWrapper: vueInjection
   })
   function useVueHooksInReact() {
     return useContext(context)

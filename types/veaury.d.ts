@@ -13,7 +13,7 @@ interface injectPropsFromWrapper<T extends allModeReturn = allModeReturn>{
 }
 interface magicOptions {
     [key: string]: any
-    injectPropsFromWrapper?: injectionFunction
+    useInjectPropsFromWrapper?: injectionFunction
     beforeVueAppMount?: (app: object) => any
 }
 type options = magicOptions | null | undefined;
@@ -26,10 +26,10 @@ type CrossingProviderReturn = [useCrossingHooks, CrossingProviderComponent]
 
 export const createCrossingProviderForReactInVue: (vueInjection: injectionFunction) => CrossingProviderReturn;
 export const createCrossingProviderForVueInReact: (reactInjection: injectionFunction, providerName?: string) => CrossingProviderReturn;
-export const veauryOptions: options;
-export const setVeauryOptions: (veauryOptions: options) => options;
+// export const veauryOptions: options;
+// export const setVeauryOptions: (veauryOptions: options) => options;
 export const applyReactInVue: (ReactComponent: ReactComponent, options?: options) => VueComponent;
-export const applyVueInReact: (VueComponent: ReactComponent, options?: options) => ReactComponent;
+export const applyVueInReact: (VueComponent: VueComponent, options?: options) => ReactComponent;
 export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => any;
 export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 export const VueContainer: any;

@@ -27,10 +27,10 @@ function ReactInterceptComponent({Loader, componentProps}) {
 
 const VueContainer = React.forwardRef((props, ref) => {
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
-  const injection = globalOptions.injectPropsFromWrapper || props.component?.__veauryInjectPropsFromWrapper__
+  const injection = globalOptions.useInjectPropsFromWrapper || props.component?.__veauryInjectPropsFromWrapper__
 
   let ReactInjectionProps
-  // If it is a slot, injectPropsFromWrapper is not executed
+  // If it is a slot, useInjectPropsFromWrapper is not executed
   if (!globalOptions.isSlots) {
     if (typeof injection === 'function') {
       ReactInjectionProps = injection(props)

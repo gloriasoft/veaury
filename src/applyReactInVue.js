@@ -241,13 +241,13 @@ export default function applyReactInVue(component, options = {}) {
   return {
     originReactComponent: component,
     setup(props) {
-      // If it is a slot, injectPropsFromWrapper is not executed
+      // If it is a slot, useInjectPropsFromWrapper is not executed
       if (options.isSlots) return
       const setupResult = {}
       const injectedProps = reactive({})
       const instance = getCurrentInstance()
 
-      const injection = options.injectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
+      const injection = options.useInjectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
       if (typeof injection === 'function') {
         const injectionResult = injection.call(instance.proxy, props)
         if (typeof injectionResult !== "function") {

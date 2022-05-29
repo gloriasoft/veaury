@@ -14,7 +14,7 @@
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
-import {ProviderInVue} from "./react_app/CrossProvider";
+import {ProviderInVue} from "./vueRouterAndVuexCrossingProvider";
 
 export default {
   components: {

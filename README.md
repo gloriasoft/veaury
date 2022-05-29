@@ -374,83 +374,78 @@ export default function () {
 }
 
 ```
-### HOC injectPropsFromWrapper
-`injectPropsFromWrapper` is a higher order component.  
+### Option useInjectPropsFromWrapper
+`useInjectPropsFromWrapper` is an option to `applyReactInVue` and `applyVueInReact`.
   
 When developing Vue and React applications at the same time, sometimes it is necessary to obtain the context of the React app inside the Vue component, and vice versa.  
   
-For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.  
-  
-This HOC can be used for both Vue and React components.  
+For example, to get information from `react-router` in Vue components, or to get state from `vuex` in React components.
 
-```typescript
-interface propsFromWrapper {
-    [propName: string]: any;
-}
-type component = object | Function
-type computedModeReturn = () => propsFromWrapper
-type defaultModeReturn = propsFromWrapper | Function
-type allModeReturn = defaultModeReturn | computedModeReturn
-type injectionFunction<T = allModeReturn> = (props?: propsFromWrapper) => T
-
-// types of injectPropsFromWrapper
-interface injectPropsFromWrapper<T extends allModeReturn = allModeReturn>{
-    (injectionFunction: injectionFunction<T>, component:component): component
-}
-```
 #### Usage of injecting React hooks in Vue component
 React application uses Vue component, example to get `react-router` inside Vue component.  
 ```vue
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span><br/><br/>
+    the path info from 'react-router': <span style="font-weight: bold">{{fullPath}}</span><br/><br/>
     <button @click="changeQuery">change query</button>
   </div>
 </template>
 <script>
-// This Vue component will be used in the React app and needs to use the react-router hooks
+import { computed } from 'vue'
 
-import { injectPropsFromWrapper } from 'veaury'
-import { useLocation, useNavigate } from 'react-router-dom'
-import React from 'react'
-
-function ReactInjectionHook (reactProps) {
-  // React hooks can be used in this function
-  // Use the hooks of react-router-dom
-  const reactRouterLocation = useLocation()
-  const navigate = useNavigate()
-  function changeQuery() {
-    navigate(`?a=${Math.random()}`, {replace: true})
-  }
-
-  // The returned object will be passed to the Vue component as props
-  return {
-    pathname: reactRouterLocation.pathname,
-    search: reactRouterLocation.search,
-    changeQuery
+export default {
+  props: ['reactRouter'],
+  // do not destructure props
+  setup(props) {
+    function changeQuery() {
+      props.reactRouter?.navigate(`?a=${Math.random()}`, {replace: true})
+    }
+    const fullPath = computed(() => {
+      const { location } = props.reactRouter || {}
+      return location?.pathname + location?.search
+    })
+    return {
+      fullPath,
+      changeQuery
+    }
   }
 }
-// 'injectPropsFromWrapper' returns the original Vue component and will register injectionHook.
-// When the Vue component is applied to the React app by 'applyVueInReact',
-// InjectionHook will be executed first, otherwise InjectionHook will not be executed
-export default injectPropsFromWrapper(ReactInjectionHook, {
-  props: {
-    pathname: String,
-    search: String,
-    changeQuery: Function
-  }
-})
 </script>
 ```
+Use `applyVueInReact` to wrap the above Vue component into a React component, and pass in `react-router`
+```js
+import { applyVueInReact } from 'veaury'
+import { useLocation, useNavigate } from 'react-router-dom'
+import AboveVueComponent from './AboveVueComponent'
+
+export default applyVueInReact(AboveVueComponent, {
+  useInjectPropsFromWrapper(reactProps) {
+    // React hooks can be used in this function
+    // Use the hooks of react-router-dom
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    // The returned object will be passed to the Vue component as props
+    return {
+      reactRouter: {
+        navigate,
+        location
+      }
+    }
+  }
+})
+```
+
 #### Usage of injecting Vue hooks in React component
 Vue application uses React component, example to get `vue-router` and `vuex` inside React component.  
 There are two modes for injecting functions, 'setup' and 'computed' modes.  
 ```jsx
+import React from 'react'
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
-import {injectPropsFromWrapper} from 'veaury'
+import {applyReactInVue} from 'veaury'
 
 // This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
 
@@ -497,11 +492,7 @@ function VueInjectionHookInComputedMode(vueProps) {
   }
 }
 
-// The first parameter is the injection function.
-// Vue's injection function has two modes: 'setup' and 'computed'.
-// Refer to the case of the above two injection function types.
-// Also try replacing the first parameter with 'VueInjectionHookInComputedMode'
-export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (props) {
+function ReactComponent (props) {
   return (<div>
     This is the React Component
     <span>
@@ -510,14 +501,161 @@ export default injectPropsFromWrapper(VueInjectionHookInSetupMode, function (pro
     </span><br/>
     <button onClick={props.changeQuery}>change query</button> <button onClick={props.incrementCount}>increment count</button>
   </div>)
+}
+
+// Vue's injection function has two modes: 'setup' and 'computed'.
+// Refer to the case of the above two injection function types.
+// Also try replacing the option injectPropsFromWrapper with 'VueInjectionHookInComputedMode'
+export default applyReactInVue(ReactComponent, {
+  useInjectPropsFromWrapper: VueInjectionHookInSetupMode
 })
 
 ```
-> **Note:** If you use injection function to wrap the same component multiple times, the previous injection function will be overwritten.  
-> 
-> Injection functions in 'computed' mode only support synchronous code
-> 
-> It should be ensured that the logic inside the injection function is a pure function, and business logic should not be added to the injection function. It is not recommended to use lifecycle or asynchronous calls in the injection function.
+### Crossing provider
+Although it is possible to use hooks from another framework via `useInjectPropsFromWrapper` and get them via properties, but in most cases, it is to get context type data, such as vue-router, react-router, redux, vuex, or another framework custom context.  
+
+Use `createCrossingProviderForReactInVue` and `createCrossingProviderForVueInReact` to create cross-frame providers, and components of another framework within the provider can get the context from this framework.  
+
+#### Usage of createCrossingProviderForVueInReact
+Create a react-router provider and a vue hooks that can be executed in the setup function of the Vue component and get the react-router. (reactRouterCrossingProvider.js)
+```jsx
+// Create a Provider that can get react hooks
+// This Provider will be exported as a react component,
+// and all of the vue components in this Provider can get the status of react hooks
+
+import { useLocation, useNavigate } from 'react-router-dom'
+import { createCrossingProviderForVueInReact } from 'veaury'
+
+// Execute 'useReactRouterForVue' in the setup function of the vue component to get the object returned by the incoming function
+const [useReactRouterForVue, ReactRouterProviderForVue] = createCrossingProviderForVueInReact(
+  // This incoming function can execute react hooks
+  function() {
+    return {
+      location: useLocation(),
+      navigate: useNavigate()
+    }
+  }
+)
+
+export {
+  useReactRouterForVue,
+  ReactRouterProviderForVue
+}
+```
+The vue component(Basic.vue) can get the context from the provider through the custom hook returned by `createCrossingProviderForVueInReact`.
+```vue
+<template>
+  <div class="vue-component">
+    <h3>This is the Vue Component.</h3>
+    the path info from 'react-router': <span style="font-weight: bold">{{pathname + search}}</span><br/><br/>
+    <button @click="changeQuery">change query</button>
+  </div>
+</template>
+<script>
+import { useReactRouterForVue } from './reactRouterCrossingProvider'
+import React from 'react'
+
+export default {
+  setup() {
+    const { location, navigate } = useReactRouterForVue()
+    function changeQuery() {
+      navigate(`?a=${Math.random()}`, {replace: true})
+    }
+    return {
+      pathname: location.pathname,
+      search: location.search,
+      changeQuery
+    }
+  }
+}
+</script>
+```
+React components use the provider, so that all vue components (including internal components) in the provider can get the context of this provider through custom hooks.
+```jsx
+import {applyVueInReact} from 'veaury'
+import BasicVue from './Basic.vue'
+import { ReactRouterProviderForVue } from './reactRouterCrossingProvider'
+
+const Basic = applyVueInReact(BasicVue)
+export default function () {
+
+    return <ReactRouterProviderForVue>
+            <Basic/>
+        </ReactRouterProviderForVue>
+}
+
+```
+
+#### Usage of createCrossingProviderForReactInVue
+Create a provider including vue-router and vuex and a React hooks that can be executed in the React function component and get the vue-router and vuex. (vueRouterAndVuexCrossingProvider.js)
+```js
+import {useStore} from 'vuex'
+import {useRouter, useRoute} from 'vue-router'
+import {createCrossingProviderForReactInVue} from 'veaury'
+
+const [useVueHooksInReact, VueProviderForReact] = createCrossingProviderForReactInVue(function() {
+  return {
+    vuex: useStore(),
+    vueRoute: useRoute(),
+    vueRouter: useRouter()
+  }
+})
+
+export {
+  useVueHooksInReact,
+  VueProviderForReact
+}
+```
+The React component(Basic.js) can get the context from the provider through the custom hook.
+```jsx
+import React from 'react'
+import { useVueHooksInReact } from '../vueRouterAndVuexCrossingProvider'
+
+export default function (props) {
+  const { vuex, vueRoute, vueRouter } = useVueHooksInReact()
+  function changeQuery() {
+    vueRouter.replace({
+      query: {
+        a: Math.random()
+      }
+    })
+  }
+  function incrementCount() {
+    vuex.dispatch('increment')
+  }
+  
+  return (<div>
+    This is the React Component<br/>
+    <span>
+      the path info from 'vue-router': <span style={{fontWeight: 'bold'}}>{vueRoute.fullPath}</span><br/>
+      the count from 'vuex': <span style={{fontWeight: 'bold'}}>{vuex.state.count}</span>
+    </span><br/>
+    <button onClick={changeQuery}>change query</button> <button onClick={incrementCount}>increment count</button>
+  </div>)
+}
+```
+Vue components use the provider, so that all React components (including internal components) in the provider can get the context of this provider through custom hooks.
+```vue
+<template>
+  <VueProviderForReact>
+    <Basic/>
+  </VueProviderForReact>
+</template>
+
+<script>
+import { applyReactInVue } from 'veaury'
+// This is a React Component
+import ReactBasic from "./react_app/Basic"
+import {VueProviderForReact} from "./vueRouterAndVuexCrossingProvider";
+
+export default {
+  components: {
+    VueProviderForReact,
+    Basic: applyReactInVue(ReactBasic),
+  }
+}
+</script>
+```
 
 ### Usage of lazyReactInVue
 ```vue

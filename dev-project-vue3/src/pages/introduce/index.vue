@@ -8,7 +8,8 @@
   <router-link to="/context">context</router-link>
   <router-link to="/lazyReactInVue">lazyReactInVue</router-link>
   <router-link to="/routerView">router-view</router-link>
-  <router-link to="/injection">injectPropsFromWrapper</router-link>
+  <router-link to="/useInjectPropsFromWrapper">useInjectPropsFromWrapper</router-link>
+  <router-link to="/crossingProvider">CrossingProvider</router-link>
 </template>
 
 <script>

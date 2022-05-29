@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import { useVueHooksInReact } from './CrossProvider'
+import { useVueHooksInReact } from '../vueRouterAndVuexCrossingProvider'
 
 export default function (props) {
   const { vuex, vueRoute, vueRouter } = useVueHooksInReact()
