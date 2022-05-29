@@ -694,3 +694,40 @@ export default function () {
 // types
 type lazyReactInVue = (asyncImport: Promise<any>, options?: options) => any
 ```
+
+### Usage of ref
+Get the React component's instance in the Vue Component.  
+```vue
+<template>
+  <Basic ref="Basic"/>
+</template>
+<script>
+import { applyReactInVue } from 'veaury'
+import BasicReact from './Basic'
+export default {
+  components: {
+    Basic: applyReactInVue(BasicReact)
+  },
+  mounted() {
+    // Get the real react instance through `__veauryReactRef__`
+    console.log(this.$refs.Basic.__veauryReactRef__)
+  }
+}
+</script>
+```
+Get the Vue component's instance in the React Component.
+```jsx
+import {applyVueInReact} from 'veaury'
+import BasicVue from './Basic.vue'
+import React, { createRef, useEffect } from "react"
+
+const Basic = applyVueInReact(BasicVue)
+export default function () {
+  const basicInstance = createRef(null)
+  useEffect(() => {
+    // Get the real react instance through `__veauryVueRef__`
+    console.log(basicInstance.current.__veauryVueRef__)
+  }, [])
+  return <Basic ref={basicInstance}/>
+}
+```
