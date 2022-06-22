@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom"
 // import { createRoot } from "react-dom/client"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
-import { h as createElement, getCurrentInstance, reactive } from 'vue'
+import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 
 function toRaws(obj) {
@@ -33,12 +33,8 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
   // reactDevTools
   static displayName = `applyReact_${Component.displayName || Component.name || "Component"}`
 
-  setRef(ref) {
-    if (!ref) return
-    // Use the reactRef property to save the instance of the target react component,
-    // which can be obtained by the setRef instance of the parent component
-    wrapInstance.__veauryReactRef__ = ref
-    // The enumerable properties of the react instance are linked to the vue instance
+  // The enumerable properties of the react instance are linked to the vue instance
+  reactPropsLinkToVueInstance(ref) {
     Object.keys(ref).forEach((key) => {
       if (!wrapInstance[key]) {
         wrapInstance[key] = ref[key]
@@ -50,19 +46,14 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         wrapInstance[key] = ref[key]
       }
     })
-    Promise.resolve().then(() => {
-      Object.keys(ref).forEach((key) => {
-        if (!wrapInstance[key]) {
-          wrapInstance[key] = ref[key]
-        }
-      })
-      Object.getOwnPropertyNames(ref.__proto__).filter((key) => ['constructor', 'render'].indexOf(key) < 0).forEach((key) => {
-        if (!wrapInstance[key]) {
-          wrapInstance[key] = ref[key]
-        }
-      })
-    })
-
+  }
+  setRef(ref) {
+    if (!ref) return
+    // Use the reactRef property to save the instance of the target react component,
+    // which can be obtained by the setRef instance of the parent component
+    wrapInstance.__veauryReactRef__ = ref
+    this.reactPropsLinkToVueInstance(ref)
+    Promise.resolve().then(() => this.reactPropsLinkToVueInstance(ref))
 
     // Compatible with receiving parameters of type useRef
     this.setRef.current = ref
@@ -154,6 +145,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       if (!props.hasOwnProperty(i) || props[i] == null) continue
       if (props[i].__slot) {
         if (!props[i].reactSlot) {
+          console.log(8888888888, i, props[i])
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
           // if (options.defaultSlotsFormatter) {
@@ -167,7 +159,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           // } else {
             props[i] = { ...applyVueInReact(this.createSlot(props[i]), { ...options, isSlots: true, wrapInstance }).render() }
           // }
-          props[i].vueSlot = vueSlot
+          props[i].vueFunction = vueSlot
         } else {
           props[i] = props[i].reactSlot
         }
@@ -179,10 +171,27 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         $scopedSlots[i] = props[i]
       }
     }
-    // parse normal slots
-    if (children != null) {
+
+    const getChildren = () => {
       if (!children.reactSlot) {
         const vueSlot = children
+
+
+        // if (typeof children === 'function') {
+        //   const trueChildren = children()
+        //   // Check if children are from react children wrapped by applyReactInVue
+        //   if (trueChildren.length === 1) {
+        //     if (trueChildren[0].reactSlot) {
+        //       children = trueChildren[0].reactSlot
+        //       return
+        //     }
+        //     // Vue Fragment wrapped
+        //     if (trueChildren[0].type === VueFragment && trueChildren[0].children?.length === 1 && trueChildren[0].children[0].reactSlot) {
+        //       children = trueChildren[0].children[0].reactSlot
+        //       return
+        //     }
+        //   }
+        // }
         // TODO: defaultSlotsFormatter
         // if (options.defaultSlotsFormatter) {
         //   children.__top__ = this.__veauryVueWrapperRef__
@@ -193,12 +202,17 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         //     children = { ...children }
         //   }
         // } else {
-          children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
+        children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
+        children.vueFunction = vueSlot
         // }
-        children.vueSlot = vueSlot
-      } else {
-        children = children.reactSlot
+        return
       }
+      children = children.reactSlot
+    }
+    // parse normal slots
+    if (children != null) {
+      // Use a predicate function to determine the value of children
+      getChildren()
     }
     $slots.default = children
     const refInfo = {}
@@ -240,7 +254,7 @@ export default function applyReactInVue(component, options = {}) {
 
   return {
     originReactComponent: component,
-    setup(props) {
+    setup(props, context) {
       // If it is a slot, useInjectPropsFromWrapper is not executed
       if (options.isSlots) return
       const setupResult = {}
@@ -296,9 +310,36 @@ export default function applyReactInVue(component, options = {}) {
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
       // this.slotsInit()
+      this.__veauryCheckReactSlot__()
       return VNode
     },
     methods: {
+      __veauryCheckReactSlot__() {
+        function linkReact(slot, child, type) {
+          if (child[type]) {
+            slot[type] = child[type]
+            return true
+          }
+        }
+        Object.keys(this.$slots).forEach((key) => {
+          try {
+            const trueChildren = this.$slots[key]({})
+            // Check if children are from react children wrapped by applyReactInVue
+            if (trueChildren.length === 1) {
+              const child = trueChildren[0]
+              if (linkReact(this.$slots[key], child, 'reactSlot')) return
+              // if (linkReact(this.$slots[key], child, 'reactFunction')) return
+
+              // Vue Fragment wrapped
+              if (child.type === VueFragment && child.children?.length === 1) {
+                const subChild = child.children[0]
+                if (linkReact(this.$slots[key], subChild, 'reactSlot')) return
+                // linkReact(this.$slots[key], subChild, 'reactFunction')
+              }
+            }
+          } catch(e) {}
+        })
+      },
       __veauryPushVuePortal__(vuePortal) {
         const key = this.__veauryPortalKeyPool__.shift() || this.__veauryMaxPortalCount__++
         this.VEAURY_Portals.push({
@@ -351,6 +392,18 @@ export default function applyReactInVue(component, options = {}) {
             if (slotFunction.reactFunction) {
               return slotFunction.reactFunction.apply(this, args)
             }
+            console.log(111111, slotFunction.reactFunction)
+            // TODO: Determine whether there is a reactFunction,
+            //  but it will cause the slot function to be executed twice, and will trigger a vue warning
+            // const trueSlot = slotFunction.apply(this, args)
+            // if (trueSlot.length === 1) {
+            //   if (trueSlot[0].reactFunction) {
+            //     return trueSlot[0].reactFunction.apply(this, args)
+            //   }
+            //   if (trueSlot[0].children?.length === 1 && trueSlot[0].children[0].reactFunction) {
+            //     return trueSlot[0].children[0].reactFunction.apply(this, args)
+            //   }
+            // }
             if (options.defaultSlotsFormatter) {
               let scopeSlot = slotFunction.apply(this, args)
               scopeSlot.__top__ = _this

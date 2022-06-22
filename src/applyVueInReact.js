@@ -151,12 +151,17 @@ class VueComponentLoader extends React.Component {
     if ($slots) {
       Object.keys($slots).forEach((key) => {
         const originSlot = $slots[key]
+        if (originSlot == null) return
         if (typeof originSlot === 'function') {
           $slots[key] = originSlot
+          $slots[key].reactFunction = originSlot
         } else {
           $slots[key] = () => originSlot
+          $slots[key].reactSlot = originSlot
         }
-
+        if (originSlot.vueFunction) {
+          $slots[key].vueFunction = originSlot.vueFunction
+        }
       })
       return $slots
     }
@@ -202,6 +207,7 @@ class VueComponentLoader extends React.Component {
           for (let i in tempScopedSlots) {
             if (!tempScopedSlots.hasOwnProperty(i)) continue
             let reactFunction = tempScopedSlots[i]
+            if (reactFunction == null) continue
             tempScopedSlots[i] = ((scopedSlot) => {
               return (...args) => {
                 if (scopedSlot.vueFunction) {
@@ -215,6 +221,14 @@ class VueComponentLoader extends React.Component {
                 } else {
                   newSlot = this.getScopedSlots.__scopeSlots[i]
                   newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                }
+                if (scopedSlot.reactFunction) {
+                  newSlot.reactFunction = scopedSlot.reactFunction
+                  return newSlot
+                }
+                if (scopedSlot.reactSlot) {
+                  newSlot.reactSlot = scopedSlot.reactSlot
+                  return newSlot
                 }
                 return newSlot
               }

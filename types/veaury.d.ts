@@ -22,10 +22,12 @@ interface defineAsyncComponentOptions {
 }
 type useCrossingHooks = Function
 type CrossingProviderComponent = component
-type CrossingProviderReturn = [useCrossingHooks, CrossingProviderComponent]
+type ReactContext = Object
+type CrossingProviderReactInVueReturn = [useCrossingHooks, CrossingProviderComponent, ReactContext]
+type CrossingProviderVueInReactReturn = [useCrossingHooks, CrossingProviderComponent]
 
-export const createCrossingProviderForReactInVue: (vueInjection: injectionFunction) => CrossingProviderReturn;
-export const createCrossingProviderForVueInReact: (reactInjection: injectionFunction, providerName?: string) => CrossingProviderReturn;
+export const createCrossingProviderForReactInVue: (vueInjection: injectionFunction) => CrossingProviderReactInVueReturn;
+export const createCrossingProviderForVueInReact: (reactInjection: injectionFunction, providerName?: string) => CrossingProviderVueInReactReturn;
 // export const veauryOptions: options;
 // export const setVeauryOptions: (veauryOptions: options) => options;
 export const applyReactInVue: (ReactComponent: ReactComponent, options?: options) => VueComponent;

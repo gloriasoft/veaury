@@ -39,6 +39,10 @@ export default [
     element: asyncElement(() => import('../components/LazyVueInReact')),
   },
   {
+    path: '/ReactMissVue/*',
+    element: asyncElement(() => import('../components/reactMissVue')),
+  },
+  {
     path: '*',
     element: asyncElement(() => import('../components/Introduce')),
   },
