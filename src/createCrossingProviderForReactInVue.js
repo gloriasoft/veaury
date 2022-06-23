@@ -5,11 +5,11 @@ import applyReactInVue from "./applyReactInVue"
 export default function createCrossingProviderForReactInVue(vueInjection) {
   const reactContext = createContext({})
   const ProviderInVue = applyReactInVue(function ({children, ...props}) {
-    return <context.Provider value={{
+    return <reactContext.Provider value={{
       ...props
     }}>
       {children}
-    </context.Provider>
+    </reactContext.Provider>
   }, {
     useInjectPropsFromWrapper: vueInjection
   })
