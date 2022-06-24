@@ -109,6 +109,7 @@ class VueComponentLoader extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
+    console.log(111111111, nextProps, nextState)
     if (nextProps === this.props) return true
     let { component, [optionsName]: options, 'v-slots': $slots = {}, children, ...props } = nextProps
     if (this.__veauryCurrentVueComponent__ !== component) {
@@ -132,6 +133,7 @@ class VueComponentLoader extends React.Component {
       delete this.__veauryVueInstance__.$data[key]
     })
     // update vue $data
+    console.log(8888, props.$slots)
     this.__veauryVueInstance__ && Object.assign(this.__veauryVueInstance__.$data, parseVModel(props))
     return true
   }
