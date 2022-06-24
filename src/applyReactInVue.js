@@ -145,7 +145,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       if (!props.hasOwnProperty(i) || props[i] == null) continue
       if (props[i].__slot) {
         if (!props[i].reactSlot) {
-          console.log(8888888888, i, props[i])
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
           // if (options.defaultSlotsFormatter) {
@@ -392,7 +391,6 @@ export default function applyReactInVue(component, options = {}) {
             if (slotFunction.reactFunction) {
               return slotFunction.reactFunction.apply(this, args)
             }
-            console.log(111111, slotFunction.reactFunction)
             // TODO: Determine whether there is a reactFunction,
             //  but it will cause the slot function to be executed twice, and will trigger a vue warning
             // const trueSlot = slotFunction.apply(this, args)

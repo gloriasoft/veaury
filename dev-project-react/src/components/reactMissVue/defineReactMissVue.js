@@ -3,31 +3,29 @@
 // and all of the vue components in this Provider can get the status of react hooks
 
 import { defineStore, createPinia } from 'pinia'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import { h } from 'vue'
-import { createCrossingProviderForReactInVue, applyVueInReact, applyReactInVue } from 'veaury'
+import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createReactMissVue, applyReactInVue } from 'veaury'
 
-function TestReact2() {
-  return 333333
-}
-
+// create vue-router instance
 const router = createRouter({
-  history: createWebHashHistory('/#/ReactMissVue/'),
+  history: createWebHashHistory('/#/ReactMissVue'),
   routes: [
     {
-      name: 'aaa111',
+      name: '',
       path: '/aaa',
-      component: applyReactInVue(TestReact2)
+      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>
+      path:/aaa<br/>
+      <input type="text"/></div>)
     },
     {
       name: 'empty',
       path: '/:default(.*)',
-      component: applyReactInVue(() => <div>empty</div>)
+      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>empty</div>)
     },
   ],
 })
 
-
+// create a pinia store
 const useFooStore = defineStore({
   id: 'foo',
   state() {
@@ -43,6 +41,7 @@ const useFooStore = defineStore({
     }
   }
 })
+// create a pinia store
 const useBarStore = defineStore({
   id: 'bar',
   state() {
@@ -59,23 +58,27 @@ const useBarStore = defineStore({
   }
 })
 
-// Execute 'useReactRouterForVue' in the setup function of the vue component to get the object returned by the incoming function
-let [useReactMissVue, ReactMissVue] = createCrossingProviderForReactInVue(
-  // This incoming function can execute react hooks
-  function() {
+// create a ReactMissVue instance
+let [useReactMissVue, ReactMissVue] = createReactMissVue({
+  useVueInjection() {
+    // This object can be obtained by using useReactMissVue in the react component
     return {
       fooStore: useFooStore(),
-      barStore: useBarStore()
+      barStore: useBarStore(),
+      vueRouter: useRouter(),
+      vueRoute: useRoute()
     }
-  }
-)
-
-ReactMissVue = applyVueInReact(ReactMissVue, {
+  },
+  // beforeVueAppMount can only be used in the outermost ReactMissVue
+  // Because veaury will only create a vue application in the outermost layer
   beforeVueAppMount(app) {
+    // register pinia
     app.use(createPinia())
+    // register vue-router
     app.use(router)
   }
 })
+
 export {
   useReactMissVue,
   ReactMissVue
