@@ -109,9 +109,8 @@ class VueComponentLoader extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
-    console.log(111111111, nextProps, nextState)
     if (nextProps === this.props) return true
-    let { component, [optionsName]: options, 'v-slots': $slots = {}, children, ...props } = nextProps
+    let { component, [optionsName]: options, 'v-slots': $slots = null, children, ...props } = nextProps
     if (this.__veauryCurrentVueComponent__ !== component) {
       this.updateVueComponent(component)
     }
@@ -119,21 +118,35 @@ class VueComponentLoader extends React.Component {
     if (!this.__veauryVueInstance__) return
 
     if (children) {
+      if (!$slots) {
+        $slots = {}
+      }
       if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
         $slots = children
       } else {
         $slots.default = children
       }
     }
-    if ($slots) {
-      props.$slots = this.transferSlots($slots)
+
+    const dataSlots = this.__veauryVueInstance__.$data.$slots
+    if (dataSlots) {
+      Object.keys(dataSlots).forEach((key) => {
+        delete dataSlots[key]
+      })
     }
-    // delete all keys
+    if ($slots) {
+      if (!dataSlots) this.__veauryVueInstance__.$data.$slots = {}
+      Object.assign(this.__veauryVueInstance__.$data.$slots, this.transferSlots($slots))
+    }
+
+    // delete all keys, except $slots
     Object.keys(this.__veauryVueInstance__.$data).forEach((key) => {
+      // don't delete $slots, otherwise it will trigger infinite updates
+      if (key === '$slots') return
       delete this.__veauryVueInstance__.$data[key]
     })
+
     // update vue $data
-    console.log(8888, props.$slots)
     this.__veauryVueInstance__ && Object.assign(this.__veauryVueInstance__.$data, parseVModel(props))
     return true
   }
