@@ -10,12 +10,12 @@ const router = createRouter({
     {
       name: '',
       path: '/aaa',
-      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>path: /aaa</div>)
+      component: applyReactInVue(() => <div className="react-component">react use vue-router<br/>path: /aaa</div>)
     },
     {
       name: 'empty',
       path: '/:default(.*)',
-      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>empty</div>)
+      component: applyReactInVue(() => <div className="react-component">react use vue-router<br/>empty</div>)
     },
   ],
 })

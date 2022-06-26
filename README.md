@@ -662,8 +662,8 @@ So I implemented a factory function called `createReactMissVue` that returns a R
 With ReactMissVue, you can use Vue's plugins directly in React applications.  
 Enjoy it!  
 
-#### Usage of createReactMissVue
-
+#### Usage of createReactMissVue  
+For detailed use cases, please refer to `dev-project-react/src/components/reactMissVue`  
 ```jsx
 import { defineStore, createPinia } from 'pinia'
 import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
@@ -678,12 +678,18 @@ const router = createRouter({
     {
       name: '',
       path: '/aaa',
-      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>path: /aaa</div>)
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        path: /aaa
+      </div>)
     },
     {
       name: 'empty',
       path: '/:default(.*)',
-      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>empty</div>)
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        empty
+      </div>)
     },
   ],
 })
