@@ -1,5 +1,5 @@
 // Sometimes some features and plugins of Vue are really more useful than React.
-// Such as beforeEach of vue-router, pinia.
+// Such as beforeEach of vue-router, and pinia.
 // So I implemented a factory function called createReactMissVue that returns a React Provider Component and a React hooks.
 // With ReactMissVue, you can use Vue's plugins directly in React applications.
 // Enjoy it!

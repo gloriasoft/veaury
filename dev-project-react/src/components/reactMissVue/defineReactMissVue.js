@@ -1,7 +1,3 @@
-// Create a Provider that can get react hooks
-// This Provider will be exported as a react component,
-// and all of the vue components in this Provider can get the status of react hooks
-
 import { defineStore, createPinia } from 'pinia'
 import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
 import { createReactMissVue, applyReactInVue } from 'veaury'

@@ -1,7 +1,6 @@
 import { VueContainer } from 'veaury'
 import { ReactMissVue, useReactMissVue } from './defineReactMissVue'
 
-
 function TestReactComponent() {
   // use pinia store
   const { fooStore } = useReactMissVue()

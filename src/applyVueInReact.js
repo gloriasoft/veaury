@@ -21,10 +21,6 @@ function filterVueComponent (component, vueInstance) {
   return component
 }
 
-function ReactInterceptComponent({Loader, componentProps}) {
-  return <Loader {...componentProps}/>
-}
-
 const VueContainer = React.forwardRef((props, ref) => {
   if (props.component == null) return null
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
