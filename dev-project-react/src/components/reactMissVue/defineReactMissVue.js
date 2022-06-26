@@ -8,14 +8,13 @@ import { createReactMissVue, applyReactInVue } from 'veaury'
 
 // create vue-router instance
 const router = createRouter({
+  // Using vue-router inside route 'ReactMissVue'
   history: createWebHashHistory('/#/ReactMissVue'),
   routes: [
     {
       name: '',
       path: '/aaa',
-      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>
-      path:/aaa<br/>
-      <input type="text"/></div>)
+      component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>path: /aaa</div>)
     },
     {
       name: 'empty',
@@ -23,6 +22,12 @@ const router = createRouter({
       component: applyReactInVue(() => <div className="vue-component">react use vue-router<br/>empty</div>)
     },
   ],
+})
+
+// Yes, that's what vue-router has a charm over react-router
+router.beforeEach((to, from, next) => {
+  console.log('The beforeEach hook of vue-router is triggered!', to, from)
+  next()
 })
 
 // create a pinia store

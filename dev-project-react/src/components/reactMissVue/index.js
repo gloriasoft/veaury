@@ -1,14 +1,6 @@
-import {applyVueInReact, VueContainer} from 'veaury'
+import { VueContainer } from 'veaury'
 import { ReactMissVue, useReactMissVue } from './defineReactMissVue'
-import { KeepAlive, h } from 'vue'
 
-const KeepAliveReact = applyVueInReact(KeepAlive)
-const AA = applyVueInReact({
-  render() {
-    console.log(55555)
-    return 12121212
-  }
-})
 
 function TestReactComponent() {
   // use pinia store
@@ -27,29 +19,23 @@ function TestReactComponent1() {
 }
 
 function Demo() {
-  const { vueRouter } = useReactMissVue()
+  const { vueRouter, fooStore, barStore } = useReactMissVue()
   function jump(path) {
     vueRouter.push(path)
-  }
-
-  function DD(aa) {
-    console.log(1111111111, aa)
-    return 121212
   }
 
   return <div>
     <h3>This example shows the basic usage of `ReactMissVue`.</h3>
     <h4>Sometimes some features and plugins of Vue are really more useful than React.</h4>
-    <h4>Such as keep-alive, beforeEach of vue-router, pinia.</h4>
-    <h4></h4>
+    <h4>Such as beforeEach of vue-router and pinia.</h4>
     <TestReactComponent/>
     <TestReactComponent1/>
-      {/* Use the global component router-view */}
-    <VueContainer component="RouterView">
-      {() => <AA/>}
-    </VueContainer>
+    {/* Use the global component router-view */}
+    <VueContainer component="RouterView"/>
     <button onClick={() => jump('aaa')}>jump to 'ReactMissVue/aaa' from vue-router</button><br/>
-    <button onClick={() => jump(Math.random().toString())}>jump to random path from vue-router</button>
+    <button onClick={() => jump(Math.random().toString())}>jump to random path from vue-router</button><br/>
+    change the name of 'Foo' store from pina:<input type="text" onChange={(ele) => fooStore.changeName(ele.target.value)} value={fooStore.name}/><br/>
+    change the name of 'Bar' store from pina:<input type="text" onChange={(ele) => barStore.changeName(ele.target.value)} value={barStore.name}/><br/>
   </div>
 }
 
