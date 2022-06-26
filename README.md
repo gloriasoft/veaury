@@ -667,8 +667,7 @@ For detailed use cases, please refer to `dev-project-react/src/components/reactM
 ```jsx
 import { defineStore, createPinia } from 'pinia'
 import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
-import { createReactMissVue, applyReactInVue } from 'veaury'
-import { VueContainer } from "./veaury";
+import { createReactMissVue, applyReactInVue, VueContainer } from 'veaury'
 
 // create vue-router instance
 const router = createRouter({
