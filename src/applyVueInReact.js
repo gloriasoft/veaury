@@ -21,13 +21,10 @@ function filterVueComponent (component, vueInstance) {
   return component
 }
 
-function ReactInterceptComponent({Loader, componentProps}) {
-  return <Loader {...componentProps}/>
-}
-
 const VueContainer = React.forwardRef((props, ref) => {
+  if (props.component == null) return null
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
-  const injection = globalOptions.useInjectPropsFromWrapper || props.component?.__veauryInjectPropsFromWrapper__
+  const injection = globalOptions.useInjectPropsFromWrapper || props.component.__veauryInjectPropsFromWrapper__
 
   let ReactInjectionProps
   // If it is a slot, useInjectPropsFromWrapper is not executed
@@ -110,7 +107,7 @@ class VueComponentLoader extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     if (nextProps === this.props) return true
-    let { component, [optionsName]: options, 'v-slots': $slots = {}, children, ...props } = nextProps
+    let { component, [optionsName]: options, 'v-slots': $slots = null, children, ...props } = nextProps
     if (this.__veauryCurrentVueComponent__ !== component) {
       this.updateVueComponent(component)
     }
@@ -118,19 +115,34 @@ class VueComponentLoader extends React.Component {
     if (!this.__veauryVueInstance__) return
 
     if (children) {
+      if (!$slots) {
+        $slots = {}
+      }
       if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
         $slots = children
       } else {
         $slots.default = children
       }
     }
-    if ($slots) {
-      props.$slots = this.transferSlots($slots)
+
+    const dataSlots = this.__veauryVueInstance__.$data.$slots
+    if (dataSlots) {
+      Object.keys(dataSlots).forEach((key) => {
+        delete dataSlots[key]
+      })
     }
-    // delete all keys
+    if ($slots) {
+      if (!dataSlots) this.__veauryVueInstance__.$data.$slots = {}
+      Object.assign(this.__veauryVueInstance__.$data.$slots, this.transferSlots($slots))
+    }
+
+    // delete all keys, except $slots
     Object.keys(this.__veauryVueInstance__.$data).forEach((key) => {
+      // don't delete $slots, otherwise it will trigger infinite updates
+      if (key === '$slots') return
       delete this.__veauryVueInstance__.$data[key]
     })
+
     // update vue $data
     this.__veauryVueInstance__ && Object.assign(this.__veauryVueInstance__.$data, parseVModel(props))
     return true
@@ -151,12 +163,17 @@ class VueComponentLoader extends React.Component {
     if ($slots) {
       Object.keys($slots).forEach((key) => {
         const originSlot = $slots[key]
+        if (originSlot == null) return
         if (typeof originSlot === 'function') {
           $slots[key] = originSlot
+          $slots[key].reactFunction = originSlot
         } else {
           $slots[key] = () => originSlot
+          $slots[key].reactSlot = originSlot
         }
-
+        if (originSlot.vueFunction) {
+          $slots[key].vueFunction = originSlot.vueFunction
+        }
       })
       return $slots
     }
@@ -202,6 +219,7 @@ class VueComponentLoader extends React.Component {
           for (let i in tempScopedSlots) {
             if (!tempScopedSlots.hasOwnProperty(i)) continue
             let reactFunction = tempScopedSlots[i]
+            if (reactFunction == null) continue
             tempScopedSlots[i] = ((scopedSlot) => {
               return (...args) => {
                 if (scopedSlot.vueFunction) {
@@ -215,6 +233,14 @@ class VueComponentLoader extends React.Component {
                 } else {
                   newSlot = this.getScopedSlots.__scopeSlots[i]
                   newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                }
+                if (scopedSlot.reactFunction) {
+                  newSlot.reactFunction = scopedSlot.reactFunction
+                  return newSlot
+                }
+                if (scopedSlot.reactSlot) {
+                  newSlot.reactSlot = scopedSlot.reactSlot
+                  return newSlot
                 }
                 return newSlot
               }

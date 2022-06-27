@@ -16,5 +16,6 @@ export default function introduce() {
     <NavLink to={'/useInjectPropsFromWrapper'} style={style}>useInjectPropsFromWrapper</NavLink>
     <NavLink to={'/CrossingProvider'} style={style}>CrossingProvider</NavLink>
     <NavLink to={'/lazyVueInReact'} style={style}>lazyVueInReact</NavLink>
+    <NavLink to={'/ReactMissVue'} style={style}>ReactMissVue</NavLink>
   </Fragment>
 }

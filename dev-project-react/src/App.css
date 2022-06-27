@@ -5,6 +5,13 @@
   margin: auto;
 }
 
+.react-component {
+  background: #0ae4fd;
+  padding: 10px;
+  width: 500px;
+  margin: auto;
+}
+
 .slot {
   background: #0ae4fd;
   padding: 10px;

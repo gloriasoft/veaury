@@ -3,18 +3,18 @@ import { createContext, useContext } from "react"
 import applyReactInVue from "./applyReactInVue"
 
 export default function createCrossingProviderForReactInVue(vueInjection) {
-  const context = createContext({})
+  const reactContext = createContext({})
   const ProviderInVue = applyReactInVue(function ({children, ...props}) {
-    return <context.Provider value={{
+    return <reactContext.Provider value={{
       ...props
     }}>
       {children}
-    </context.Provider>
+    </reactContext.Provider>
   }, {
     useInjectPropsFromWrapper: vueInjection
   })
   function useVueHooksInReact() {
-    return useContext(context)
+    return useContext(reactContext)
   }
-  return [useVueHooksInReact, ProviderInVue]
+  return [useVueHooksInReact, ProviderInVue, reactContext]
 }

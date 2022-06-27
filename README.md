@@ -656,6 +656,97 @@ export default {
 }
 </script>
 ```
+### ReactMissVue  
+Sometimes some features and plugins of Vue are really more useful than React, such as `beforeEach` of `vue-router`, and `pinia`.  
+So I implemented a factory function called `createReactMissVue` that returns a React provider component and a React hook.  
+With ReactMissVue, you can use Vue's plugins directly in React applications.  
+Enjoy it!  
+
+#### Usage of createReactMissVue  
+For detailed use cases, please refer to `dev-project-react/src/components/reactMissVue`  
+```jsx
+import { defineStore, createPinia } from 'pinia'
+import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createReactMissVue, applyReactInVue, VueContainer } from 'veaury'
+
+// create vue-router instance
+const router = createRouter({
+  // Using vue-router inside route 'ReactMissVue'
+  history: createWebHashHistory('/#/ReactMissVue'),
+  routes: [
+    {
+      name: '',
+      path: '/aaa',
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        path: /aaa
+      </div>)
+    },
+    {
+      name: 'empty',
+      path: '/:default(.*)',
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        empty
+      </div>)
+    },
+  ],
+})
+
+// create a pinia store
+const useFooStore = defineStore({
+  id: 'foo',
+  state() {
+    return {
+      name: 'Eduardo'
+    }
+  },
+  actions: {
+    changeName(name) {
+      this.$patch({
+        name
+      })
+    }
+  }
+})
+
+// create a ReactMissVue instance
+let [useReactMissVue, ReactMissVue, ReactMissVueContext] = createReactMissVue({
+  useVueInjection() {
+    // This object can be obtained by using useReactMissVue in the react component
+    return {
+      fooStore: useFooStore(),
+      vueRouter: useRouter(),
+      vueRoute: useRoute()
+    }
+  },
+  // beforeVueAppMount can only be used in the outermost ReactMissVue
+  // Because veaury will only create a vue application in the outermost layer
+  beforeVueAppMount(app) {
+    // register pinia
+    app.use(createPinia())
+    // register vue-router
+    app.use(router)
+  }
+})
+
+function Demo() {
+  const { fooStore } = useReactMissVue()
+  return <div>
+    <div>
+      Foo's name: {fooStore?.name}
+    </div>
+    {/* Use the global component router-view */}
+    <VueContainer component="RouterView"/>
+  </div>
+}
+
+export default function () {
+  return <ReactMissVue>
+    <Demo/>
+  </ReactMissVue>
+}
+```
 
 ### Usage of lazyReactInVue
 ```vue
