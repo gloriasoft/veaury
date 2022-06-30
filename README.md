@@ -38,6 +38,57 @@ You can refer to How to configure the two projects to support the other framewor
 [How to configure React in the Vue project from '@vue/cli' ](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
 [How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
+If it is a project built by `vite`, the relevant configuration is as follows.  
+Remember to install `@vue/babel-plugin-jsx` first.  
++ The main project is Vue:  
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import react from '@vitejs/plugin-react'
+
+// When you use @vitejs/plugin-react, you can't use @vitejs/plugin-vue-jsx
+export default defineConfig({
+  plugins: [
+    vue({}),
+    react({
+      babel: {
+        // Default vuejsx plugin is off
+        plugins: [['@vue/babel-plugin-jsx', false]],
+        overrides: [{
+          // For any 'react_app' directory, enable the vuejsx plugin
+          exclude: [/[/\\]react_app[\\/$]+/],
+          plugins: ['@vue/babel-plugin-jsx']
+        }]
+      }
+    })
+  ]
+})
+```  
++ The main project is React:  
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    react({
+      babel: {
+        // Default vuejsx plugin is off
+        plugins: [['@vue/babel-plugin-jsx', false]],
+        overrides: [{
+          // For any '.vue' files, enable the vuejsx plugin
+          include: [/vue&type=script&lang.[tj]sx?$/],
+          plugins: ['@vue/babel-plugin-jsx']
+        }]
+      }
+    }),
+  ]
+})
+
+```
+
 ## Use cases
 - 👨‍👩‍👧 Using both Vue and React in one app
 - 🏃 Migrating from React to Vue or from Vue to React
