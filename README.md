@@ -39,7 +39,7 @@ You can refer to How to configure the two projects to support the other framewor
 [How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
 If it is a project built by `vite`, the relevant configuration is as follows.  
-Remember to install `@vue/babel-plugin-jsx` first.  
+
 + The main project is Vue:  
 ```js
 import { defineConfig } from 'vite'
@@ -49,7 +49,7 @@ import veauryVitePlugins from 'veaury/vite/index'
 // When you use @vitejs/plugin-react, you can't use @vitejs/plugin-vue-jsx
 export default defineConfig({
   plugins: [
-    // remove vue and vuejsx plugins
+    // Turn off vue and vuejsx plugins
     // vue(),
     // vueJsx(),
     veauryVitePlugins({
@@ -66,7 +66,7 @@ import veauryVitePlugins from 'veaury/vite/index'
 
 export default defineConfig({
   plugins: [
-    // remove react plugin
+    // Turn off react plugin
     // react(),
     veauryVitePlugins({
       type: 'react'
