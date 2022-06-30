@@ -43,11 +43,15 @@ Remember to install `@vue/babel-plugin-jsx` first.
 + The main project is Vue:  
 ```js
 import { defineConfig } from 'vite'
+// >= veaury@2.1.1
 import veauryVitePlugins from 'veaury/vite/index'
 
 // When you use @vitejs/plugin-react, you can't use @vitejs/plugin-vue-jsx
 export default defineConfig({
   plugins: [
+    // remove vue and vuejsx plugins
+    // vue(),
+    // vueJsx(),
     veauryVitePlugins({
       type: 'vue'
     })
@@ -57,10 +61,13 @@ export default defineConfig({
 + The main project is React:  
 ```js
 import { defineConfig } from 'vite'
+// >= veaury@2.1.1
 import veauryVitePlugins from 'veaury/vite/index'
 
 export default defineConfig({
   plugins: [
+    // remove react plugin
+    // react(),
     veauryVitePlugins({
       type: 'react'
     })
