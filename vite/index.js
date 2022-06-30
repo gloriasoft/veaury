@@ -1,7 +1,8 @@
-import vue from '@vitejs/plugin-vue'
-import react from '@vitejs/plugin-react'
+const vue = require('@vitejs/plugin-vue')
+const react = require('@vitejs/plugin-react')
 
-export default function veauryVitePlugins(options) {
+function veauryVitePlugins(options) {
+
   let overrides = [{
     plugins: ['@vue/babel-plugin-jsx']
   }]
@@ -19,8 +20,9 @@ export default function veauryVitePlugins(options) {
       overrides[0].include = options.exclude
     }
     if (options.overrides)
-    overrides = options.overrides
+      overrides = options.overrides
   }
+
   return [
     vue(),
     react({
@@ -32,3 +34,5 @@ export default function veauryVitePlugins(options) {
     })
   ]
 }
+
+module.exports = veauryVitePlugins
