@@ -1,7 +1,7 @@
 {
   "name": "veaury",
   "private": false,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
   "main": "dist/veaury.umd.js",
   "module": "dist/veaury.esm.js",
@@ -28,7 +28,8 @@
     "dist",
     "types",
     "babel",
-    "webpack"
+    "webpack",
+    "vite"
   ],
   "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
@@ -47,7 +48,9 @@
   "dependencies": {
     "@vue/babel-plugin-jsx": "^1.1.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "vue-loader": "^17.0.0"
+    "vue-loader": "^17.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "@vitejs/plugin-vue": "^2.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
