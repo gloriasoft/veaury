@@ -55,7 +55,7 @@ export default defineConfig({
         // Default vuejsx plugin is off
         plugins: [['@vue/babel-plugin-jsx', false]],
         overrides: [{
-          // For any 'react_app' directory, enable the vuejsx plugin
+          // For any directory excepts 'react_app', enable the vuejsx plugin
           exclude: [/[/\\]react_app[\\/$]+/],
           plugins: ['@vue/babel-plugin-jsx']
         }]
