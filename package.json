@@ -28,7 +28,8 @@
     "dist",
     "types",
     "babel",
-    "webpack"
+    "webpack",
+    "vite"
   ],
   "homepage": "https://github.com/devilwjp/veaury#readme",
   "peerDependencies": {
