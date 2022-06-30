@@ -46,12 +46,14 @@ import { defineConfig } from 'vite'
 // >= veaury@2.1.1
 import veauryVitePlugins from 'veaury/vite/index'
 
-// When you use @vitejs/plugin-react, you can't use @vitejs/plugin-vue-jsx
 export default defineConfig({
   plugins: [
     // Turn off vue and vuejsx plugins
     // vue(),
     // vueJsx(),
+    // When the type of veauryVitePlugins is set to vue, 
+    // only jsx in files in the directory named 'react_app' will be parsed with react jsx,
+    // and jsx in other files will be parsed with vue jsx
     veauryVitePlugins({
       type: 'vue'
     })
@@ -68,6 +70,9 @@ export default defineConfig({
   plugins: [
     // Turn off react plugin
     // react(),
+    // When the type of veauryVitePlugins is set to react, 
+    // only jsx in .vue file will be parsed with vue jsx, 
+    // jsx in other files will be parsed with react jsx
     veauryVitePlugins({
       type: 'react'
     })
