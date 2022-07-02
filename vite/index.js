@@ -1,32 +1,27 @@
 const vue = require('@vitejs/plugin-vue')
 const react = require('@vitejs/plugin-react')
 
-function veauryVitePlugins(options) {
+function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueJsxOverrides, reactPluginBabelOption}) {
 
-  let overrides = [{
+  let initOverrides = [{
     plugins: ['@vue/babel-plugin-jsx']
   }]
-  if (options.type === 'react') {
-    overrides[0].include = [/vue&type=script&lang\.[tj]sx?$/]
+  if (type === 'react') {
+    initOverrides[0].include = [/vue&type=script&lang\.[tj]sx?$/]
   }
-  if (options.type === 'vue') {
-    overrides[0].exclude = [/[/\\]react_app[\\/$]+/]
+  if (type === 'vue') {
+    initOverrides[0].exclude = [/[/\\]react_app[\\/$]+/]
   }
-  if (options.type === 'custom') {
-    if (options.include) {
-      overrides[0].include = options.include
+  if (type === 'custom') {
+    if (vueJsxInclude) {
+      initOverrides[0].include = vueJsxInclude
     }
-    if (options.exclude) {
-      overrides[0].include = options.exclude
+    if (vueJsxExclude) {
+      initOverrides[0].include = vueJsxExclude
     }
-    if (options.vueJsxInclude) {
-      overrides[0].include = options.vueJsxInclude
+    if (vueJsxOverrides) {
+      initOverrides = vueJsxOverrides
     }
-    if (options.vueJsxExclude) {
-      overrides[0].include = options.vueJsxExclude
-    }
-    if (options.overrides)
-      overrides = options.overrides
   }
 
   return [
@@ -35,7 +30,8 @@ function veauryVitePlugins(options) {
       babel: {
         // Default vuejsx plugin is off
         plugins: [['@vue/babel-plugin-jsx', false]],
-        overrides
+        overrides: initOverrides,
+        ...reactPluginBabelOption
       }
     })
   ]
