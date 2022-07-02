@@ -94,7 +94,7 @@ export default defineConfig({
       vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
       // vueJsxExclude: [],
       // Customize babel's overrides, this setting will override `vueJsxInclude` and `vueJsxExclude`
-      // overrides: [{
+      // vueJsxOverrides: [{
       //   exclude: [/[/\\]react_app[\\/$]+/],
       //   plugins: ['@vue/babel-plugin-jsx']
       // }]

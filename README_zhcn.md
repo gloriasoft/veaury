@@ -84,8 +84,8 @@ export default defineConfig({
       // 所有.vue文件以及在名为vue_app目录里的文件都将以vue jsx编译
       vueJsxInclude: [/vue&type=script&lang.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
       // vueJsxExclude: [],
-      // 自定义babel的overrides, 这个设置会覆盖 `vueJsxInclude` 和 `vueJsxExclude`
-      // overrides: [{
+      // 自定义babel的vueJsxOverrides, 这个设置会覆盖 `vueJsxInclude` 和 `vueJsxExclude`
+      // vueJsxOverrides: [{
       //   exclude: [/[/\\]react_app[\\/$]+/],
       //   plugins: ['@vue/babel-plugin-jsx']
       // }]
