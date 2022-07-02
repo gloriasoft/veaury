@@ -14,10 +14,16 @@ function veauryVitePlugins(options) {
   }
   if (options.type === 'custom') {
     if (options.include) {
-      overrides[0].include = options.vueJsxInclude || options.include
+      overrides[0].include = options.include
     }
     if (options.exclude) {
-      overrides[0].include = options.vueJsxExclude || options.exclude
+      overrides[0].include = options.exclude
+    }
+    if (options.vueJsxInclude) {
+      overrides[0].include = options.vueJsxInclude
+    }
+    if (options.vueJsxExclude) {
+      overrides[0].include = options.vueJsxExclude
     }
     if (options.overrides)
       overrides = options.overrides

@@ -91,7 +91,7 @@ export default defineConfig({
     veauryVitePlugins({
       type: 'custom',
       // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
-      vueJsxInclude: [/vue&type=script&lang.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
       // vueJsxExclude: [],
       // Customize babel's overrides, this setting will override `vueJsxInclude` and `vueJsxExclude`
       // overrides: [{
