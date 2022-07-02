@@ -33,6 +33,67 @@ Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项�
 [如何配置由'@vue/cli'创建的vue项目支持开发react](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
 [如何配置由'create-react-app'创建的react项目支持开发vue](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
+如果项目是通过`vite`构建的，那么需要对`vite.config.js`做如下配置  
+
++ 主项目是vue:
+```js
+import { defineConfig } from 'vite'
+// >= veaury@2.1.1
+import veauryVitePlugins from 'veaury/vite'
+
+export default defineConfig({
+  plugins: [
+    // 关闭 vue 和 vuejsx 插件
+    // vue(),
+    // vueJsx(),
+    // type设为vue时, 所有名为react_app目录中的文件的jsx将被react jsx编译，其他文件里的jsx将以vue jsx编译
+    veauryVitePlugins({
+      type: 'vue'
+    })
+  ]
+})
+```  
++ The main project is React:
+```js
+import { defineConfig } from 'vite'
+// >= veaury@2.1.1
+import veauryVitePlugins from 'veaury/vite'
+
+export default defineConfig({
+  plugins: [
+    // 关闭 react 插件
+    // react(),
+    // type设为react时，所有.vue文件里的jsx将以vue jsx进行编译，其他文件的jsx都是以react jsx编译
+    veauryVitePlugins({
+      type: 'react'
+    })
+  ]
+})
+
+```
+如果想自定义vue jsx编译的范围, 可以将type设置为`custom`，然后通过设置`vueJsxInclude`、`vueJsxExclude`以及`overrides`来自定义编译范围
+```js
+import { defineConfig } from 'vite'
+// >= veaury@2.1.1
+import veauryVitePlugins from 'veaury/vite'
+
+export default defineConfig({
+  plugins: [
+    veauryVitePlugins({
+      type: 'custom',
+      // 所有.vue文件以及在名为vue_app目录里的文件都将以vue jsx编译
+      vueJsxInclude: [/vue&type=script&lang.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      // vueJsxExclude: [],
+      // 自定义babel的overrides, 这个设置会覆盖 `vueJsxInclude` 和 `vueJsxExclude`
+      // overrides: [{
+      //   exclude: [/[/\\]react_app[\\/$]+/],
+      //   plugins: ['@vue/babel-plugin-jsx']
+      // }]
+    })
+  ]
+})
+```
+
 ## 使用场景
 - 👨‍👩‍👧 在一个应用中同时开发React和Vue
 - 🏃 从Vue项目迁移到React项目，或者从React项目迁移到Vue项目

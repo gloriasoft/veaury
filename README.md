@@ -44,7 +44,7 @@ If it is a project built by `vite`, the relevant configuration is as follows.
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index'
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -64,7 +64,7 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index'
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -79,6 +79,28 @@ export default defineConfig({
   ]
 })
 
+```
+If you want to customize the compilation scope of vueJsx, you can configure overrides by setting type to `custom`.
+```js
+import { defineConfig } from 'vite'
+// >= veaury@2.1.1
+import veauryVitePlugins from 'veaury/vite'
+
+export default defineConfig({
+  plugins: [
+    veauryVitePlugins({
+      type: 'custom',
+      // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
+      vueJsxInclude: [/vue&type=script&lang.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      // vueJsxExclude: [],
+      // Customize babel's overrides, this setting will override `vueJsxInclude` and `vueJsxExclude`
+      // overrides: [{
+      //   exclude: [/[/\\]react_app[\\/$]+/],
+      //   plugins: ['@vue/babel-plugin-jsx']
+      // }]
+    })
+  ]
+})
 ```
 
 ## Use cases
