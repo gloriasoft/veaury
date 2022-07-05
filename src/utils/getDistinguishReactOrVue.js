@@ -5,16 +5,10 @@ import takeVueDomInReact from "./takeVueDomInReact";
 import FakeDirective from "./FakeDirective";
 import { pureInterceptProps } from "./interceptProps";
 
-interface getDistinguishReactOrVueParams {
-    reactComponents?: object | Function | (object | Function)[] | 'all' | JSX.IntrinsicElements;
-    domTags?: any;
-    division?: boolean;
-}
-
-export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}: getDistinguishReactOrVueParams) {
-    return function defaultSlotsFormatter(children: any, vueInReactCall?, hashList?) {
+export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
+    return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
         if (children && children.forEach) {
-            const newChildren: any = []
+            const newChildren = []
             children.forEach((child, topIndex) => {
                 if (!child) return
                 if (!child.componentOptions?.Ctor?.options?.originReactComponent) {
@@ -52,9 +46,9 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                 if (Component !== 'all' && ! (Component instanceof Array)) {
                     Component = [Component]
                 }
-                if (Component === 'all' || (Component as any[]).indexOf(ReactComponent) > -1) {
+                if (Component === 'all' || Component.indexOf(ReactComponent) > -1) {
                     child.__top__ = children.__top__
-                    const props: any = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
+                    const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
                     // 处理ref
                     let ref = child.data?.ref
                     if (ref && typeof ref === 'string') {
@@ -88,7 +82,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                                 get(target, key) {
                                     return target[key]
                                 },
-                                set(target, key, value):any {
+                                set(target, key, value) {
                                     const reactRef = child.context.$refs?.[refKey]
                                     if (reactRef) {
                                         reactRef[key] = value

@@ -1,10 +1,10 @@
-function deepFind (first: any, getChildren: (child: any, index?: number, parent?: any) => any[], todo: (child: any, index?: number, parent?: any) => any, startIndex: number = 0, parent?: any): any {
+function deepFind(first, getChildren, todo, startIndex = 0, parent) {
     if (todo(first, startIndex, parent) === false) {
-        return
+        return;
     }
-    const children = getChildren(first, startIndex, parent)
+    const children = getChildren(first, startIndex, parent);
     if (children) {
-        children.forEach((child, index) => deepFind(child, getChildren, todo, index, first))
+        children.forEach((child, index) => deepFind(child, getChildren, todo, index, first));
     }
 }
-export default deepFind
+export default deepFind;

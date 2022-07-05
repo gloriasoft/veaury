@@ -3,5 +3,5 @@
 // This HOC will convert the VNode passed to the React component proportionally to the ReactNode.
 
 export default function applyPureReactInVue() {
-  
+
 }

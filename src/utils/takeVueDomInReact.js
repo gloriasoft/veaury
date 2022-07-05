@@ -8,7 +8,7 @@ function toFirstUpperCase(val) {
     return val.replace(reg, ($, $1) => $1.toUpperCase())
 }
 
-function takeVueDomInReact(child: any, tags: string | string[], vueInReactCall?: any, division?: boolean, slotsFormatter?: any, hashList?, __top__?): any {
+function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter, hashList, __top__) {
     if (tags !== 'all' && ! (tags instanceof Array)) {
         tags = tags ? [tags]: []
     }
@@ -41,7 +41,7 @@ function takeVueDomInReact(child: any, tags: string | string[], vueInReactCall?:
                     get(target, key) {
                         return target[key]
                     },
-                    set(target, key, value):any {
+                    set(target, key, value) {
                         const reactRef = child.context.$refs?.[refKey]
                         if (reactRef) {
                             reactRef[key] = value

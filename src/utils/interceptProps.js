@@ -1,9 +1,10 @@
-import {Input} from '@wemo-ui/klein'
+// import {Input} from '@wemo-ui/klein'
 
 // 处理Input和TextArea的输入法闪烁问题
-const reactComponents = [Input, Input.TextArea, Input.Search]
+// const reactComponents = [Input, Input.TextArea, Input.Search]
 
-export function pureInterceptProps (target: any = {}, child, ReactComponent) {
+export function pureInterceptProps (target = {}, child, ReactComponent) {
+    return target
     if (reactComponents.indexOf(ReactComponent) > -1) {
         if (target.onChange && child.__top__) {
             const oldChange = target.onChange

@@ -1,32 +1,37 @@
 <template>
-  <h3>
-    This example shows the basic usage of `applyReactInVue`.
-  </h3>
-  <h4>
-    Using React components in Vue components.
-  </h4>
-  <Basic :foo="foo">
-    <div class="slot">
-      This is the Vue default slot
-      <AA v-if="showFlag" :disappearTime="5"/>
-      <div>
-        current time: {{currentTime}}
-      </div>
-    </div>
-  </Basic>
+<!--  <h3>-->
+<!--    This example shows the basic usage of `applyReactInVue`.-->
+<!--  </h3>-->
+<!--  <h4>-->
+<!--    Using React components in Vue components.-->
+<!--  </h4>-->
+<!--  <Basic :foo="foo">-->
+<!--    <div class="slot">-->
+<!--      This is the Vue default slot-->
+<!--      <AA v-if="showFlag" :disappearTime="5"/>-->
+<!--      <div>-->
+<!--        current time: {{currentTime}}-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </Basic>-->
+  <BB>
+    <div>12121</div>
+  </BB>
 </template>
 
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { applyReactInVue } from 'veaury'
+import { applyReactInVue, applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
+import ReactBB from './react_app/BB'
 
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
-    AA: applyReactInVue(ReactAA)
+    AA: applyReactInVue(ReactAA),
+    BB: applyPureReactInVue(ReactBB)
   },
   setup() {
     let timer, timer1

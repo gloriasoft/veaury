@@ -1,6 +1,6 @@
 import {formatClass, formatStyle} from './vueStyleClassTransformer'
 
-export default function getChildInfo(child: any, index: number | string, vueInReactCall?, defaultSlotsFormatter?, hashList?): object {
+export default function getChildInfo(child, index, vueInReactCall, defaultSlotsFormatter, hashList) {
     // 处理事件
     const listeners = {}
     for (let key in child.componentOptions.listeners) {
@@ -27,7 +27,7 @@ export default function getChildInfo(child: any, index: number | string, vueInRe
         }
     })
 
-    const newProps:any = {}
+    const newProps = {}
     const style = { ...formatStyle(props.style), ...formatStyle(props.staticStyle) }
     const className = Array.from(new Set([...formatClass(props.class), ...formatClass(props.staticClass)])).join(' ')
     if (Object.keys(style).length > 0) newProps.style = style

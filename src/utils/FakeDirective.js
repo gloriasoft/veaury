@@ -1,9 +1,7 @@
 import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import Vue from "vue";
 
-class FakeDirective extends React.Component<any, any> {
-    private _reactInternals: any;
-    private _reactInternalFiber: any;
+class FakeDirective extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -82,7 +80,7 @@ class FakeDirective extends React.Component<any, any> {
 
             // unbind
             directiveMap[directiveBinding.name] = {...directiveMap[directiveBinding.name], ...directiveBinding}
-            unbind && (unbind as any)(ref, directiveMap[directiveBinding.name], vnode, prevVnode, true)
+            unbind && unbind(ref, directiveMap[directiveBinding.name], vnode, prevVnode, true)
         })
         this.setState({
             prevVnode: {...vnode},

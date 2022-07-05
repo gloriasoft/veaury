@@ -147,17 +147,19 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         if (!props[i].reactSlot) {
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
-          // if (options.defaultSlotsFormatter) {
-          //   props[i].__top__ = this.__veauryVueWrapperRef__
-          //   props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
-          //   if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
-          //     props[i] = [...props[i]]
-          //   } else if (typeof props[i] === "object") {
-          //     props[i] = { ...props[i] }
-          //   }
-          // } else {
+          // Custom slot handler
+          if (options.defaultSlotsFormatter) {
+            console.log(12121221)
+            props[i].__top__ = this.__veauryVueWrapperRef__
+            props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
+            if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
+              props[i] = [...props[i]]
+            } else if (typeof props[i] === "object") {
+              props[i] = { ...props[i] }
+            }
+          } else {
             props[i] = { ...applyVueInReact(this.createSlot(props[i]), { ...options, isSlots: true, wrapInstance }).render() }
-          // }
+          }
           props[i].vueFunction = vueSlot
         } else {
           props[i] = props[i].reactSlot
@@ -192,18 +194,19 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         //   }
         // }
         // TODO: defaultSlotsFormatter
-        // if (options.defaultSlotsFormatter) {
-        //   children.__top__ = this.__veauryVueWrapperRef__
-        //   children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
-        //   if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
-        //     children = [...children]
-        //   } else if (typeof children === "object") {
-        //     children = { ...children }
-        //   }
-        // } else {
-        children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
-        children.vueFunction = vueSlot
-        // }
+        if (options.defaultSlotsFormatter) {
+          console.log(1111111)
+          children.__top__ = this.__veauryVueWrapperRef__
+          children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
+          if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
+            children = [...children]
+          } else if (typeof children === "object") {
+            children = { ...children }
+          }
+        } else {
+          children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
+          children.vueFunction = vueSlot
+        }
         return
       }
       children = children.reactSlot
