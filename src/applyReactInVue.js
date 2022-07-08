@@ -149,7 +149,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           // TODO: defaultSlotsFormatter
           // Custom slot handler
           if (options.defaultSlotsFormatter) {
-            console.log(12121221)
             props[i].__top__ = this.__veauryVueWrapperRef__
             props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
             if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
@@ -194,10 +193,10 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         //   }
         // }
         // TODO: defaultSlotsFormatter
-        if (options.defaultSlotsFormatter) {
-          console.log(1111111)
+        if (options.defaultSlotsFormatter && children.__trueChildren) {
           children.__top__ = this.__veauryVueWrapperRef__
-          children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
+          children = options.defaultSlotsFormatter(children.__trueChildren, this.vueInReactCall, hashList)
+          console.log(1111111, children)
           if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
             children = [...children]
           } else if (typeof children === "object") {
@@ -326,6 +325,7 @@ export default function applyReactInVue(component, options = {}) {
         Object.keys(this.$slots).forEach((key) => {
           try {
             const trueChildren = this.$slots[key]({})
+            this.$slots[key].__trueChildren = trueChildren
             // Check if children are from react children wrapped by applyReactInVue
             if (trueChildren.length === 1) {
               const child = trueChildren[0]

@@ -7,6 +7,7 @@ import { pureInterceptProps } from "./interceptProps";
 
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
     return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
+        console.log(2222222222)
         if (children && children.forEach) {
             const newChildren = []
             children.forEach((child, topIndex) => {
