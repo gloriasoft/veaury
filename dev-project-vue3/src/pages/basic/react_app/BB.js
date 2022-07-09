@@ -1,4 +1,5 @@
 import React from 'react'
 export default function (props) {
-  return <div>{props.children}</div>
+  console.log(55555, props.children)
+  return props.children
 }

@@ -197,9 +197,15 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           children.__top__ = this.__veauryVueWrapperRef__
           children = options.defaultSlotsFormatter(children.__trueChildren, this.vueInReactCall, hashList)
           console.log(1111111, children)
-          if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
+          if (children instanceof Array) {
             children = [...children]
-          } else if (typeof children === "object") {
+            return
+          }
+          if (["string", "number"].indexOf(typeof children) > -1) {
+            children = [children]
+            return
+          }
+          if (typeof children === "object") {
             children = { ...children }
           }
         } else {

@@ -14,8 +14,13 @@
 <!--      </div>-->
 <!--    </div>-->
 <!--  </Basic>-->
+<!--  <div ref="CCRef">UUUUU</div>-->
   <BB>
-    <div>12121</div>
+    33333
+    <div @click="testClick" style="color:red" class="AA BB" ref="CCRef">12121</div>
+    <CC @click="testClick" style="width: 100px" class="AA BB">
+      1212
+    </CC>
   </BB>
 </template>
 
@@ -26,19 +31,26 @@ import { applyReactInVue, applyPureReactInVue } from 'veaury'
 import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
 import ReactBB from './react_app/BB'
+import ReactCC from './react_app/CC'
 
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
     AA: applyReactInVue(ReactAA),
-    BB: applyPureReactInVue(ReactBB)
+    BB: applyPureReactInVue(ReactBB),
+    CC: applyPureReactInVue(ReactCC)
+  },
+  mounted() {
+    console.log(888, this.$refs)
   },
   setup() {
     let timer, timer1
     const currentTime = ref(new Date().toLocaleString())
     const foo = ref(Math.random())
     const showFlag = ref(true)
+    const CCRef = ref(null)
     onMounted(() => {
+      console.log(777, CCRef.value)
       timer = setInterval(() => {
         currentTime.value = new Date().toLocaleString()
         foo.value = Math.random()
@@ -51,10 +63,15 @@ export default {
       clearInterval(timer)
       clearInterval(timer1)
     })
+    function testClick() {
+      console.log(1212)
+    }
     return {
       currentTime,
       foo,
-      showFlag
+      showFlag,
+      testClick,
+      CCRef
     }
   }
 }

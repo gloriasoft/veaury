@@ -30,7 +30,6 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
                 // composition api ref variable exists
                 const refObj = child.ref.i.setupState?.[refKey]
                 if (refObj !== undefined) {
-
                     child.ref.i.setupState[refKey] = reactRef
                 }
             }

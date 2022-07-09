@@ -2,8 +2,8 @@
 // passing children is encapsulated by a div with `style="all:unset"`.
 // This HOC will convert the VNode passed to the React component proportionally to the ReactNode.
 
-import transformer from "./utils/transformer";
-import getDistinguishReactOrVue from "./utils/getDistinguishReactOrVue";
+import transformer from "./pureReactInVue/transformer";
+import getDistinguishReactOrVue from "./pureReactInVue/getDistinguishReactOrVue";
 
 const NoWrapFunction = getDistinguishReactOrVue({reactComponents: 'all', domTags: 'all'})
 export default function applyPureReactInVue (ReactComponent, combinedOption) {
