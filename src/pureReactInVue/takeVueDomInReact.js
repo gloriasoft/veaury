@@ -1,12 +1,6 @@
 import React from 'react';
 import {formatClass, formatStyle} from './vueStyleClassTransformer'
-import FakeDirective from "./FakeDirective";
-
-
-function toFirstUpperCase(val) {
-    const reg = /^(\w)/g
-    return val.replace(reg, ($, $1) => $1.toUpperCase())
-}
+import DirectiveHOC from "./FakeDirective";
 
 function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter, hashList, __top__) {
     if (tags !== 'all' && ! (tags instanceof Array)) {
@@ -15,7 +9,9 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
     if (!child.component && (tags === 'all' || tags.indexOf(child.type) > -1)) {
         console.log(7777777, child)
 
-        // 处理ref
+        // Analyze ref
+        // the VNode internal properties, ref: {i: instance, r: ref_key}
+        // TODO: ref for
         let ref = child.ref?.r
         if (ref && typeof ref === 'string') {
             const refKey = ref
@@ -63,7 +59,7 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
             ...hashMap,
             ...(ref? {ref}: {})
         }
-        const directives = child.data?.directives
+        // const directives = child.dirs
         let newChildren = child.children || props.children
         if (newChildren) {
             if (["string", "number"].indexOf(typeof newChildren) > -1) {
@@ -73,15 +69,9 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
             }
             newChildren.__top__ = __top__
         }
-        if (directives && directives.length > 0) {
-            // return <FakeDirective vnode={child}><child.tag {...props}>{slotsFormatter(child.children, vueInReactCall, hashList)}</child.tag></FakeDirective>
-            return <FakeDirective vnode={child} reactComponent={child.type}  {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</FakeDirective>
-        }
-        return <child.type {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</child.type>
+        return DirectiveHOC(child, <child.type {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</child.type>)
     }
-    // if (child.text || child.tag) {
-        return vueInReactCall([child], null, division)
-    // }
+    return vueInReactCall([child], null, division)
 }
 
 export default takeVueDomInReact

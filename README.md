@@ -11,7 +11,8 @@ It is built on the Vue and React framework. It's use cases include using both Vu
 ## The greatest feature  
 - 🌞 Support Vue3   
 - 🌈 Support Context - Share the context of all vue and react components.  
-- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.
+- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.  
+- 🪂 Pure mode - The children of the converted component no longer have an extra element container. [>>learn more about how the pure mode works](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)  
 
 ## Legacy
 The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which can use React in Vue2 and Vue2 in React.  

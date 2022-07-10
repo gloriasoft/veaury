@@ -2,7 +2,7 @@ import React from 'react';
 import getChildInfo from "./getChildInfo";
 import {isTextOwner} from "./isTextChild";
 import takeVueDomInReact from "./takeVueDomInReact";
-import FakeDirective from "./FakeDirective";
+import DirectiveHOC from "./FakeDirective";
 import { pureInterceptProps } from "./interceptProps";
 
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
@@ -13,6 +13,9 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                 if (!child) return
                 if (!child.type?.originReactComponent) {
                     console.log(22222, child)
+                    if (child.dirs) {
+                        window.aaa = child
+                    }
                     // reactNode
                     if (child.$$typeof || typeof child === 'string') {
                         newChildren.push(child)
@@ -95,16 +98,11 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                             })
                         } catch(e) {}
                     }
-                    const directives = child.data?.directives
+                    // const directives = child.data?.directives
                     if (child.children) {
                         child.children.__top__ = children.__top__
                     }
-                    if (directives && directives.length > 0) {
-                        // newChild = <FakeDirective vnode={child}><ReactComponent children={defaultSlotsFormatter(child.componentOptions.children, vueInReactCall, hashList)} {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} /></FakeDirective>
-                        newChild = <FakeDirective vnode={child} reactComponent={ReactComponent} children={defaultSlotsFormatter(child.children, vueInReactCall, hashList)} {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}}/>
-                    } else {
-                        newChild = <ReactComponent children={defaultSlotsFormatter(child.children, vueInReactCall, hashList)} {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} />
-                    }
+                    newChild = DirectiveHOC(child, <ReactComponent children={defaultSlotsFormatter(child.children, vueInReactCall, hashList)} {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} />)
                 } else {
                     newChild = isTextOwner(child)? child.text: takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)
                 }

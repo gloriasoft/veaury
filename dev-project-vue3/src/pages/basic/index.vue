@@ -17,7 +17,7 @@
 <!--  <div ref="CCRef">UUUUU</div>-->
   <BB>
     33333
-    <div @click="testClick" style="color:red" class="AA BB" ref="CCRef">12121</div>
+    <div @click="testClick" style="color:red" class="AA BB" v-abc="count1">12121</div>
     <CC @click="testClick" style="width: 100px" class="AA BB">
       1212
     </CC>
@@ -38,7 +38,17 @@ export default {
     Basic: applyReactInVue(ReactBasic),
     AA: applyReactInVue(ReactAA),
     BB: applyPureReactInVue(ReactBB),
-    CC: applyPureReactInVue(ReactCC)
+    CC: applyPureReactInVue(ReactCC),
+  },
+  directives: {
+    abc: {
+      mounted(...args) {
+        console.log('abcabc', args)
+      },
+      updated(el, binding) {
+        console.log('updated!!!!', binding.value, binding.oldValue)
+      }
+    }
   },
   mounted() {
     console.log(888, this.$refs)
@@ -49,11 +59,13 @@ export default {
     const foo = ref(Math.random())
     const showFlag = ref(true)
     const CCRef = ref(null)
+    const count1 = ref(2)
     onMounted(() => {
       console.log(777, CCRef.value)
       timer = setInterval(() => {
         currentTime.value = new Date().toLocaleString()
         foo.value = Math.random()
+        count1.value = 33
       }, 1000)
       timer1 = setTimeout(() => {
         showFlag.value = false
@@ -71,7 +83,8 @@ export default {
       foo,
       showFlag,
       testClick,
-      CCRef
+      CCRef,
+      count1
     }
   }
 }
