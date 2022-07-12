@@ -4,6 +4,7 @@ import {isTextOwner} from "./isTextChild";
 import takeVueDomInReact from "./takeVueDomInReact";
 import DirectiveHOC from "./FakeDirective";
 import { pureInterceptProps } from "./interceptProps";
+import RenderReactNode from "./RenderReactNode";
 
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
     return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
@@ -11,7 +12,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
             const newChildren = []
             children.forEach((child, topIndex) => {
                 if (!child) return
-                if (!child.type?.originReactComponent) {
+                if (!child.type?.originReactComponent ) {
                     console.log(22222, child)
                     if (child.dirs) {
                         window.aaa = child
@@ -25,8 +26,8 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                         child.children.trim() !== '' && newChildren.push(child.children.trim())
                         return
                     }
-                    if(!child.component) {
-                        // newChildren.push(vueInReactCall([child], null, true))
+                    // dom element
+                    if(typeof child.type === 'string') {
                         let newChild = takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList, children.__top__)
                         if (newChild instanceof Array) {
                             newChild = newChild[0]
@@ -46,6 +47,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                     }
                     return
                 }
+                // react component in vue
                 const ReactComponent = child.type.originReactComponent
 
                 let newChild
@@ -55,54 +57,42 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                 if (Component === 'all' || Component.indexOf(ReactComponent) > -1) {
                     child.__top__ = children.__top__
                     const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
-                    // 处理ref
+                    // TODO: 处理ref
                     let ref = child.data?.ref
-                    if (ref && typeof ref === 'string') {
-                        const refKey = ref
-                        ref = (reactRef) => {
-                            if (!reactRef) return
-                            reactRef.__syncUpdateProps = function (newExtraData = {}) {
-                                if (!children.__top__) return
-                                child.__extraData = newExtraData
-                                children.__top__.__syncUpdateProps({})
-                            }
+                    // if (ref && typeof ref === 'string') {
+                    //     const refKey = ref
+                    //     ref = (reactRef) => {
+                    //         if (!reactRef) return
+                    //         reactRef.__syncUpdateProps = function (newExtraData = {}) {
+                    //             if (!children.__top__) return
+                    //             child.__extraData = newExtraData
+                    //             children.__top__.__syncUpdateProps({})
+                    //         }
+                    //
+                    //         const $refs = child.context.$refs
+                    //         if ($refs) {
+                    //             $refs[refKey] = reactRef
+                    //         }
+                    //     }
+                    //     const oldRef= ref
+                    //     ref = new Proxy(oldRef, {
+                    //         get(target, key) {
+                    //             return target[key]
+                    //         },
+                    //         set(target, key, value) {
+                    //             const reactRef = child.context.$refs?.[refKey]
+                    //             if (reactRef) {
+                    //                 reactRef[key] = value
+                    //             }
+                    //             return value
+                    //         }
+                    //     })
+                    // }
 
-                            const $refs = child.context.$refs
-                            if ($refs) {
-                                $refs[refKey] = reactRef
-                            }
-                            try { Proxy } catch(e) {
-                                Promise.resolve().then(() => {
-                                    Object.keys(ref).forEach((key) => {
-                                        if (!reactRef[key]) {
-                                            reactRef[key] = ref[key]
-                                        }
-                                    })
-                                })
-                            }
-                        }
-                        try {
-                            Proxy;
-                            const oldRef= ref
-                            ref = new Proxy(oldRef, {
-                                get(target, key) {
-                                    return target[key]
-                                },
-                                set(target, key, value) {
-                                    const reactRef = child.context.$refs?.[refKey]
-                                    if (reactRef) {
-                                        reactRef[key] = value
-                                    }
-                                    return value
-                                }
-                            })
-                        } catch(e) {}
-                    }
-                    // const directives = child.data?.directives
-                    if (child.children) {
-                        child.children.__top__ = children.__top__
-                    }
-                    newChild = DirectiveHOC(child, <ReactComponent children={defaultSlotsFormatter(child.children, vueInReactCall, hashList)} {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} />)
+                    // if (child.children) {
+                    //     child.children.__top__ = children.__top__
+                    // }
+                    newChild = DirectiveHOC(child, <ReactComponent {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} />)
                 } else {
                     newChild = isTextOwner(child)? child.text: takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)
                 }

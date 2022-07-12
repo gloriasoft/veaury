@@ -1,8 +1,7 @@
 import * as React from "react";
 
 export default function DirectiveHOC(VNode, ReactNode) {
-    const directives = VNode.dirs
-    if (directives && directives.length > 0) {
+    if (VNode.dirs?.length > 0) {
         return <FakeDirective vnode={VNode}>{ReactNode}</FakeDirective>
     }
     return ReactNode

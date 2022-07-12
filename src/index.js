@@ -9,3 +9,4 @@ export {default as createCrossingProviderForReactInVue} from './createCrossingPr
 export {default as createCrossingProviderForVueInReact} from './createCrossingProviderForVueInReact'
 export {default as createReactMissVue} from './createReactMissVue'
 export {default as applyPureReactInVue} from './applyPureReactInVue'
+export {default as RenderReactNode} from './pureReactInVue/RenderReactNode'

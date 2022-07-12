@@ -1,28 +1,27 @@
 import {formatClass, formatStyle} from './vueStyleClassTransformer'
+import options from '../options'
+import RenderReactNode from './RenderReactNode'
 
 export default function getChildInfo(child, index, vueInReactCall, defaultSlotsFormatter, hashList) {
 
-    console.log('childinfo', child)
-    const {on, key, scopedSlots = {}, ...props} = child.props
-    // const {$stable, ...scoped} = scopedSlots
-    //
-    // const reactScoped = {}
-    // Object.keys(scoped).forEach((key) => {
-    //     // 判断具名插槽还是作用域插槽, 没有太好的办法, 这里通过将函数toString判断有没有参数
-    //     const fn = scoped[key]
-    //     const fnString = fn.toString()
-    //     if (fnString.match(/^function\s*\(\s*\)/)) {
-    //         // 具名插槽
-    //         // reactScoped[key] = vueInReactCall([scoped[key]()])
-    //         reactScoped[key] = defaultSlotsFormatter(scoped[key](), vueInReactCall, hashList)
-    //     } else {
-    //         // 作用域插槽
-    //         reactScoped[key] = function(...args) {
-    //             // return vueInReactCall([fn.apply(this, args)])
-    //             return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
-    //         }
-    //     }
-    // })
+    const props = child.props
+
+    const reactScoped = {}
+    Object.keys(child.children || []).forEach((key) => {
+        const fn = child.children[key]
+        // get reactNode and children
+        const prefix = options.react.vueNamedSlotsKey.find((prefix) => key.indexOf(prefix) === 0)
+        if (prefix || key === 'default') {
+            // replace slot's name to react props key name
+            const newKey = key.replace(new RegExp(`^${prefix}`), '').replace(/^default$/, 'children')
+            reactScoped[newKey] = defaultSlotsFormatter(fn(), vueInReactCall, hashList)
+            return
+        }
+        // react render props
+        reactScoped[key] = function(...args) {
+            return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
+        }
+    })
 
     const newProps = {}
     const style = formatStyle(props.style)
@@ -30,15 +29,15 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
     if (Object.keys(style).length > 0) newProps.style = style
     if (className !== '') newProps.className = className
 
-    const result = props
-    Object.assign(result, {
+    Object.assign(props, {
         ...newProps,
-        // ...reactScoped,
-        // ...attrs,
-    })
-    delete result.class
+        ...reactScoped,})
+    delete props.class
 
-    console.log(99999999, result)
-    // 处理属性
-    return result
+    if (child.type === RenderReactNode) {
+        const reactNode = props.node
+        props.node = () => reactNode
+    }
+
+    return props
 }

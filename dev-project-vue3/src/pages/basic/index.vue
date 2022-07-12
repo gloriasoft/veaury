@@ -17,21 +17,40 @@
 <!--  <div ref="CCRef">UUUUU</div>-->
   <BB>
     33333
-    <div @click="testClick" style="color:red" class="AA BB" v-abc="count1">12121</div>
-    <CC @click="testClick" style="width: 100px" class="AA BB">
-      1212
+    <div @click="testClick" style="color:red" class="AA BB">12121</div>
+    <CC @click="testClick">
+      <!--      <div>CCCC</div>-->
+      <!--      <template v-slot:node:aaa>-->
+      <!--        AAAA-->
+      <!--      </template>-->
+      <template v-slot:bbb="aaa">
+        {{count1}}<br/>
+        <RenderReactNode :node="aaa"/>
+      </template>
     </CC>
   </BB>
+
+
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref } from 'vue'
-import { applyReactInVue, applyPureReactInVue } from 'veaury'
+import { onMounted, onUnmounted, ref, h } from 'vue'
+import { applyReactInVue, applyPureReactInVue, RenderReactNode } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
 import ReactBB from './react_app/BB'
 import ReactCC from './react_app/CC'
+// const DD = {
+//   components: {
+//     RenderReactNode
+//   },
+//   render(props, context) {
+//     return h('div', {
+//       node: 'KKKKKKK'
+//     })
+//   }
+// }
 
 export default {
   components: {
@@ -39,6 +58,8 @@ export default {
     AA: applyReactInVue(ReactAA),
     BB: applyPureReactInVue(ReactBB),
     CC: applyPureReactInVue(ReactCC),
+    RenderReactNode,
+    // DD
   },
   directives: {
     abc: {
@@ -51,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    console.log(888, this.$refs)
+    // console.log(888, this.$refs)
   },
   setup() {
     let timer, timer1
@@ -61,7 +82,7 @@ export default {
     const CCRef = ref(null)
     const count1 = ref(2)
     onMounted(() => {
-      console.log(777, CCRef.value)
+      // console.log(777, CCRef.value)
       timer = setInterval(() => {
         currentTime.value = new Date().toLocaleString()
         foo.value = Math.random()

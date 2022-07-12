@@ -54,8 +54,8 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
         }
 
         const props = {
-            style: formatStyle(child.props.style),
-            className: Array.from(new Set(formatClass(child.props.class))).join(' '),
+            style: formatStyle(child.props?.style),
+            className: Array.from(new Set(formatClass(child.props?.class))).join(' '),
             ...hashMap,
             ...(ref? {ref}: {})
         }
