@@ -1,5 +1,6 @@
-type VueComponent = object | Function;
-type ReactComponent = object | Function;
+import { Component as VueComponent } from 'vue'
+// type VueComponent = object | Function;
+type ReactComponent = Function;
 interface propsFromWrapper {
     [propName: string]: any;
 }
