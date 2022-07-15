@@ -4,7 +4,7 @@ import RenderReactNode from './RenderReactNode'
 
 export default function getChildInfo(child, index, vueInReactCall, defaultSlotsFormatter, hashList) {
 
-    const props = child.props
+    const props = child.props || {}
 
     const reactScoped = {}
     Object.keys(child.children || []).forEach((key) => {
@@ -19,6 +19,7 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
         }
         // react render props
         reactScoped[key] = function(...args) {
+            fn.__reactArgs = args
             return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
         }
     })

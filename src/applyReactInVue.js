@@ -196,7 +196,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         if (options.defaultSlotsFormatter && children.__trueChildren) {
           children.__top__ = this.__veauryVueWrapperRef__
           children = options.defaultSlotsFormatter(children.__trueChildren, this.vueInReactCall, hashList)
-          console.log(1111111, children)
           if (children instanceof Array) {
             children = [...children]
             return
@@ -317,32 +316,41 @@ export default function applyReactInVue(component, options = {}) {
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
       // this.slotsInit()
-      this.__veauryCheckReactSlot__()
+      this.__veauryCheckReactSlot__(this.$slots)
       return VNode
     },
     methods: {
-      __veauryCheckReactSlot__() {
+      __veauryCheckReactSlot__(slots) {
         function linkReact(slot, child, type) {
           if (child[type]) {
             slot[type] = child[type]
             return true
           }
         }
-        Object.keys(this.$slots).forEach((key) => {
+        Object.keys(slots).forEach((key) => {
           try {
-            const trueChildren = this.$slots[key]({})
-            this.$slots[key].__trueChildren = trueChildren
+            const fn = slots[key]
+            // If this function is executed inside the react component, the incoming parameters will be save
+            const trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+            fn.__trueChildren = trueChildren
+
+            trueChildren.forEach((child) => {
+              if (child.children) {
+                this.__veauryCheckReactSlot__(child.children)
+              }
+            })
+
             // Check if children are from react children wrapped by applyReactInVue
             if (trueChildren.length === 1) {
               const child = trueChildren[0]
-              if (linkReact(this.$slots[key], child, 'reactSlot')) return
-              // if (linkReact(this.$slots[key], child, 'reactFunction')) return
+              if (linkReact(fn, child, 'reactSlot')) return
+              if (linkReact(fn, child, 'reactFunction')) return
 
               // Vue Fragment wrapped
               if (child.type === VueFragment && child.children?.length === 1) {
                 const subChild = child.children[0]
-                if (linkReact(this.$slots[key], subChild, 'reactSlot')) return
-                // linkReact(this.$slots[key], subChild, 'reactFunction')
+                if (linkReact(fn, subChild, 'reactSlot')) return
+                linkReact(fn, subChild, 'reactFunction')
               }
             }
           } catch(e) {}
