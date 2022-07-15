@@ -1,10 +1,11 @@
 import {formatClass, formatStyle} from './vueStyleClassTransformer'
 import options from '../options'
-import RenderReactNode from './RenderReactNode'
+// import RenderReactNode from './RenderReactNode'
 
 export default function getChildInfo(child, index, vueInReactCall, defaultSlotsFormatter, hashList) {
 
-    const props = child.props || {}
+    // Filter out ref
+    const {ref, ...props} = child.props || {}
 
     const reactScoped = {}
     Object.keys(child.children || []).forEach((key) => {
@@ -35,10 +36,10 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
         ...reactScoped,})
     delete props.class
 
-    if (child.type === RenderReactNode) {
-        const reactNode = props.node
-        props.node = () => reactNode
-    }
+    // if (child.type === RenderReactNode) {
+    //     const reactNode = props.node
+    //     props.node = () => reactNode
+    // }
 
     return props
 }

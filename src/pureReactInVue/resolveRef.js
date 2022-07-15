@@ -2,7 +2,7 @@
 // TODO: ref for
 export default function resolveRef(child) {
   if (typeof child.type?.originReactComponent === 'function') {
-
+    return null
   }
   let ref = child.ref?.r
   if (ref && typeof ref === 'string') {

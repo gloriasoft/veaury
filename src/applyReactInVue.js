@@ -74,6 +74,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     this.setRef = this.setRef.bind(this)
     this.vueInReactCall = this.vueInReactCall.bind(this)
     this.__veauryVueWrapperRef__ = wrapInstance
+    wrapInstance.__veauryVueInReactCall__ = this.vueInReactCall
   }
 
   // Use the method of converting VNode to ReactNode to solve the problem of slot transmission
@@ -228,9 +229,9 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     }
     let finalProps = props
     // TODO: defaultPropsFormatter
-    // if (options.defaultPropsFormatter) {
-    //   finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
-    // }
+    if (options.defaultPropsFormatter) {
+      finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
+    }
     const newProps = { ...finalProps }
     // class components and object components and components that can pass catchVueRef
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
@@ -422,7 +423,7 @@ export default function applyReactInVue(component, options = {}) {
             if (options.defaultSlotsFormatter) {
               let scopeSlot = slotFunction.apply(this, args)
               scopeSlot.__top__ = _this
-              scopeSlot = options.defaultSlotsFormatter(scopeSlot, _this.vueInReactCall, hashList)
+              scopeSlot = options.defaultSlotsFormatter(scopeSlot, _this.__veauryVueInReactCall__, hashList)
               if (scopeSlot instanceof Array || (typeof scopeSlot).indexOf("string", "number") > -1) {
                 scopeSlot = [...scopeSlot]
               } else if (typeof scopeSlot === "object") {

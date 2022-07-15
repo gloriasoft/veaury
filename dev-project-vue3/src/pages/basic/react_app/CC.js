@@ -1,10 +1,10 @@
 import React, {useEffect, useState, useImperativeHandle, forwardRef} from 'react'
-export default function (props, ref) {
+export default forwardRef(function (props, ref) {
   console.log(666666666666)
   const [aa, setAa] = useState(3333)
-  // useImperativeHandle(ref, () => ({
-  //   aaa: 1
-  // }))
+  useImperativeHandle(ref, () => ({
+    aaa: 1
+  }))
   useEffect(() => {
     console.log('CC mounted!!!!!')
   }, [])
@@ -12,4 +12,4 @@ export default function (props, ref) {
     {/*<div>{props.children}</div>*/}
     {props.bbb(<div>{aa}</div>)}
   </div>
-}
+})

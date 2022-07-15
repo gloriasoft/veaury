@@ -25,9 +25,9 @@
       <!--      </template>-->
       <template v-slot:bbb="aaa">
         {{count1}}<br/>
-        <RenderReactNode :node="aaa" ref="FF"/>
+        <RenderReactNode :node="aaa" />
         <DD ref="DD"/>
-<!--        <EE ref="EE"/>-->
+        <EE ref="EE"/>
       </template>
     </CC>
   </BB>
@@ -45,9 +45,6 @@ import ReactAA from "./react_app/AA"
 import ReactBB from './react_app/BB'
 import ReactCC from './react_app/CC'
 const DD = {
-  data() {
-    return {bbb:1}
-  },
   render() {
     return h('div', 'KKKKKKK')
   }

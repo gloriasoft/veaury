@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import React, { forwardRef } from 'react';
 import getChildInfo from "./getChildInfo";
 import {isTextOwner} from "./isTextChild";
 import takeVueDomInReact from "./takeVueDomInReact";
@@ -60,9 +60,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                     if (child.children) {
                         child.children.__top__ = children.__top__
                     }
-                    if (ref && typeof ReactComponent === 'function') {
-                        ReactComponent = forwardRef(ReactComponent)
-                    }
+
                     newChild = DirectiveHOC(child, <ReactComponent {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref? {ref}: {})}} />)
                 } else {
                     newChild = isTextOwner(child)? child.text: takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)

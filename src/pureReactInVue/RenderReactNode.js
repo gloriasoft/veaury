@@ -1,9 +1,17 @@
 import applyReactInVue from '../applyReactInVue'
-import React from 'react'
+import React, {forwardRef, createRef} from 'react'
 import {h} from 'vue'
 
-function RenderReactNode (props) {
-    return props.node()
+function RenderReactNode (props, ref) {
+    let reactNode = props.node
+    if (typeof reactNode === 'function') {
+        reactNode = reactNode()
+    }
+
+    if (!ref?.current && typeof ref !== 'function' && !ref?.toString().match(/^function/)) {
+        ref = null
+    }
+    return {...reactNode, ref}
 }
 
 const Bridge = applyReactInVue(RenderReactNode)
@@ -12,6 +20,6 @@ function WrapVue(props) {
         node: () => props.node
     })
 }
-WrapVue.originReactComponent = RenderReactNode
+WrapVue.originReactComponent = forwardRef(RenderReactNode)
 
 export default WrapVue
