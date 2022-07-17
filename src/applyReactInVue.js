@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom"
 // import { createRoot } from "react-dom/client"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
-import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment } from 'vue'
+import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 
 function toRaws(obj) {
@@ -332,7 +332,8 @@ export default function applyReactInVue(component, options = {}) {
           try {
             const fn = slots[key]
             // If this function is executed inside the react component, the incoming parameters will be save
-            const trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+            let trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+            // trueChildren = trueChildren.filter((n) => n.type !== Comment)
             fn.__trueChildren = trueChildren
 
             trueChildren.forEach((child) => {

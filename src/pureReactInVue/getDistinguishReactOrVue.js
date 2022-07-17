@@ -14,6 +14,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
             const newChildren = []
             children.forEach((child, topIndex) => {
                 if (!child || child.type === Comment) return
+                console.log('AAAAAAAAAA', child, hashList)
                 if (!child.type?.originReactComponent ) {
 
                     // reactNode
@@ -53,6 +54,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
                 }
                 if (Component === 'all' || Component.indexOf(ReactComponent) > -1) {
                     child.__top__ = children.__top__
+                    console.log(333333, child)
                     const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
 
                     const ref = resolveRef(child)

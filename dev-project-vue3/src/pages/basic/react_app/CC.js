@@ -10,6 +10,6 @@ export default forwardRef(function (props, ref) {
   }, [])
   return <div onClick={props.onClick}>
     {/*<div>{props.children}</div>*/}
-    {props.bbb(<div>{aa}</div>)}
+    {props.bbb}
   </div>
 })

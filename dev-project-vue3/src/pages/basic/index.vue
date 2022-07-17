@@ -16,19 +16,20 @@
 <!--  </Basic>-->
 <!--  <div ref="CCRef">UUUUU</div>-->
   <BB>
-    33333
-    <div @click="testClick" style="color:red" class="AA BB" >12121</div>
-    <CC @click="testClick" ref="CC">
+<!--    33333-->
+<!--    <div @click="testClick" style="color:red" class="AA BB" >12121</div>-->
+    <CC @click="testClick" ref="CC" :bbb="bb">
+      {{count1}}
       <!--      <div>CCCC</div>-->
       <!--      <template v-slot:node:aaa>-->
       <!--        AAAA-->
       <!--      </template>-->
-      <template v-slot:bbb="aaa">
-        {{count1}}<br/>
-        <RenderReactNode :node="aaa" />
-        <DD ref="DD"/>
-        <EE ref="EE"/>
-      </template>
+<!--      <template v-slot:bbb="aaa">-->
+<!--        {{count1}}<br/>-->
+<!--        <RenderReactNode :node="aaa" />-->
+<!--        <DD ref="DD"/>-->
+<!--        <EE ref="EE"/>-->
+<!--      </template>-->
     </CC>
   </BB>
 
@@ -37,7 +38,7 @@
 
 <script>
 import { onMounted, onUnmounted, ref, h } from 'vue'
-import { applyReactInVue, applyPureReactInVue, RenderReactNode } from 'veaury'
+import { applyReactInVue, applyPureReactInVue, RenderReactNode, getReactNode } from 'veaury'
 import {createElement} from 'react'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
@@ -86,16 +87,25 @@ export default {
     const showFlag = ref(true)
     const CCRef = ref(null)
     const count1 = ref(2)
+    const bb = getReactNode(<div style="color:red">test getReactNode</div>)
+    const bbProps = {...bb.props}
+    Object.defineProperty(bb, 'props', {
+      get () {
+        console.log('xxxxxxxxxxxxxxxxxxxxxx', bbProps, this)
+        bbProps.abc = 1
+        return bbProps
+      }
+    })
     onMounted(() => {
       // console.log(777, CCRef.value)
-      // timer = setInterval(() => {
-      //   currentTime.value = new Date().toLocaleString()
-      //   foo.value = Math.random()
-      //   count1.value = 33
-      // }, 1000)
-      // timer1 = setTimeout(() => {
-      //   showFlag.value = false
-      // }, 5000)
+      timer = setInterval(() => {
+        currentTime.value = new Date().toLocaleString()
+        foo.value = Math.random()
+        count1.value = 33
+      }, 1000)
+      timer1 = setTimeout(() => {
+        showFlag.value = false
+      }, 5000)
     })
     onUnmounted(() => {
       clearInterval(timer)
@@ -110,7 +120,8 @@ export default {
       showFlag,
       testClick,
       CCRef,
-      count1
+      count1,
+      bb
     }
   }
 }
