@@ -2,6 +2,7 @@ import React from 'react';
 import {formatClass, formatStyle} from './vueStyleClassTransformer'
 import DirectiveHOC from "./FakeDirective";
 import resolveRef from "./resolveRef";
+import addScopeId from "./addScopeId";
 
 function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter, hashList, __top__) {
     if (tags !== 'all' && ! (tags instanceof Array)) {
@@ -12,17 +13,17 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
         // Resolve ref
         let ref = resolveRef(child)
 
-        const hashMap = {}
-        if (hashList) {
-            hashList.forEach((val) => {
-                hashMap[val] = ''
-            })
-        }
+        // const hashMap = {}
+        // if (hashList && typeof hashList !== 'function') {
+        //     hashList.forEach((val) => {
+        //         hashMap[val] = ''
+        //     })
+        // }
 
         const props = {
             style: formatStyle(child.props?.style),
             className: Array.from(new Set(formatClass(child.props?.class))).join(' '),
-            ...hashMap,
+            // ...hashMap,
             ...(ref? {ref}: {})
         }
         // const directives = child.dirs
@@ -35,7 +36,8 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
             }
             newChildren.__top__ = __top__
         }
-        return DirectiveHOC(child, <child.type {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</child.type>)
+        const reactNode = addScopeId(<child.type {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</child.type>, child.scopeId)
+        return DirectiveHOC(child, reactNode)
     }
     return vueInReactCall([child], null, division)
 }

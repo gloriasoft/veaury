@@ -15,11 +15,14 @@
 <!--    </div>-->
 <!--  </Basic>-->
 <!--  <div ref="CCRef">UUUUU</div>-->
-  <BB>
-<!--    33333-->
-<!--    <div @click="testClick" style="color:red" class="AA BB" >12121</div>-->
+<!--  <BB>-->
+<!--&lt;!&ndash;    33333&ndash;&gt;-->
+<!--&lt;!&ndash;    <div @click="testClick" style="color:red" class="AA BB" >12121</div>&ndash;&gt;-->
+<!--    <component :is="tt"/>-->
+  <component :is="tt"/>
     <CC @click="testClick" ref="CC" :bbb="bb">
-      {{count1}}
+      <div>1212</div>
+<!--      <div>dddd</div>-->
       <!--      <div>CCCC</div>-->
       <!--      <template v-slot:node:aaa>-->
       <!--        AAAA-->
@@ -31,13 +34,15 @@
 <!--        <EE ref="EE"/>-->
 <!--      </template>-->
     </CC>
-  </BB>
+<!--  </BB>-->
+<!--  <AAA>-->
+<!--  </AAA>-->
 
 
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref, h } from 'vue'
+import { onMounted, onUnmounted, ref, h, getCurrentInstance, computed, provide, withScopeId, withCtx } from 'vue'
 import { applyReactInVue, applyPureReactInVue, RenderReactNode, getReactNode } from 'veaury'
 import {createElement} from 'react'
 // This is a React Component
@@ -45,24 +50,35 @@ import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
 import ReactBB from './react_app/BB'
 import ReactCC from './react_app/CC'
+import AAA from './AAA'
+
+
+
+
 const DD = {
   render() {
-    return h('div', 'KKKKKKK')
+    return h('div', {}, <div>1212</div>)
   }
 }
 function EE () {
   return createElement('div', {}, 'EEEEEE')
 }
 
+
+// const newGetReactNode = getReactNode.clone()
+// const bb = newGetReactNode([<div style="color:red"><div>121221</div></div>, <DD/>])
+
+
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
     AA: applyReactInVue(ReactAA),
-    BB: applyPureReactInVue(ReactBB),
+    BB: applyReactInVue(ReactBB),
     CC: applyPureReactInVue(ReactCC),
     RenderReactNode,
     DD,
-    EE: applyReactInVue(EE)
+    EE: applyReactInVue(EE),
+    AAA
   },
   directives: {
     abc: {
@@ -74,38 +90,44 @@ export default {
       }
     }
   },
-  mounted() {
-    Promise.resolve().then(() => {
-      console.log(888, this.$refs)
+  beforeCreate() {
+    setTimeout(() => {
+      console.log('AAAAAAAAAAAA', this)
     })
+    // console.log(44444444444, getCurrentInstance())
+    // Promise.resolve().then(() => {
+    //   console.log(888, this.$refs)
+    // })
 
   },
   setup() {
+    function ddd() {
+
+    }
+    const tt = withCtx(() =>  [<div><div>77777777</div></div>, <DD/>])
+    const RR = <div>DDDD</div>
+    const bb = getReactNode(withCtx(() => [<div style="color:red"><div>121221</div></div>, <DD/>], getCurrentInstance()))
+    // newGetReactNode.scopeId = getCurrentInstance().type.__scopeId
+
     let timer, timer1
     const currentTime = ref(new Date().toLocaleString())
     const foo = ref(Math.random())
     const showFlag = ref(true)
     const CCRef = ref(null)
     const count1 = ref(2)
-    const bb = getReactNode(<div style="color:red">test getReactNode</div>)
-    const bbProps = {...bb.props}
-    Object.defineProperty(bb, 'props', {
-      get () {
-        console.log('xxxxxxxxxxxxxxxxxxxxxx', bbProps, this)
-        bbProps.abc = 1
-        return bbProps
-      }
-    })
+
     onMounted(() => {
+
+
       // console.log(777, CCRef.value)
-      timer = setInterval(() => {
-        currentTime.value = new Date().toLocaleString()
-        foo.value = Math.random()
-        count1.value = 33
-      }, 1000)
-      timer1 = setTimeout(() => {
-        showFlag.value = false
-      }, 5000)
+      // timer = setInterval(() => {
+      //   currentTime.value = new Date().toLocaleString()
+      //   foo.value = Math.random()
+      //   count1.value = 33
+      // }, 1000)
+      // timer1 = setTimeout(() => {
+      //   showFlag.value = false
+      // }, 5000)
     })
     onUnmounted(() => {
       clearInterval(timer)
@@ -121,13 +143,19 @@ export default {
       testClick,
       CCRef,
       count1,
-      bb
+      bb,
+      tt,
+      RR,
+      AAA
     }
   }
 }
 </script>
 
 <style scoped>
+.bbb{
+  font-weight: bold;
+}
 .slot {
   background: aquamarine;
   padding: 10px;

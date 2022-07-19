@@ -1,5 +1,5 @@
-export default function (reactInstance) {
-    const fiberNode = reactInstance._reactInternals || reactInstance._reactInternalFiber
+export default function (reactInstance, fiberNode) {
+    fiberNode = reactInstance?._reactInternals || reactInstance?._reactInternalFiber || fiberNode
     let parentInstance = fiberNode?.return
     let vueWrapperRef
     // Look up the vueWrapperRef
