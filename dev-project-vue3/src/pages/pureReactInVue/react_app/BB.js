@@ -1,8 +1,5 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 
 export default function BB(props) {
-  useEffect(() => {
-    console.log('BB mounted!!!!!')
-  }, [])
   return props.children
 }

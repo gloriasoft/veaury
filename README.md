@@ -399,6 +399,45 @@ export default function () {
 }
 ```
 
+### getReactNode  
+ReactNode = `getReactNode`(VNode)  
+Sometimes the property of the react component is a complex data structure, which contains ReactNode, and in the vue file, the definition of jsx will be compiled into vue's jsx.
+```vue
+<template>
+  <AA :prop1="propForReact"/>
+</template>
+<script setup>
+import { getReactNode, applyPureReactInVue } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+const propForReact = {
+  foo: 'Mike',
+  bar: [{
+    body: getReactNode(<div>John</div>)
+  }],
+  render: (name) => getReactNode(<div>{name}</div>)
+}
+</script>
+```
+
+### RenderReactNode
+Sometimes the input parameter of the render props of the react component is ReactNode.  
+`RenderReactNode` is a vue component that accepts a `node` parameter and can render ReactNode in a Vue component.  
+```vue
+<template>
+  <AA>
+    <template v-slot:prop2="itemReactNode">
+      <RenderReactNode :node="itemReactNode"/>
+    </template>
+  </AA>
+</template>
+<script setup>
+import { RenderReactNode } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+</script>
+```
+
 ### Vue in React, Usage of v-model / v-models
 The usage of 'v-model' is similar to the usage of 'v-model' of Vue's jsx.  
 The value type of the `v-model` property should be  
