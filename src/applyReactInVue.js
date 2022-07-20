@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom"
 // import { createRoot } from "react-dom/client"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
-import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment } from 'vue'
+import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 
 function toRaws(obj) {
@@ -74,6 +74,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     this.setRef = this.setRef.bind(this)
     this.vueInReactCall = this.vueInReactCall.bind(this)
     this.__veauryVueWrapperRef__ = wrapInstance
+    wrapInstance.__veauryVueInReactCall__ = this.vueInReactCall
   }
 
   // Use the method of converting VNode to ReactNode to solve the problem of slot transmission
@@ -147,17 +148,18 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         if (!props[i].reactSlot) {
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
-          // if (options.defaultSlotsFormatter) {
-          //   props[i].__top__ = this.__veauryVueWrapperRef__
-          //   props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
-          //   if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
-          //     props[i] = [...props[i]]
-          //   } else if (typeof props[i] === "object") {
-          //     props[i] = { ...props[i] }
-          //   }
-          // } else {
+          // Custom slot handler
+          if (options.defaultSlotsFormatter) {
+            props[i].__top__ = this.__veauryVueWrapperRef__
+            props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
+            if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
+              props[i] = [...props[i]]
+            } else if (typeof props[i] === "object") {
+              props[i] = { ...props[i] }
+            }
+          } else {
             props[i] = { ...applyVueInReact(this.createSlot(props[i]), { ...options, isSlots: true, wrapInstance }).render() }
-          // }
+          }
           props[i].vueFunction = vueSlot
         } else {
           props[i] = props[i].reactSlot
@@ -192,18 +194,24 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         //   }
         // }
         // TODO: defaultSlotsFormatter
-        // if (options.defaultSlotsFormatter) {
-        //   children.__top__ = this.__veauryVueWrapperRef__
-        //   children = options.defaultSlotsFormatter(children, this.vueInReactCall, hashList)
-        //   if (children instanceof Array || (typeof children).indexOf("string", "number") > -1) {
-        //     children = [...children]
-        //   } else if (typeof children === "object") {
-        //     children = { ...children }
-        //   }
-        // } else {
-        children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
-        children.vueFunction = vueSlot
-        // }
+        if (options.defaultSlotsFormatter && children.__trueChildren) {
+          children.__top__ = this.__veauryVueWrapperRef__
+          children = options.defaultSlotsFormatter(children.__trueChildren, this.vueInReactCall, hashList)
+          if (children instanceof Array) {
+            children = [...children]
+            return
+          }
+          if (["string", "number"].indexOf(typeof children) > -1) {
+            children = [children]
+            return
+          }
+          if (typeof children === "object") {
+            children = { ...children }
+          }
+        } else {
+          children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
+          children.vueFunction = vueSlot
+        }
         return
       }
       children = children.reactSlot
@@ -221,9 +229,9 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     }
     let finalProps = props
     // TODO: defaultPropsFormatter
-    // if (options.defaultPropsFormatter) {
-    //   finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
-    // }
+    if (options.defaultPropsFormatter) {
+      finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
+    }
     const newProps = { ...finalProps }
     // class components and object components and components that can pass catchVueRef
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
@@ -309,31 +317,42 @@ export default function applyReactInVue(component, options = {}) {
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
       // this.slotsInit()
-      this.__veauryCheckReactSlot__()
+      this.__veauryCheckReactSlot__(this.$slots)
       return VNode
     },
     methods: {
-      __veauryCheckReactSlot__() {
+      __veauryCheckReactSlot__(slots) {
         function linkReact(slot, child, type) {
           if (child[type]) {
             slot[type] = child[type]
             return true
           }
         }
-        Object.keys(this.$slots).forEach((key) => {
+        Object.keys(slots).forEach((key) => {
           try {
-            const trueChildren = this.$slots[key]({})
+            const fn = slots[key]
+            // If this function is executed inside the react component, the incoming parameters will be save
+            let trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+            // trueChildren = trueChildren.filter((n) => n.type !== Comment)
+            fn.__trueChildren = trueChildren
+
+            trueChildren.forEach((child) => {
+              if (child.children) {
+                this.__veauryCheckReactSlot__(child.children)
+              }
+            })
+
             // Check if children are from react children wrapped by applyReactInVue
             if (trueChildren.length === 1) {
               const child = trueChildren[0]
-              if (linkReact(this.$slots[key], child, 'reactSlot')) return
-              // if (linkReact(this.$slots[key], child, 'reactFunction')) return
+              if (linkReact(fn, child, 'reactSlot')) return
+              if (linkReact(fn, child, 'reactFunction')) return
 
               // Vue Fragment wrapped
               if (child.type === VueFragment && child.children?.length === 1) {
                 const subChild = child.children[0]
-                if (linkReact(this.$slots[key], subChild, 'reactSlot')) return
-                // linkReact(this.$slots[key], subChild, 'reactFunction')
+                if (linkReact(fn, subChild, 'reactSlot')) return
+                linkReact(fn, subChild, 'reactFunction')
               }
             }
           } catch(e) {}
@@ -405,7 +424,7 @@ export default function applyReactInVue(component, options = {}) {
             if (options.defaultSlotsFormatter) {
               let scopeSlot = slotFunction.apply(this, args)
               scopeSlot.__top__ = _this
-              scopeSlot = options.defaultSlotsFormatter(scopeSlot, _this.vueInReactCall, hashList)
+              scopeSlot = options.defaultSlotsFormatter(scopeSlot, _this.__veauryVueInReactCall__, hashList)
               if (scopeSlot instanceof Array || (typeof scopeSlot).indexOf("string", "number") > -1) {
                 scopeSlot = [...scopeSlot]
               } else if (typeof scopeSlot === "object") {

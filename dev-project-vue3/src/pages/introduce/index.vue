@@ -10,6 +10,7 @@
   <router-link to="/routerView">router-view</router-link>
   <router-link to="/useInjectPropsFromWrapper">useInjectPropsFromWrapper</router-link>
   <router-link to="/crossingProvider">CrossingProvider</router-link>
+  <router-link to="/pureReactInVue">pureReactInVue</router-link>
 </template>
 
 <script>

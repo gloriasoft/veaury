@@ -8,3 +8,6 @@ export {default as veauryOptions, setOptions as setVeauryOptions} from './option
 export {default as createCrossingProviderForReactInVue} from './createCrossingProviderForReactInVue'
 export {default as createCrossingProviderForVueInReact} from './createCrossingProviderForVueInReact'
 export {default as createReactMissVue} from './createReactMissVue'
+export {default as applyPureReactInVue} from './pureReactInVue'
+export {default as RenderReactNode} from './pureReactInVue/RenderReactNode'
+export {default as getReactNode} from './pureReactInVue/getReactNode'

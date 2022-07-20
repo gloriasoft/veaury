@@ -51,6 +51,11 @@ export default createRouter({
             component: () => import('../pages/crossProvider')
         },
         {
+            name: 'pureReactInVue',
+            path: '/pureReactInVue',
+            component: () => import('../pages/pureReactInVue')
+        },
+        {
             name: 'introduce',
             path: '/:default(.*)',
             component: () => import('../pages/introduce')

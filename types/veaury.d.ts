@@ -1,5 +1,7 @@
-import { Component as VueComponent } from 'vue'
-// type VueComponent = object | Function;
+import { Component as VueComponent, VNode } from 'vue'
+
+type ReactNode = object
+type SlotFunction = () => VNode
 type ReactComponent = Function;
 interface propsFromWrapper {
     [propName: string]: any;
@@ -45,6 +47,9 @@ export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOp
 export const VueContainer: any;
 export const injectPropsFromWrapper: injectPropsFromWrapper
 export const creatReactMissVue: (ReactMissVueOptions) => createReactMissVueReturn
+export const getReactNode: VNode | SlotFunction
+export const RenderReactNode: ReactNode
+export const applyPureReactInVue: typeof applyReactInVue
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {

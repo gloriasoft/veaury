@@ -11,7 +11,8 @@ It is built on the Vue and React framework. It's use cases include using both Vu
 ## The greatest feature  
 - 🌞 Support Vue3   
 - 🌈 Support Context - Share the context of all vue and react components.  
-- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.
+- 💗 Support for using hooks across frameworks - You can use React's hooks in a Vue component, or you can use Vue's 'setup' function in a React component and use Vue's hooks in this function.  
+- 🪂 Pure mode - The children of the converted component no longer have an extra element container. [>>learn more about how the pure mode works](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)  
 
 ## Legacy
 The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which can use React in Vue2 and Vue2 in React.  
@@ -139,9 +140,8 @@ export default function () {
 ```  
 
 ### React in Vue - Basic usage
-
+[Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
-
 <template>
   <Basic :foo="foo">
     <div>
@@ -150,15 +150,16 @@ export default function () {
   </Basic>
 </template>
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyReactInVue, applyPureReactInVue} from 'veaury'
 // This is a React component
 import BasicReactComponent from './react_app/Basic.jsx'
 import {ref} from 'vue'
 
 export default {
   components: {
-    // Use HOC 'applyReactInVue'
-    Basic: applyReactInVue(BasicReactComponent)
+    // Use HOC 'applyReactInVue' or 'applyPureReactInVue'
+    Basic: applyReactInVue(BasicReactComponent), 
+    BasicPure: applyPureReactInVue(BasicReactComponent)
   },
   setup() {
     return {
@@ -396,6 +397,45 @@ export default function () {
   // Render '<router-view>' if 'vue-router' exists, You can use '<VueContainer component="RouterView"/>'
   return <VueContainer component={BasicVue} {...passedProps}/>
 }
+```
+
+### getReactNode  
+ReactNode = `getReactNode`(VNode)  
+Sometimes the property of the react component is a complex data structure, which contains ReactNode, and in the vue file, the definition of jsx will be compiled into vue's jsx.
+```vue
+<template>
+  <AA :prop1="propForReact"/>
+</template>
+<script setup>
+import { getReactNode, applyPureReactInVue } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+const propForReact = {
+  foo: 'Mike',
+  bar: [{
+    body: getReactNode(<div>John</div>)
+  }],
+  render: (name) => getReactNode(<div>{name}</div>)
+}
+</script>
+```
+
+### RenderReactNode
+Sometimes the input parameter of the render props of the react component is ReactNode.  
+`RenderReactNode` is a vue component that accepts a `node` parameter and can render ReactNode in a Vue component.  
+```vue
+<template>
+  <AA>
+    <template v-slot:prop2="itemReactNode">
+      <RenderReactNode :node="itemReactNode"/>
+    </template>
+  </AA>
+</template>
+<script setup>
+import { RenderReactNode, applyPureReactInVue } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+</script>
 ```
 
 ### Vue in React, Usage of v-model / v-models

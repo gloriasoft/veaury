@@ -300,7 +300,7 @@ class VueComponentLoader extends React.Component {
           },
           {
             ...options.isSlots && this.children? {
-              default: this.children
+              default: typeof this.children === 'function' ? this.children: () => this.children
             } : {
               ...lastNamedSlots,
             }
