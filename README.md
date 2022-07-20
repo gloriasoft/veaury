@@ -432,7 +432,7 @@ Sometimes the input parameter of the render props of the react component is Reac
   </AA>
 </template>
 <script setup>
-import { RenderReactNode } from 'veaury'
+import { RenderReactNode, applyPureReactInVue } from 'veaury'
 import AAReact from './react_app/AA.jsx'
 const AA = applyPureReactInVue(AAReact)
 </script>
