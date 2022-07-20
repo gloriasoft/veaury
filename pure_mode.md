@@ -1,5 +1,7 @@
 # Pure mode  
-Two examples are given to illustrate the difference between `applyReactInVue` and `applyPureReactInVue`.  
+
+## Example  
+The example is given to illustrate the difference between `applyReactInVue` and `applyPureReactInVue`.  
 
 The React component AA.  
 (./react_app/AA)  
@@ -66,9 +68,9 @@ const AAWithNormal = applyReactInVue(AAReact)
 }
 </style>
 ```
-<div align=center>
-  <img width="400" src="https://user-images.githubusercontent.com/38802722/179908805-be8afde8-8c92-4eea-ad7b-b2040ee8b94a.png"/>
-</div>
-<div align=center>
-  <img width="800" src="https://user-images.githubusercontent.com/38802722/179910828-b20c9128-a531-4de5-ab0f-7075eafb9b80.png"/>
-</div>
+## Preview  
+<img width="500" src="https://user-images.githubusercontent.com/38802722/179908805-be8afde8-8c92-4eea-ad7b-b2040ee8b94a.png"/>  
+
+## Why does it behave like this?  
+<img width="800" src="https://user-images.githubusercontent.com/38802722/179910828-b20c9128-a531-4de5-ab0f-7075eafb9b80.png"/>  
+
