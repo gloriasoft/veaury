@@ -1,5 +1,5 @@
 import applyReactInVue from '../applyReactInVue'
-import React, {forwardRef, createRef} from 'react'
+import React, {forwardRef} from 'react'
 import {h} from 'vue'
 
 function RenderReactNode (props, ref) {

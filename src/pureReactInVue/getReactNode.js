@@ -1,5 +1,5 @@
 import {VueContainer} from '../applyVueInReact'
-import React, {useState} from 'react'
+import React from 'react'
 import getDistinguishReactOrVue from "./getDistinguishReactOrVue";
 import {h, getCurrentInstance} from 'vue'
 
