@@ -140,9 +140,8 @@ export default function () {
 ```  
 
 ### React in Vue - Basic usage
-
+[Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
-
 <template>
   <Basic :foo="foo">
     <div>
@@ -151,15 +150,16 @@ export default function () {
   </Basic>
 </template>
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyReactInVue, applyPureReactInVue} from 'veaury'
 // This is a React component
 import BasicReactComponent from './react_app/Basic.jsx'
 import {ref} from 'vue'
 
 export default {
   components: {
-    // Use HOC 'applyReactInVue'
-    Basic: applyReactInVue(BasicReactComponent)
+    // Use HOC 'applyReactInVue' or 'applyPureReactInVue'
+    Basic: applyReactInVue(BasicReactComponent), 
+    BasicPure: applyPureReactInVue(BasicReactComponent)
   },
   setup() {
     return {
