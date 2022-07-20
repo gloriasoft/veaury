@@ -72,5 +72,6 @@ const AAWithNormal = applyReactInVue(AAReact)
 <img width="500" src="https://user-images.githubusercontent.com/38802722/179908805-be8afde8-8c92-4eea-ad7b-b2040ee8b94a.png"/>  
 
 ## Why does it behave like this?  
-<img width="800" src="https://user-images.githubusercontent.com/38802722/179910828-b20c9128-a531-4de5-ab0f-7075eafb9b80.png"/>  
+<img width="1000" src="https://user-images.githubusercontent.com/38802722/179910828-b20c9128-a531-4de5-ab0f-7075eafb9b80.png"/>  
 
+`applyPureReactInVue` will directly convert VNode into ReactNode, and a new container will be created when Vue components are encountered, while `applyReactInVue` will not do any conversion processing on VNode, but will create a container to render VNode uniformly.  
