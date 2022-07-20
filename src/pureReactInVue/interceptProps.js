@@ -1,4 +1,5 @@
 // TODO
+// This function will solve the timing problem of affecting external vue components after modifying the state inside some special react components
 const reactComponents = []
 
 export function pureInterceptProps(target = {}, child, ReactComponent) {

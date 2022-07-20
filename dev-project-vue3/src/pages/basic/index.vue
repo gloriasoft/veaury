@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted, ref, h, getCurrentInstance, computed, provide, withScopeId, withCtx } from 'vue'
+import { onMounted, onUnmounted, ref, h, getCurrentInstance, computed, provide, withScopeId, withCtx, VNode } from 'vue'
 import { applyReactInVue, applyPureReactInVue, RenderReactNode, getReactNode } from 'veaury'
 import {createElement} from 'react'
 // This is a React Component
@@ -51,9 +51,6 @@ import ReactAA from "./react_app/AA"
 import ReactBB from './react_app/BB'
 import ReactCC from './react_app/CC'
 import AAA from './AAA'
-
-
-
 
 const DD = {
   render() {
