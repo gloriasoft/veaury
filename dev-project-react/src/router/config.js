@@ -43,6 +43,10 @@ export default [
     element: asyncElement(() => import('../components/reactMissVue')),
   },
   {
+    path: '/pureVueInReact/*',
+    element: asyncElement(() => import('../components/pureVueInReact')),
+  },
+  {
     path: '*',
     element: asyncElement(() => import('../components/Introduce')),
   },

@@ -17,5 +17,6 @@ export default function introduce() {
     <NavLink to={'/CrossingProvider'} style={style}>CrossingProvider</NavLink>
     <NavLink to={'/lazyVueInReact'} style={style}>lazyVueInReact</NavLink>
     <NavLink to={'/ReactMissVue'} style={style}>ReactMissVue</NavLink>
+    <NavLink to={'/pureVueInReact'} style={style}>Pure mode</NavLink>
   </Fragment>
 }
