@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { applyPureReactInVue, applyReactInVue } from 'veaury'
+import { applyPureReactInVue, applyReactInVue, RenderReactNode } from 'veaury'
 import { ref, onMounted } from 'vue'
 import AAReact from './react_app/AA'
 import BBReact from './react_app/BB'
