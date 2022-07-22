@@ -13,17 +13,11 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
         // Resolve ref
         let ref = resolveRef(child)
 
-        // const hashMap = {}
-        // if (hashList && typeof hashList !== 'function') {
-        //     hashList.forEach((val) => {
-        //         hashMap[val] = ''
-        //     })
-        // }
-
+        const {style, class: className, ...otherProps} = child.props || {}
         const props = {
-            style: formatStyle(child.props?.style),
-            className: Array.from(new Set(formatClass(child.props?.class))).join(' '),
-            // ...hashMap,
+            ...otherProps,
+            style: formatStyle(style),
+            className: Array.from(new Set(formatClass(className))).join(' '),
             ...(ref? {ref}: {})
         }
         // const directives = child.dirs

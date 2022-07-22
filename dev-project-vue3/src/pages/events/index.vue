@@ -16,13 +16,13 @@
 
 <script>
 import { ref } from 'vue'
-import { applyReactInVue } from 'veaury'
+import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactButton from "./react_app/Button"
 
 export default {
   components: {
-    ReactButton: applyReactInVue(ReactButton)
+    ReactButton: applyPureReactInVue(ReactButton)
   },
   setup() {
     const currentTimestamp = ref(Date.now())

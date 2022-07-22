@@ -1,7 +1,7 @@
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 import React, {useRef} from 'react'
 
 // This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
@@ -64,12 +64,13 @@ function ReactComponent (props) {
       the count from 'vuex': <span style={{fontWeight: 'bold'}}>{props.count}</span>
     </span><br/>
     <button onClick={props.changeQuery}>change query</button> <button onClick={props.incrementCount}>increment count</button>
+    {props.children}
   </div>)
 }
 
 // Vue's injection function has two modes: 'setup' and 'computed'.
 // Refer to the case of the above two injection function types.
 // Also try replacing the option injectPropsFromWrapper with 'VueInjectionHookInComputedMode'
-export default applyReactInVue(ReactComponent, {
+export default applyPureReactInVue(ReactComponent, {
   useInjectPropsFromWrapper: VueInjectionHookInSetupMode
 })

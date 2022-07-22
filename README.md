@@ -140,14 +140,15 @@ export default function () {
 ```  
 
 ### React in Vue - Basic usage
+`applyPureReactInVue` is recommended.  
 [Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
 <template>
-  <Basic :foo="foo">
+  <BasicPure :foo="foo">
     <div>
       the children
     </div>
-  </Basic>
+  </BasicPure>
 </template>
 <script>
 import {applyReactInVue, applyPureReactInVue} from 'veaury'
@@ -201,13 +202,13 @@ export default function () {
 
 <script>
 import {ref} from 'vue'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React Component
 import ReactButton from "./react_app/Button.jsx"
 
 export default {
   components: {
-    ReactButton: applyReactInVue(ReactButton)
+    ReactButton: applyPureReactInVue(ReactButton)
   },
   setup() {
     function onClickForReact() {
@@ -294,13 +295,13 @@ A named slot has a name prefixed with `node:` = React Node
 </template>
 
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Slots.jsx"
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    Basic: applyPureReactInVue(ReactBasic)
   }
 }
 </script>
@@ -355,7 +356,7 @@ export default function () {
 
 <script>
 import {provide, inject, h} from 'vue'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React component
 import ReactBasic from "./react_app/Basic"
 // This is a Vue component
@@ -369,7 +370,7 @@ const SubVueComponent = {
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
     SubVueComponent
   },
   setup() {
@@ -550,7 +551,7 @@ import React from 'react'
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 
 // This React component will be used in the Vue app and needs to use the vue-router and vuex hooks
 
@@ -611,7 +612,7 @@ function ReactComponent (props) {
 // Vue's injection function has two modes: 'setup' and 'computed'.
 // Refer to the case of the above two injection function types.
 // Also try replacing the option injectPropsFromWrapper with 'VueInjectionHookInComputedMode'
-export default applyReactInVue(ReactComponent, {
+export default applyPureReactInVue(ReactComponent, {
   useInjectPropsFromWrapper: VueInjectionHookInSetupMode
 })
 
@@ -691,14 +692,15 @@ export default function () {
 
 ```
 
-#### Usage of createCrossingProviderForReactInVue
+#### Usage of createCrossingProviderForReactInVue  
+It is now recommended to use `createCrossingProviderForPureReactInVue` instead of `createCrossingProviderForReactInVue`.  
 Create a provider including vue-router and vuex and a React hooks that can be executed in the React function component and get the vue-router and vuex. (vueRouterAndVuexCrossingProvider.js)
 ```js
 import {useStore} from 'vuex'
 import {useRouter, useRoute} from 'vue-router'
-import {createCrossingProviderForReactInVue} from 'veaury'
+import {createCrossingProviderForPureReactInVue} from 'veaury'
 
-const [useVueHooksInReact, VueProviderForReact] = createCrossingProviderForReactInVue(function() {
+const [useVueHooksInReact, VueProviderForReact] = createCrossingProviderForPureReactInVue(function() {
   return {
     vuex: useStore(),
     vueRoute: useRoute(),
@@ -748,7 +750,7 @@ Vue components use the provider, so that all React components (including interna
 </template>
 
 <script>
-import { applyReactInVue } from 'veaury'
+import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import {VueProviderForReact} from "./vueRouterAndVuexCrossingProvider";
@@ -756,7 +758,7 @@ import {VueProviderForReact} from "./vueRouterAndVuexCrossingProvider";
 export default {
   components: {
     VueProviderForReact,
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
   }
 }
 </script>
@@ -854,59 +856,51 @@ export default function () {
 ```
 
 ### Usage of lazyReactInVue
+It is now recommended to use `lazyPureReactInVue` instead of `lazyReactInVue`.  
 ```vue
 <template>
   <Basic/>
 </template>
 
 <script>
-import { lazyReactInVue } from 'veaury'
+import { lazyPureReactInVue } from 'veaury'
 
 export default {
   components: {
     // import an async React component
     // It is also possible to use the full parameter of the Vue3 API 'defineAsyncComponent'
     // for example: lazyReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
-    Basic: lazyReactInVue(() => import('./react_app/Basic'))
+    Basic: lazyPureReactInVue(() => import('./react_app/Basic'))
   },
 }
 </script>
-```
-```typescript
-// types
-type lazyReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
-```
-
-### Usage of lazyVueInReact
-```jsx
-import { lazyVueInReact } from 'veaury'
-
-const AsyncBasic = lazyVueInReact(() => import('./Basic'))
-export default function () {
-    return <AsyncBasic/>
-}
-```
-```typescript
-// types
-type lazyReactInVue = (asyncImport: Promise<any>, options?: options) => any
 ```
 
 ### Usage of ref
 Get the React component's instance in the Vue Component.  
 ```vue
 <template>
-  <Basic ref="Basic"/>
+  <Basic ref="Basic">
+    <div ref="div">hello</div>
+    <AA ref="AA"/>
+  </Basic>
 </template>
 <script>
-import { applyReactInVue } from 'veaury'
-import BasicReact from './Basic'
+import { applyPureReactInVue } from 'veaury'
+import BasicReact from './Basic.jsx'
+import AAReact from './AA.jsx'
 export default {
   components: {
-    Basic: applyReactInVue(BasicReact)
+    Basic: applyPureReactInVue(BasicReact),
+    AA: applyPureReactInVue(AAReact)
   },
   mounted() {
     // Get the real react instance through `__veauryReactRef__`
     console.log(this.$refs.Basic.__veauryReactRef__)
+    // If the converted react component or dom element is placed as a child node in a pure mode react component, 
+    // the ref can be obtained directly
+    console.log(this.$refs.div)
+    console.log(this.$refs.AA)
   }
 }
 </script>

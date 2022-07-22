@@ -14,7 +14,7 @@
 
 <script>
 import { onMounted, onUnmounted, ref } from 'vue'
-import { lazyReactInVue } from 'veaury'
+import { lazyPureReactInVue } from 'veaury'
 
 
 export default {
@@ -22,7 +22,7 @@ export default {
     // import an async React component
     // It is also possible to use the full parameter of the Vue3 API 'defineAsyncComponent'
     // for example: lazyReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
-    Basic: lazyReactInVue(() => import('./react_app/Basic'))
+    Basic: lazyPureReactInVue(() => import('./react_app/Basic'))
   },
   setup() {
     let timer

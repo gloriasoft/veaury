@@ -1,6 +1,6 @@
 import { defineStore, createPinia } from 'pinia'
 import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
-import { createReactMissVue, applyReactInVue } from 'veaury'
+import { createReactMissVue, applyPureReactInVue } from 'veaury'
 
 // create vue-router instance
 const router = createRouter({
@@ -10,12 +10,12 @@ const router = createRouter({
     {
       name: '',
       path: '/aaa',
-      component: applyReactInVue(() => <div className="react-component">react use vue-router<br/>path: /aaa</div>)
+      component: applyPureReactInVue(() => <div className="react-component">react use vue-router<br/>path: /aaa</div>)
     },
     {
       name: 'empty',
       path: '/:default(.*)',
-      component: applyReactInVue(() => <div className="react-component">react use vue-router<br/>empty</div>)
+      component: applyPureReactInVue(() => <div className="react-component">react use vue-router<br/>empty</div>)
     },
   ],
 })

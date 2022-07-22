@@ -13,14 +13,14 @@
 
 <script>
 import { onMounted, onUnmounted, ref, provide } from 'vue'
-import { applyReactInVue } from 'veaury'
+import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import Custom1 from "./Custom1"
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
     Custom1
   },
   setup() {
