@@ -5,7 +5,9 @@
   <h4>
     Using React components in Vue components.
   </h4>
-  <BasicVue/>
+  <BasicVue>
+    <div class="slot">Vue children pass to React</div>
+  </BasicVue>
 </template>
 
 <script>

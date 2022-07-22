@@ -1,6 +1,6 @@
 <template>
   <h3>
-    This example shows the basic usage of `createCrossingProviderForReactInVue`.
+    This example shows the basic usage of `createCrossingProviderForPureReactInVue`.
   </h3>
   <h4>
     Using React components in Vue components.
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { applyReactInVue } from 'veaury'
+import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import {ProviderInVue} from "./vueRouterAndVuexCrossingProvider";
@@ -19,7 +19,7 @@ import {ProviderInVue} from "./vueRouterAndVuexCrossingProvider";
 export default {
   components: {
     ProviderInVue,
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
   },
   mounted() {
     // console.log(11111, this.$refs.aaa)

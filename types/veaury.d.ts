@@ -50,6 +50,8 @@ export const creatReactMissVue: (ReactMissVueOptions) => createReactMissVueRetur
 export const getReactNode: (VueElement: VNode | SlotFunction) => ReactNode;
 export const RenderReactNode: VueComponent;
 export const applyPureReactInVue: typeof applyReactInVue;
+export const createCrossingProviderForPureReactInVue: typeof createCrossingProviderForReactInVue;
+export const lazyPureReactInVue: typeof lazyReactInVue;
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {

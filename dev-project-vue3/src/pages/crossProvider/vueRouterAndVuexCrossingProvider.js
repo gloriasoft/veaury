@@ -4,9 +4,9 @@
 
 import {useStore} from 'vuex'
 import {useRouter, useRoute} from 'vue-router'
-import {createCrossingProviderForReactInVue} from 'veaury'
+import {createCrossingProviderForPureReactInVue} from 'veaury'
 
-const [useVueHooksInReact, ProviderInVue] = createCrossingProviderForReactInVue(function() {
+const [useVueHooksInReact, ProviderInVue] = createCrossingProviderForPureReactInVue(function() {
   return {
     vuex: useStore(),
     vueRoute: useRoute(),
