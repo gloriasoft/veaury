@@ -139,10 +139,16 @@ export default function () {
 }
 ```  
 
-### React in Vue - Basic usage
+### React in Vue - Basic usage  
+`applyPureReactInVue` is recommended.  
 [Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
 <template>
+  <BasicPure :foo="foo">
+    <div>
+      the children
+    </div>
+  </BasicPure>
   <Basic :foo="foo">
     <div>
       the children
@@ -201,13 +207,13 @@ export default function () {
 
 <script>
 import {ref} from 'vue'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React Component
 import ReactButton from "./react_app/Button.jsx"
 
 export default {
   components: {
-    ReactButton: applyReactInVue(ReactButton)
+    ReactButton: applyPureReactInVue(ReactButton)
   },
   setup() {
     function onClickForReact() {
@@ -294,13 +300,13 @@ A named slot has a name prefixed with `node:` = React Node
 </template>
 
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Slots.jsx"
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    Basic: applyPureReactInVue(ReactBasic)
   }
 }
 </script>
@@ -355,7 +361,7 @@ export default function () {
 
 <script>
 import {provide, inject, h} from 'vue'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // This is a React component
 import ReactBasic from "./react_app/Basic"
 // This is a Vue component
@@ -369,7 +375,7 @@ const SubVueComponent = {
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
     SubVueComponent
   },
   setup() {
