@@ -431,7 +431,7 @@ export default function () {
 }
 ```
 ### 通过VNode获取ReactNode - getReactNode 的用法
-ReactNode = `getReactNode`(VNode)
+ReactNode = `getReactNode`(VNode)  
 有时候react组件的属性是一个复杂的数据结构，里面包含了ReactNode，而在vue文件中，jsx的定义会被编译成vue的jsx（也就是VNode），如果直接将这个属性传递给react组件，react组件是不能识别VNode的。  
 ```vue
 <template>
