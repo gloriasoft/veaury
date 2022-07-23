@@ -1,3 +1,47 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  
+
+- [Veaury](#veaury)
+  - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
+  - [What is Veaury?](#what-is-veaury)
+  - [The greatest feature](#the-greatest-feature)
+  - [Legacy](#legacy)
+  - [Latest documentation](#latest-documentation)
+  - [Use cases](#use-cases)
+  - [Installation](#installation)
+  - [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
+    - [Webpack](#webpack)
+    - [Vite](#vite)
+  - [Usage](#usage)
+    - [Vue in React - Basic usage](#vue-in-react---basic-usage)
+    - [React in Vue - Basic usage](#react-in-vue---basic-usage)
+    - [Vue in React - Usage of events](#vue-in-react---usage-of-events)
+    - [React in Vue - Usage of events](#react-in-vue---usage-of-events)
+    - [Vue in React - Usage of slots](#vue-in-react---usage-of-slots)
+    - [React in Vue - Usage of render props and React node](#react-in-vue---usage-of-render-props-and-react-node)
+    - [Context](#context)
+      - [Vue in React - Usage of Provider / useContext](#vue-in-react---usage-of-provider--usecontext)
+      - [React in Vue - Usage of Provide / Inject](#react-in-vue---usage-of-provide--inject)
+    - [Usage of VueContainer in React Component](#usage-of-vuecontainer-in-react-component)
+    - [Usage of getReactNode](#usage-of-getreactnode)
+    - [Usage of RenderReactNode](#usage-of-renderreactnode)
+    - [Vue in React, Usage of v-model / v-models](#vue-in-react-usage-of-v-model--v-models)
+    - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
+      - [Usage of injecting React hooks in Vue component](#usage-of-injecting-react-hooks-in-vue-component)
+      - [Usage of injecting Vue hooks in React component](#usage-of-injecting-vue-hooks-in-react-component)
+    - [Crossing provider](#crossing-provider)
+      - [Usage of createCrossingProviderForVueInReact](#usage-of-createcrossingproviderforvueinreact)
+      - [Usage of createCrossingProviderForReactInVue](#usage-of-createcrossingproviderforreactinvue)
+    - [ReactMissVue](#reactmissvue)
+      - [Usage of createReactMissVue](#usage-of-createreactmissvue)
+    - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
+    - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
+    - [Usage of getting ref](#usage-of-getting-ref)
+  - [Contributing Guide](#contributing-guide)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
@@ -20,25 +64,34 @@ The perfect [tool library](https://github.com/devilwjp/vuereact-combined) which 
 ## Latest documentation  
 View the latest [documentation](https://github.com/devilwjp/veaury#readme)  
 [中文文档](https://github.com/devilwjp/veaury/blob/master/README_zhcn.md)
+
+## Use cases
+- 👨‍👩‍👧 Using both Vue and React in one app
+- 🏃 Migrating from React to Vue or from Vue to React
+- 📲 Using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`
+
+## Installation
+
+```sh
+# Install with yarn:
+$ yarn add veaury
+# or with npm:
+$ npm i veaury -S
+```
+
 ## Do you want to preconfigure your project in advance?
 
 In theory, you don't need to do additional configuration in a React project to support Vue, nor do you need to do additional configuration in a Vue project to support React.  
   
-If the React or Vue component you want to convert comes from a npm package, or has already been built, you can use `applyReactInVue` or `applyVueInReact` directly.  
+If the React or Vue component you want to convert comes from a npm package, or has already been built (Not a direct vue file and does not contain jsx), you can use `applyPureReactInVue` or `applyVueInReact` directly.  
   
-If you need to develop both Vue and React in a project, instead of just using an existing npm component, then you should do some configuration, usually configuring `webpack.config.js` and `babel.config.js`.   
+If you need to develop both Vue and React in a project, instead of just using an existing npm component (There are both .vue files and react jsx files in a project source code), then you should do some configuration.   
   
-The directories `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.  
-> **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`  
-> 
-> **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects  
-> 
-> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development
-  
-You can refer to How to configure the two projects to support the other framework.  
+### Webpack  
 [How to configure React in the Vue project from '@vue/cli' ](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
 [How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
+### Vite
 If it is a project built by `vite`, the relevant configuration is as follows.  
 
 + The main project is Vue:  
@@ -103,21 +156,6 @@ export default defineConfig({
   ]
 })
 ```
-
-## Use cases
-- 👨‍👩‍👧 Using both Vue and React in one app
-- 🏃 Migrating from React to Vue or from Vue to React
-- 📲 Using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`
-
-## Installation
-
-```sh
-# Install with yarn:
-$ yarn add veaury
-# or with npm:
-$ npm i veaury -S
-```
-
 ## Usage
 
 ### Vue in React - Basic usage
@@ -400,7 +438,7 @@ export default function () {
 }
 ```
 
-### getReactNode  
+### Usage of getReactNode  
 ReactNode = `getReactNode`(VNode)  
 Sometimes the property of the react component is a complex data structure, which contains ReactNode, and in the vue file, the definition of jsx will be compiled into vue's jsx.
 ```vue
@@ -421,7 +459,7 @@ const propForReact = {
 </script>
 ```
 
-### RenderReactNode
+### Usage of RenderReactNode
 Sometimes the input parameter of the render props of the react component is ReactNode.  
 `RenderReactNode` is a vue component that accepts a `node` parameter and can render ReactNode in a Vue component.  
 ```vue
@@ -875,8 +913,17 @@ export default {
 }
 </script>
 ```
+### Usage of lazyVueInReact
+```jsx
+import { lazyVueInReact } from 'veaury'
 
-### Usage of ref
+const AsyncBasic = lazyVueInReact(() => import('./Basic'))
+export default function () {
+    return <AsyncBasic/>
+}
+```
+
+### Usage of getting ref
 Get the React component's instance in the Vue Component.  
 ```vue
 <template>
@@ -921,3 +968,11 @@ export default function () {
   return <Basic ref={basicInstance}/>
 }
 ```
+
+## Contributing Guide  
+The directories `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.
+> **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`
+>
+> **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects
+>
+> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development

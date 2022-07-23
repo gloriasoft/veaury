@@ -1,3 +1,46 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**目录引导**  
+
+- [Veaury](#veaury)
+  - [Vue3应用可以使用React组件，React应用可以使用Vue3组件，并且非常完美！](#vue3%E5%BA%94%E7%94%A8%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6react%E5%BA%94%E7%94%A8%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8vue3%E7%BB%84%E4%BB%B6%E5%B9%B6%E4%B8%94%E9%9D%9E%E5%B8%B8%E5%AE%8C%E7%BE%8E)
+  - [什么是Veaury?](#%E4%BB%80%E4%B9%88%E6%98%AFveaury)
+  - [重要功能](#%E9%87%8D%E8%A6%81%E5%8A%9F%E8%83%BD)
+  - [支持Vue2？](#%E6%94%AF%E6%8C%81vue2)
+  - [使用场景](#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
+  - [安装](#%E5%AE%89%E8%A3%85)
+  - [项目的预配置](#%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%A2%84%E9%85%8D%E7%BD%AE)
+    - [Webpack](#webpack)
+    - [Vite](#vite)
+  - [用法](#%E7%94%A8%E6%B3%95)
+    - [在React组件中使用Vue组件 - 基本用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+    - [在Vue组件中使用React组件 - 基本用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+    - [在React组件中使用Vue组件 - 事件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在Vue组件中使用React组件 - 事件的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在React组件中使用Vue组件 - 插槽的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E6%8F%92%E6%A7%BD%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在Vue组件中使用React组件 - 传递render props 和 React node 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BC%A0%E9%80%92render-props-%E5%92%8C-react-node-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [Context(上下文)](#context%E4%B8%8A%E4%B8%8B%E6%96%87)
+      - [React组件使用Vue组件 - Provider / useContext 的用法](#react%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---provider--usecontext-%E7%9A%84%E7%94%A8%E6%B3%95)
+      - [Vue组件使用React组件 - Provide / Inject 的用法](#vue%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---provide--inject-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在React组件中使用 VueContainer 组件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8-vuecontainer-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [通过VNode获取ReactNode - getReactNode 的用法](#%E9%80%9A%E8%BF%87vnode%E8%8E%B7%E5%8F%96reactnode---getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在Vue组件中直接渲染ReactNode - RenderReactNode 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93reactnode---renderreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在React组件中使用Vue组件, v-model / v-models 的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6-v-model--v-models-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
+      - [在 Vue 组件中注入 React hooks的用法](#%E5%9C%A8-vue-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-react-hooks%E7%9A%84%E7%94%A8%E6%B3%95)
+      - [在 React 组件中注入 Vue hooks 的用法](#%E5%9C%A8-react-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-vue-hooks-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [跨框架的Provider](#%E8%B7%A8%E6%A1%86%E6%9E%B6%E7%9A%84provider)
+      - [createCrossingProviderForVueInReact 的用法](#createcrossingproviderforvueinreact-%E7%9A%84%E7%94%A8%E6%B3%95)
+      - [createCrossingProviderForReactInVue的用法](#createcrossingproviderforreactinvue%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [ReactMissVue](#reactmissvue)
+      - [Usage of createReactMissVue](#usage-of-createreactmissvue)
+    - [lazyReactInVue的用法(在Vue组件中使用异步的React组件)](#lazyreactinvue%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84react%E7%BB%84%E4%BB%B6)
+    - [lazyVueInReact的用法(在React组件中使用异步的Vue组件)](#lazyvueinreact%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84vue%E7%BB%84%E4%BB%B6)
+    - [获取ref实例的用法](#%E8%8E%B7%E5%8F%96ref%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [Contributing Guide](#contributing-guide)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
@@ -10,29 +53,38 @@ Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项�
 ## 重要功能
 - 🌞 支持 Vue3   
 - 🌈 支持 Context - 同一个应用中出现的vue组件和react组件的context是共享的.  
-- 💗 支持跨框架的hooks调用 - 可以在react组件中使用vue的hooks，获取到vue组件或者应用的上下文数据，比如vue-router、vuex，也可以在vue组件中使用react的hooks，获取到react组件或者应用的上下文数据，比如react-router、provide、context等
+- 💗 支持跨框架的hooks调用 - 可以在react组件中使用vue的hooks，获取到vue组件或者应用的上下文数据，比如vue-router、vuex，也可以在vue组件中使用react的hooks，获取到react组件或者应用的上下文数据，比如react-router、provide、context等 
+- 🪂 纯净模式 - 转换后的组件的子组件不再会有一个附加的dom元素容器. [>>了解纯净模式是如何工作的?](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)
 
 ## 支持Vue2？
 [完美支持react和vue2同时开发的工具库vuereact-combined](https://github.com/devilwjp/vuereact-combined)  
 
+## 使用场景
+- 👨‍👩‍👧 在一个应用中同时开发React和Vue
+- 🏃 从Vue项目迁移到React项目，或者从React项目迁移到Vue项目
+- 📲 在一个应用中可以随意使用React或者Vue的第三方组件, 比如 `antd`, `element-ui`, `vuetify`
+
+## 安装
+
+```sh
+# Install with yarn:
+$ yarn add veaury
+# or with npm:
+$ npm i veaury -S
+```
+
 ## 项目的预配置
 理论上，不需要在 React 项目中做额外的配置来支持 Vue，也不需要在 Vue 项目中做额外的配置来支持 React。  
 
-如果要转换的 React 或 Vue 组件来自 npm 包，或者已经经过构建（不是直接的vue文件以及不含有jsx），则可以直接使用 `applyReactInVue` 或 `applyVueInReact`。  
+如果要转换的 React 或 Vue 组件来自 npm 包，或者已经经过构建（不是直接的vue文件以及不含有jsx），则可以直接使用 `applyPureReactInVue` 或 `applyVueInReact`。  
 
-如果需要在一个项目中同时开发 Vue 和 React，而不是仅仅使用现有的 npm 组件，那么应该做一些配置，通常配置 `webpack.config.js` 和 `babel.config.js`。  
+如果需要在一个项目中同时开发 Vue 和 React(一个项目源码中同时存在.vue文件和react jsx文件)，而不是仅仅使用现有的 npm 组件，那么应该做一些配置。  
 
-本项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别由`create-react-app`和`@vue/cli`创建的两个初始项目。  
-> **Note:** 在react项目中的`config/webpack.config.js`以及vue项目中的`vue.config.js`里，可以找到webpack的alias别名配置，将`veaury`的别名注释解开，就可以对根项目中`src`目录里的`veaury`源代码进行开发调试了
-> 
-> **Setup:** 在主项目的根目录下运行命令行`npm run setup:yarn` 或者 `npm run setup:npm`，可以整体安装主项目和两个调试用的子项目
-> 
-> **Develop:** 在主项目的根目录下运行命令行`npm run dev:vue` 以及 `npm run setup:npm`就可以对子项目进行开发调试
-   
-以下信息可以作为如何配置react和vue项目以支持另一种框架的参考  
+### Webpack  
 [如何配置由'@vue/cli'创建的vue项目支持开发react](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  
 [如何配置由'create-react-app'创建的react项目支持开发vue](https://github.com/devilwjp/veaury/tree/master/dev-project-react)
 
+### Vite  
 如果项目是通过`vite`构建的，那么需要对`vite.config.js`做如下配置  
 
 + 主项目是vue:
@@ -94,20 +146,6 @@ export default defineConfig({
 })
 ```
 
-## 使用场景
-- 👨‍👩‍👧 在一个应用中同时开发React和Vue
-- 🏃 从Vue项目迁移到React项目，或者从React项目迁移到Vue项目
-- 📲 在一个应用中可以随意使用React或者Vue的第三方组件, 比如 `antd`, `element-ui`, `vuetify`
-
-## 安装
-
-```sh
-# Install with yarn:
-$ yarn add veaury
-# or with npm:
-$ npm i veaury -S
-```
-
 ## 用法
 
 ### 在React组件中使用Vue组件 - 基本用法
@@ -130,18 +168,19 @@ export default function () {
 ```  
 
 ### 在Vue组件中使用React组件 - 基本用法
-
+现在推荐使用`applyPureReactInVue`代替`applyReactInvue`.  
+[了解 `applyPureReactInVue` 和 `applyReactInVue` 的区别](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)
 ```vue
 
 <template>
-  <Basic :foo="foo">
+  <BasicPure :foo="foo">
     <div>
       children内容
     </div>
-  </Basic>
+  </BasicPure>
 </template>
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyReactInVue, applyPureReactInVue} from 'veaury'
 // 这是一个React组件
 import BasicReactComponent from './react_app/Basic.jsx'
 import {ref} from 'vue'
@@ -149,7 +188,9 @@ import {ref} from 'vue'
 export default {
   components: {
     // 使用高阶组件 'applyReactInVue'
-    Basic: applyReactInVue(BasicReactComponent)
+    Basic: applyReactInVue(BasicReactComponent),
+    // 现在推荐使用纯净模式的 'applyPureReactInVue'
+    BasicPure: applyPureReactInVue(BasicReactComponent)
   },
   setup() {
     return {
@@ -190,13 +231,13 @@ export default function () {
 </template>
 
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // React组件ReactButton
 import ReactButton from "./react_app/Button.jsx"
 
 export default {
   components: {
-    ReactButton: applyReactInVue(ReactButton)
+    ReactButton: applyPureReactInVue(ReactButton)
   },
   setup() {
     function onClickForReact() {
@@ -283,13 +324,13 @@ Vue3的默认插槽和children = React props.children.
 </template>
 
 <script>
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // 这是一个React组件
 import ReactBasic from "./react_app/Slots.jsx"
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic)
+    Basic: applyPureReactInVue(ReactBasic)
   }
 }
 </script>
@@ -346,7 +387,7 @@ export default function () {
 
 <script>
 import {provide, inject, h} from 'vue'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 // 这是一个React组件
 import ReactBasic from "./react_app/Basic"
 // 这是一个Vue组件
@@ -360,7 +401,7 @@ const SubVueComponent = {
 
 export default {
   components: {
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
     SubVueComponent
   },
   setup() {
@@ -388,6 +429,44 @@ export default function () {
   // 如果 'vue-router' 存在，则渲染 '<router-view>' 可以使用 '<VueContainer component="RouterView"/>'
   return <VueContainer component={BasicVue} {...passedProps}/>
 }
+```
+### 通过VNode获取ReactNode - getReactNode 的用法
+ReactNode = `getReactNode`(VNode)  
+有时候react组件的属性是一个复杂的数据结构，里面包含了ReactNode，而在vue文件中，jsx的定义会被编译成vue的jsx（也就是VNode），如果直接将这个属性传递给react组件，react组件是不能识别VNode的。  
+```vue
+<template>
+  <AA :prop1="propForReact"/>
+</template>
+<script setup>
+import { getReactNode, applyPureReactInVue } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+const propForReact = {
+  foo: 'Mike',
+  bar: [{
+    body: getReactNode(<div>John</div>)
+  }],
+  render: (name) => getReactNode(<div>{name}</div>)
+}
+</script>
+```
+
+### 在Vue组件中直接渲染ReactNode - RenderReactNode 的用法
+有时react组件的render props的输入参数是ReactNode，而vue组件中如果直接使用作用域插槽去展示这个ReactNode是错误的。  
+`RenderReactNode` 是一个 vue 组件，它接受 `node` 参数，可以在 Vue 组件中渲染 ReactNode。  
+```vue
+<template>
+  <AA>
+    <template v-slot:prop2="itemReactNode">
+      <RenderReactNode :node="itemReactNode"/>
+    </template>
+  </AA>
+</template>
+<script setup>
+import { RenderReactNode, applyPureReactInVue } from 'veaury'
+import AAReact from './react_app/AA.jsx'
+const AA = applyPureReactInVue(AAReact)
+</script>
 ```
 
 ### 在React组件中使用Vue组件, v-model / v-models 的用法
@@ -502,7 +581,7 @@ import React from 'react'
 import {toRef} from 'vue'
 import {useStore} from 'vuex'
 import {useRoute, useRouter} from 'vue-router'
-import {applyReactInVue} from 'veaury'
+import {applyPureReactInVue} from 'veaury'
 
 // 这个 React 组件将在 Vue 应用程序中使用，需要使用 vue-router 和 vuex 钩子
 
@@ -560,18 +639,19 @@ function ReactComponent (props) {
 // Vue 的注入函数有两种模式：'setup' 和 'computed'
 // 请参考以上两种注入函数类型的案例
 // 可以尝试用 'VueInjectionHookInComputedMode'
-export default applyReactInVue(ReactComponent, {
+export default applyPureReactInVue(ReactComponent, {
   useInjectPropsFromWrapper: VueInjectionHookInSetupMode
 })
 
 ```
-### Crossing provider
-Although it is possible to use hooks from another framework via `useInjectPropsFromWrapper` and get them via properties, but in most cases, it is to get context type data, such as vue-router, react-router, redux, vuex, or another framework custom context.
+### 跨框架的Provider  
+虽然可以通过`useInjectPropsFromWrapper`使用其他框架的hook，然后通过属性在组件中获取hook的状态，但大多数情况下都是为了获取上下文类型数据，比如vue-router，react-router，redux，vuex，或者其他框架的自定义上下文。
 
-Use `createCrossingProviderForReactInVue` and `createCrossingProviderForVueInReact` to create cross-frame providers, and components of another framework within the provider can get the context from this framework.
+使用 `createCrossingProviderForPureReactInVue` 和 `createCrossingProviderForVueInReact` 创建跨框架的Provider，在这个Provider内，另一个框架的组件可以获取到这个框架的上下文状态。
 
-#### Usage of createCrossingProviderForVueInReact
-Create a react-router provider and a vue hooks that can be executed in the setup function of the Vue component and get the react-router. (reactRouterCrossingProvider.js)
+#### createCrossingProviderForVueInReact 的用法
+通过`createCrossingProviderForVueInReact`创建一个Vue的hook和一个React的Provider，React Provider会将自定义的上下文传递给所有vue的子组件，例子中创建(reactRouterCrossingProvider.js)来定义一个crossing provider，provider包含了react-router。  
+
 ```jsx
 // Create a Provider that can get react hooks
 // This Provider will be exported as a react component,
@@ -596,7 +676,8 @@ export {
   ReactRouterProviderForVue
 }
 ```
-The vue component(Basic.vue) can get the context from the provider through the custom hook returned by `createCrossingProviderForVueInReact`.
+
+然后vue组件(Basic.vue)可以通过上面的js创建的vue hook获取到react-router的上下文。  
 ```vue
 <template>
   <div class="vue-component">
@@ -624,9 +705,10 @@ export default {
 }
 </script>
 ```
-React components use the provider, so that all vue components (including internal components) in the provider can get the context of this provider through custom hooks.
+在react项目或者组件中，将之前创建的provider包囊在外层即可
 ```jsx
 import {applyVueInReact} from 'veaury'
+// Basic is a Vue component
 import BasicVue from './Basic.vue'
 import { ReactRouterProviderForVue } from './reactRouterCrossingProvider'
 
@@ -640,14 +722,15 @@ export default function () {
 
 ```
 
-#### Usage of createCrossingProviderForReactInVue
+#### createCrossingProviderForReactInVue的用法
+It is now recommended to use `createCrossingProviderForPureReactInVue` instead of `createCrossingProviderForReactInVue`.  
 Create a provider including vue-router and vuex and a React hooks that can be executed in the React function component and get the vue-router and vuex. (vueRouterAndVuexCrossingProvider.js)
 ```js
 import {useStore} from 'vuex'
 import {useRouter, useRoute} from 'vue-router'
-import {createCrossingProviderForReactInVue} from 'veaury'
+import {createCrossingProviderForPureReactInVue} from 'veaury'
 
-const [useVueHooksInReact, VueProviderForReact] = createCrossingProviderForReactInVue(function() {
+const [useVueHooksInReact, VueProviderForReact] = createCrossingProviderForPureReactInVue(function() {
   return {
     vuex: useStore(),
     vueRoute: useRoute(),
@@ -697,7 +780,7 @@ Vue components use the provider, so that all React components (including interna
 </template>
 
 <script>
-import { applyReactInVue } from 'veaury'
+import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
 import {VueProviderForReact} from "./vueRouterAndVuexCrossingProvider";
@@ -705,34 +788,126 @@ import {VueProviderForReact} from "./vueRouterAndVuexCrossingProvider";
 export default {
   components: {
     VueProviderForReact,
-    Basic: applyReactInVue(ReactBasic),
+    Basic: applyPureReactInVue(ReactBasic),
   }
 }
 </script>
 ```
+### ReactMissVue
+Sometimes some features and plugins of Vue are really more useful than React, such as `beforeEach` of `vue-router`, and `pinia`.  
+So I implemented a factory function called `createReactMissVue` that returns a React provider component and a React hook.  
+With ReactMissVue, you can use Vue's plugins directly in React applications.  
+Enjoy it!
+
+#### Usage of createReactMissVue
+For detailed use cases, please refer to `dev-project-react/src/components/reactMissVue`
+```jsx
+import { defineStore, createPinia } from 'pinia'
+import { createRouter, createWebHashHistory, useRouter, useRoute } from 'vue-router'
+import { createReactMissVue, applyReactInVue, VueContainer } from 'veaury'
+
+// create vue-router instance
+const router = createRouter({
+  // Using vue-router inside route 'ReactMissVue'
+  history: createWebHashHistory('/#/ReactMissVue'),
+  routes: [
+    {
+      name: '',
+      path: '/aaa',
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        path: /aaa
+      </div>)
+    },
+    {
+      name: 'empty',
+      path: '/:default(.*)',
+      component: applyReactInVue(() => <div className="react-component">
+        react use vue-router<br/>
+        empty
+      </div>)
+    },
+  ],
+})
+
+// create a pinia store
+const useFooStore = defineStore({
+  id: 'foo',
+  state() {
+    return {
+      name: 'Eduardo'
+    }
+  },
+  actions: {
+    changeName(name) {
+      this.$patch({
+        name
+      })
+    }
+  }
+})
+
+// create a ReactMissVue instance
+let [useReactMissVue, ReactMissVue, ReactMissVueContext] = createReactMissVue({
+  useVueInjection() {
+    // This object can be obtained by using useReactMissVue in the react component
+    return {
+      fooStore: useFooStore(),
+      vueRouter: useRouter(),
+      vueRoute: useRoute()
+    }
+  },
+  // beforeVueAppMount can only be used in the outermost ReactMissVue
+  // Because veaury will only create a vue application in the outermost layer
+  beforeVueAppMount(app) {
+    // register pinia
+    app.use(createPinia())
+    // register vue-router
+    app.use(router)
+  }
+})
+
+function Demo() {
+  const { fooStore } = useReactMissVue()
+  return <div>
+    <div>
+      Foo's name: {fooStore?.name}
+    </div>
+    {/* Use the global component router-view */}
+    <VueContainer component="RouterView"/>
+  </div>
+}
+
+export default function () {
+  return <ReactMissVue>
+    <Demo/>
+  </ReactMissVue>
+}
+```
 
 ### lazyReactInVue的用法(在Vue组件中使用异步的React组件)
+It is now recommended to use `lazyPureReactInVue` instead of `lazyReactInVue`.
 ```vue
 <template>
   <Basic/>
 </template>
 
 <script>
-import { lazyReactInVue } from 'veaury'
+import { lazyPureReactInVue } from 'veaury'
 
 export default {
   components: {
     // import an async React component
     // It is also possible to use the full parameter of the Vue3 API 'defineAsyncComponent'
-    // for example: lazyReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
-    Basic: lazyReactInVue(() => import('./react_app/Basic'))
+    // for example: lazyPureReactInVue({ loader: () => import('./react_app/Basic'), timeout: 3000 })
+    Basic: lazyPureReactInVue(() => import('./react_app/Basic'))
   },
 }
 </script>
 ```
 ```typescript
 // types
-type lazyReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
+type lazyPureReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 ```
 
 ### lazyVueInReact的用法(在React组件中使用异步的Vue组件)
@@ -748,3 +923,57 @@ export default function () {
 // types
 type lazyReactInVue = (asyncImport: Promise<any>, options?: options) => any
 ```
+
+### 获取ref实例的用法
+Get the React component's instance in the Vue Component.
+```vue
+<template>
+  <Basic ref="Basic">
+    <div ref="div">hello</div>
+    <AA ref="AA"/>
+  </Basic>
+</template>
+<script>
+import { applyPureReactInVue } from 'veaury'
+import BasicReact from './Basic.jsx'
+import AAReact from './AA.jsx'
+export default {
+  components: {
+    Basic: applyPureReactInVue(BasicReact),
+    AA: applyPureReactInVue(AAReact)
+  },
+  mounted() {
+    // Get the real react instance through `__veauryReactRef__`
+    console.log(this.$refs.Basic.__veauryReactRef__)
+    // If the converted react component or dom element is placed as a child node in a pure mode react component, 
+    // the ref can be obtained directly
+    console.log(this.$refs.div)
+    console.log(this.$refs.AA)
+  }
+}
+</script>
+```
+Get the Vue component's instance in the React Component.
+```jsx
+import {applyVueInReact} from 'veaury'
+import BasicVue from './Basic.vue'
+import React, { createRef, useEffect } from "react"
+
+const Basic = applyVueInReact(BasicVue)
+export default function () {
+  const basicInstance = createRef(null)
+  useEffect(() => {
+    // Get the real vue instance through `__veauryVueRef__`
+    console.log(basicInstance.current.__veauryVueRef__)
+  }, [])
+  return <Basic ref={basicInstance}/>
+}
+```
+
+## Contributing Guide
+本项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别由`create-react-app`和`@vue/cli`创建的两个初始项目。
+> **Note:** 在react项目中的`config/webpack.config.js`以及vue项目中的`vue.config.js`里，可以找到webpack的alias别名配置，将`veaury`的别名注释解开，就可以对根项目中`src`目录里的`veaury`源代码进行开发调试了
+>
+> **Setup:** 在主项目的根目录下运行命令行`npm run setup:yarn` 或者 `npm run setup:npm`，可以整体安装主项目和两个调试用的子项目
+>
+> **Develop:** 在主项目的根目录下运行命令行`npm run dev:vue` 以及 `npm run setup:npm`就可以对子项目进行开发调试
