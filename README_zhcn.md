@@ -23,8 +23,8 @@
       - [React组件使用Vue组件 - Provider / useContext 的用法](#react%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---provider--usecontext-%E7%9A%84%E7%94%A8%E6%B3%95)
       - [Vue组件使用React组件 - Provide / Inject 的用法](#vue%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---provide--inject-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [在React组件中使用 VueContainer 组件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8-vuecontainer-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [getReactNode 的用法](#getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [Usage of RenderReactNode](#usage-of-renderreactnode)
+    - [通过VNode获取ReactNode - getReactNode 的用法](#%E9%80%9A%E8%BF%87vnode%E8%8E%B7%E5%8F%96reactnode---getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在Vue组件中直接渲染ReactNode - RenderReactNode 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93reactnode---renderreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [在React组件中使用Vue组件, v-model / v-models 的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6-v-model--v-models-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
       - [在 Vue 组件中注入 React hooks的用法](#%E5%9C%A8-vue-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-react-hooks%E7%9A%84%E7%94%A8%E6%B3%95)
@@ -430,7 +430,7 @@ export default function () {
   return <VueContainer component={BasicVue} {...passedProps}/>
 }
 ```
-### getReactNode 的用法
+### 通过VNode获取ReactNode - getReactNode 的用法
 ReactNode = `getReactNode`(VNode)
 有时候react组件的属性是一个复杂的数据结构，里面包含了ReactNode，而在vue文件中，jsx的定义会被编译成vue的jsx（也就是VNode），如果直接将这个属性传递给react组件，react组件是不能识别VNode的。  
 ```vue
@@ -451,7 +451,7 @@ const propForReact = {
 </script>
 ```
 
-### RenderReactNode 的用法
+### 在Vue组件中直接渲染ReactNode - RenderReactNode 的用法
 有时react组件的render props的输入参数是ReactNode，而vue组件中如果直接使用作用域插槽去展示这个ReactNode是错误的。  
 `RenderReactNode` 是一个 vue 组件，它接受 `node` 参数，可以在 Vue 组件中渲染 ReactNode。  
 ```vue
