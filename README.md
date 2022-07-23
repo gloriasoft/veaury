@@ -1,3 +1,44 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Veaury](#veaury)
+  - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
+  - [What is Veaury?](#what-is-veaury)
+  - [The greatest feature](#the-greatest-feature)
+  - [Legacy](#legacy)
+  - [Latest documentation](#latest-documentation)
+  - [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
+  - [Use cases](#use-cases)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Vue in React - Basic usage](#vue-in-react---basic-usage)
+    - [React in Vue - Basic usage](#react-in-vue---basic-usage)
+    - [Vue in React - Usage of events](#vue-in-react---usage-of-events)
+    - [React in Vue - Usage of events](#react-in-vue---usage-of-events)
+    - [Vue in React - Usage of slots](#vue-in-react---usage-of-slots)
+    - [React in Vue - Usage of render props and React node](#react-in-vue---usage-of-render-props-and-react-node)
+    - [Context](#context)
+      - [Vue in React - Usage of Provider / useContext](#vue-in-react---usage-of-provider--usecontext)
+      - [React in Vue - Usage of Provide / Inject](#react-in-vue---usage-of-provide--inject)
+    - [Usage of VueContainer in React Component](#usage-of-vuecontainer-in-react-component)
+    - [Usage of getReactNode](#usage-of-getreactnode)
+    - [Usage of RenderReactNode](#usage-of-renderreactnode)
+    - [Vue in React, Usage of v-model / v-models](#vue-in-react-usage-of-v-model--v-models)
+    - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
+      - [Usage of injecting React hooks in Vue component](#usage-of-injecting-react-hooks-in-vue-component)
+      - [Usage of injecting Vue hooks in React component](#usage-of-injecting-vue-hooks-in-react-component)
+    - [Crossing provider](#crossing-provider)
+      - [Usage of createCrossingProviderForVueInReact](#usage-of-createcrossingproviderforvueinreact)
+      - [Usage of createCrossingProviderForReactInVue](#usage-of-createcrossingproviderforreactinvue)
+    - [ReactMissVue](#reactmissvue)
+      - [Usage of createReactMissVue](#usage-of-createreactmissvue)
+    - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
+    - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
+    - [Usage of ref](#usage-of-ref)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
@@ -400,7 +441,7 @@ export default function () {
 }
 ```
 
-### getReactNode  
+### Usage of getReactNode  
 ReactNode = `getReactNode`(VNode)  
 Sometimes the property of the react component is a complex data structure, which contains ReactNode, and in the vue file, the definition of jsx will be compiled into vue's jsx.
 ```vue
@@ -421,7 +462,7 @@ const propForReact = {
 </script>
 ```
 
-### RenderReactNode
+### Usage of RenderReactNode
 Sometimes the input parameter of the render props of the react component is ReactNode.  
 `RenderReactNode` is a vue component that accepts a `node` parameter and can render ReactNode in a Vue component.  
 ```vue
@@ -874,6 +915,15 @@ export default {
   },
 }
 </script>
+```
+### Usage of lazyVueInReact
+```jsx
+import { lazyVueInReact } from 'veaury'
+
+const AsyncBasic = lazyVueInReact(() => import('./Basic'))
+export default function () {
+    return <AsyncBasic/>
+}
 ```
 
 ### Usage of ref
