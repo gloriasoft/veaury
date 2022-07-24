@@ -1,6 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  
+# Table of Contents  
 
 - [Veaury](#veaury)
   - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
@@ -38,7 +38,8 @@
     - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
     - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
     - [Usage of getting ref](#usage-of-getting-ref)
-  - [Contributing Guide](#contributing-guide)
+  - [Development Setup](#development-setup)
+  - [Project Structure](#project-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -969,10 +970,20 @@ export default function () {
 }
 ```
 
-## Contributing Guide  
+## Development Setup  
 The directories `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.
 > **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`
 >
 > **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects
 >
-> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development
+> **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development  
+
+## Project Structure  
+- `babel`: contains babel presets for projects built via webpack to solve the problem of compiling both vue and react type jsx.  
+  - See [How to configure React in the Vue project from '@vue/cli' ](https://github.com/devilwjp/veaury/tree/master/dev-project-vue3)  for more details on the babel preset.
+- `dist`: contains built files for distribution. Note this directory is only updated when a release happens; they do not reflect the latest changes in development branches.  
+- `types`: contains TypeScript type definitions.
+- `vite`: contains plugins for projects built with vite to solve the problem of compiling vue and react at the same time.   
+- `webpack`: contains webpack plugins for projects built via webpack to solve the problem of compiling vue and react at the same time.  
+  - See [How to configure Vue in the React project from 'create-react-app' ](https://github.com/devilwjp/veaury/tree/master/dev-project-react)  for more details on the webpack plugin.  
+- `src`: contains the source code.  
