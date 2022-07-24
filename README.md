@@ -1,6 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  
+# Table of Contents  
 
 - [Veaury](#veaury)
   - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
@@ -38,7 +38,8 @@
     - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
     - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
     - [Usage of getting ref](#usage-of-getting-ref)
-  - [Contributing Guide](#contributing-guide)
+  - [Development Setup](#development-setup)
+  - [Project Structure](#project-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
