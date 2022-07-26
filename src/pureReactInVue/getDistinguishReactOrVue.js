@@ -7,17 +7,7 @@ import {pureInterceptProps} from "./interceptProps";
 import resolveRef from "./resolveRef";
 import {Comment} from 'vue'
 import addScopeId from "./addScopeId";
-
-function setChildKey(child, children, topIndex) {
-  if (child instanceof Array) {
-    child = child[0]
-  }
-  if (child.key == null && children.length > 1) {
-    child = {...child}
-    child.key = `_key_${topIndex}`
-  }
-  return child
-}
+import setChildKey from "../utils/setChildKey";
 
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
@@ -35,7 +25,8 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
           if (isTextOwner(child)) {
             child.children.trim() !== '' && newChildren.push(child.children.trim())
             return
-          } else if (child.type) {
+          }
+          if (child.type) {
             let newChild = takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList, children.__top__)
             newChild = setChildKey(newChild, children, topIndex)
             addScopeId(newChild, child.scopeId)

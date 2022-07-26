@@ -1,12 +1,5 @@
-import applyReactInVue from '../applyReactInVue'
+import applyVueInReact from '../applyVueInReact'
 
 export default function transformer (ReactComponent, {globalName, combinedOption, transparentApi} = {}) {
-    const Component = applyReactInVue(ReactComponent, combinedOption || {})
-    Component.install = function(app, {globalName: newGlobalName} = {}) {
-        if (globalName) {
-            app.component(newGlobalName || globalName, Component);
-        }
-        return Component
-    }
-    return Component;
+   return applyVueInReact(ReactComponent, combinedOption || {})
 }

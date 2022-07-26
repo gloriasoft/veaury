@@ -1,76 +1,58 @@
-import React, {forwardRef} from 'react';
+import {h} from 'vue';
 import getChildInfo from "./getChildInfo";
 import {isTextOwner} from "./isTextChild";
-import takeVueDomInReact from "./takeVueDomInReact";
+import takeReactDomInVue from "./takeReactDomInVue";
 import DirectiveHOC from "./FakeDirective";
 import {pureInterceptProps} from "./interceptProps";
 import resolveRef from "./resolveRef";
-import {Comment} from 'vue'
-import addScopeId from "./addScopeId";
-
-function setChildKey(child, children, topIndex) {
-  if (child instanceof Array) {
-    child = child[0]
-  }
-  if (child.key == null && children.length > 1) {
-    child = {...child}
-    child.key = `_key_${topIndex}`
-  }
-  return child
-}
+import setChildKey from "../utils/setChildKey";
 
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
-    if (children && children.forEach) {
-      const newChildren = []
-      children.forEach((child, topIndex) => {
-        if (!child || child.type === Comment) return
-        if (!child.type?.originReactComponent) {
-
-          // reactNode
-          if (child.$$typeof || typeof child === 'string' || typeof child === 'number') {
-            newChildren.push(child)
-            return
-          }
-          if (isTextOwner(child)) {
-            child.children.trim() !== '' && newChildren.push(child.children.trim())
-            return
-          } else if (child.type) {
-            let newChild = takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList, children.__top__)
-            newChild = setChildKey(newChild, children, topIndex)
-            addScopeId(newChild, child.scopeId)
-            newChildren.push(newChild)
-          }
+    if (children == null) return children
+    if (!(children instanceof Array)) children = [children]
+    const newChildren = []
+    children.forEach((child, topIndex) => {
+      // if (!child || child.type === Comment) return
+      if (!child.type?.originVueComponent) {
+        if (child.__v_isVNode || typeof child === 'string' || typeof child === 'number') {
+          newChildren.push(child)
           return
         }
-        // react component in vue
-        let ReactComponent = child.type.originReactComponent
-
-        let newChild
-        if (Component !== 'all' && !(Component instanceof Array)) {
-          Component = [Component]
+        if (child.type) {
+          let newChild = takeReactDomInVue(child, domTags, vueInReactCall, division, defaultSlotsFormatter, children.__top__)
+          newChild = setChildKey(newChild, children, topIndex)
+          newChildren.push(newChild)
         }
-        if (Component === 'all' || Component.indexOf(ReactComponent) > -1) {
-          child.__top__ = children.__top__
-          const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
+        return
+      }
+      // vue component in react
+      let VueComponent = child.type.originVueComponent
 
-          const ref = resolveRef(child)
+      let newChild
+      if (Component !== 'all' && !(Component instanceof Array)) {
+        Component = [Component]
+      }
+      if (Component === 'all' || Component.indexOf(VueComponent) > -1) {
+        child = {...child}
+        child.__top__ = children.__top__
+        const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
 
-          if (child.children) {
-            child.children.__top__ = children.__top__
-          }
+        const ref = resolveRef(child)
 
-          newChild = DirectiveHOC(child,
-            <ReactComponent {...{...pureInterceptProps(props, child, ReactComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
-        } else {
-          newChild = isTextOwner(child) ? child.text : takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)
+        if (child.children) {
+          child.children.__top__ = children.__top__
         }
-        newChild = setChildKey(newChild, children, topIndex)
-        addScopeId(newChild, child.scopeId)
-        newChildren.push(newChild)
-      })
-      return newChildren.length === 1 ? newChildren[0] : newChildren
-    }
-    return children
+
+        newChild = h(VueComponent, props)
+        // newChild = DirectiveHOC(child,
+        //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
+      } else {
+        newChild = isTextOwner(child) ? child.text : takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)
+      }
+      newChild = setChildKey(newChild, children, topIndex)
+      newChildren.push(newChild)
+    })
+    return newChildren.length === 1 ? newChildren[0] : newChildren
   }
 }
