@@ -1,7 +1,5 @@
-export function toCamelCase(val) {
-    const reg = /-(\w)/g
-    return val.replace(reg, ($, $1) => $1.toUpperCase())
-}
+import toCamelCase from '../utils/toCamelCase'
+
 export function formatStyle(val) {
     if (!val) return {}
     if (typeof val === 'string') {
