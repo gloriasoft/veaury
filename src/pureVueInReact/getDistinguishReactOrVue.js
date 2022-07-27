@@ -1,14 +1,11 @@
 import {h} from 'vue';
 import getChildInfo from "./getChildInfo";
-import {isTextOwner} from "./isTextChild";
 import takeReactDomInVue from "./takeReactDomInVue";
-import DirectiveHOC from "./FakeDirective";
-import {pureInterceptProps} from "./interceptProps";
 import resolveRef from "./resolveRef";
 import setChildKey from "../utils/setChildKey";
 
-export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
-  return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
+export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
+  return function defaultSlotsFormatter(children, vueInReactCall) {
     if (children == null) return children
     if (!(children instanceof Array)) children = [children]
     const newChildren = []
@@ -36,7 +33,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
       if (Component === 'all' || Component.indexOf(VueComponent) > -1) {
         child = {...child}
         child.__top__ = children.__top__
-        const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
+        const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter)
 
         const ref = resolveRef(child)
 
@@ -44,11 +41,11 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
           child.children.__top__ = children.__top__
         }
 
-        newChild = h(VueComponent, props)
+        newChild = h(VueComponent, {...props})
         // newChild = DirectiveHOC(child,
         //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
       } else {
-        newChild = isTextOwner(child) ? child.text : takeVueDomInReact(child, domTags, vueInReactCall, division, defaultSlotsFormatter, hashList)
+        newChild = takeReactDomInVue(child, domTags, vueInReactCall, division, defaultSlotsFormatter)
       }
       newChild = setChildKey(newChild, children, topIndex)
       newChildren.push(newChild)

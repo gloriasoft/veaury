@@ -1,5 +1,5 @@
 import {h} from 'vue';
-import {formatClass, formatStyle} from './reactStyleClassTransformer'
+import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import resolveRef from "./resolveRef";
 
 function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter, __top__) {
@@ -30,7 +30,6 @@ function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter
     }
 
     return h(child.type, props, slotsFormatter(newChildren, reactInVueCall))
-    // return <child.type {...props}>{slotsFormatter(newChildren, reactInVueCall)}</child.type>
   }
   return reactInVueCall([child], null, division)
 }

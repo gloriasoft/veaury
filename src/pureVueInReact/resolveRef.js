@@ -1,7 +1,7 @@
 // The VNode internal properties, ref: {i: instance, r: ref_key}
 // TODO: ref for
 export default function resolveRef(child) {
-  if (typeof child.type?.originReactComponent === 'function') {
+  if (typeof child.type?.originVueComponent !== 'object') {
     return null
   }
   let ref = child.ref?.r

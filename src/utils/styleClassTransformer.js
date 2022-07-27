@@ -1,4 +1,4 @@
-import toCamelCase from '../utils/toCamelCase'
+import toCamelCase from './toCamelCase'
 
 export function formatStyle(val) {
     if (!val) return {}

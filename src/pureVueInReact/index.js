@@ -5,8 +5,8 @@
 import transformer from "./transformer";
 import getDistinguishReactOrVue from "./getDistinguishReactOrVue";
 
-const NoWrapFunction = getDistinguishReactOrVue({reactComponents: 'all', domTags: 'all'})
-export default function applyPureReactInVue (ReactComponent, combinedOption) {
+const NoWrapFunction = getDistinguishReactOrVue({vueComponents: 'all', domTags: 'all'})
+export default function applyPureVueInReact (ReactComponent, combinedOption) {
   return transformer(ReactComponent, {combinedOption: {
       pureTransformer: true,
       // Custom slot handler

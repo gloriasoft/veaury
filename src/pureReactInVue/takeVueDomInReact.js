@@ -1,5 +1,5 @@
 import React from 'react';
-import {formatClass, formatStyle} from './vueStyleClassTransformer'
+import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import DirectiveHOC from "./FakeDirective";
 import resolveRef from "./resolveRef";
 import addScopeId from "./addScopeId";

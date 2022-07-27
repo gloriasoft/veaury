@@ -1,4 +1,4 @@
-import {formatClass, formatStyle} from './reactStyleClassTransformer'
+import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import options from '../options'
 // import RenderReactNode from './RenderReactNode'
 
