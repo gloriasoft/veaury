@@ -1,3 +1,4 @@
+//
 export default function couldBeClass(obj, strict) {
   if (typeof obj != "function") return false;
 
