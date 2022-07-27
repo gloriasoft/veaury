@@ -1,6 +1,6 @@
 import { provide, inject, h } from "vue"
 import applyVueInReact from "./applyVueInReact"
-import Random from "./getRandomId"
+import Random from "./utils/getRandomId"
 
 const random = new Random()
 export default function createCrossingProviderForVueInReact(reactInjection, providerName) {

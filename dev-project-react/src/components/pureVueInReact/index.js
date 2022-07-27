@@ -1,7 +1,7 @@
 import AAVue from './AA.vue'
 import BasicVue from "./Basic.vue";
 import {applyPureVueInReact} from 'veaury'
-import {Component} from 'react'
+import {Component, useRef, useEffect} from 'react'
 // import couldBeClass from "../../../../src/utils/couldBeClass";
 
 const AA = applyPureVueInReact(AAVue)
@@ -16,10 +16,14 @@ class BB extends Component {
 }
 // console.log(couldBeClass(BB))
 export default function () {
+  const ref = useRef(null)
+  useEffect(() => {
+    console.log(44444, ref.current)
+  }, [])
   return <AA>{{
     aa: ({value}) => <div>
       <Basic className="CCC" style={{color: 'blue'}}/>
-      <span>{value}</span>
+      <span ref={ref}>{value}</span>
     </div>
   }}</AA>
 }

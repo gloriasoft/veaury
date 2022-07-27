@@ -2,7 +2,7 @@ import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import options from '../options'
 // import RenderReactNode from './RenderReactNode'
 
-export default function getChildInfo(child, index, vueInReactCall, defaultSlotsFormatter, hashList) {
+export default function getChildInfo(child, index, reactInVueCall, defaultSlotsFormatter, hashList) {
 
   // Filter out ref
   const {ref, ...props} = child.props || {}
@@ -15,13 +15,13 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
     if (prefix || key === 'default') {
       // replace slot's name to react props key name
       const newKey = key.replace(new RegExp(`^${prefix}`), '').replace(/^default$/, 'children')
-      reactScoped[newKey] = defaultSlotsFormatter(fn(), vueInReactCall, hashList)
+      reactScoped[newKey] = defaultSlotsFormatter(fn(), reactInVueCall, hashList)
       return
     }
     // react render props
     reactScoped[key] = function (...args) {
       fn.__reactArgs = args
-      return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
+      return defaultSlotsFormatter(fn.apply(this, args), reactInVueCall, hashList)
     }
   })
 
@@ -35,7 +35,6 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
     ...newProps,
     ...reactScoped,
   })
-  console.log(33333, props)
   delete props.className
 
   // if (child.type === RenderReactNode) {

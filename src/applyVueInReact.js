@@ -5,7 +5,7 @@ import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
 import parseVModel from "./parseVModel"
-import RandomId from './getRandomId'
+import RandomId from './utils/getRandomId'
 
 const optionsName = 'veaury-options'
 

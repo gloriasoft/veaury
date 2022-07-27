@@ -5,7 +5,7 @@ import resolveRef from "./resolveRef";
 import setChildKey from "../utils/setChildKey";
 
 export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
-  return function defaultSlotsFormatter(children, vueInReactCall) {
+  return function defaultSlotsFormatter(children, reactInVueCall) {
     if (children == null) return children
     if (!(children instanceof Array)) children = [children]
     const newChildren = []
@@ -17,7 +17,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
           return
         }
         if (child.type) {
-          let newChild = takeReactDomInVue(child, domTags, vueInReactCall, division, defaultSlotsFormatter, children.__top__)
+          let newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter, children.__top__)
           newChild = setChildKey(newChild, children, topIndex)
           newChildren.push(newChild)
         }
@@ -33,7 +33,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
       if (Component === 'all' || Component.indexOf(VueComponent) > -1) {
         child = {...child}
         child.__top__ = children.__top__
-        const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter)
+        const props = getChildInfo(child, `_key_${topIndex}`, reactInVueCall, defaultSlotsFormatter)
 
         const ref = resolveRef(child)
 
@@ -45,7 +45,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
         // newChild = DirectiveHOC(child,
         //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
       } else {
-        newChild = takeReactDomInVue(child, domTags, vueInReactCall, division, defaultSlotsFormatter)
+        newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
       newChild = setChildKey(newChild, children, topIndex)
       newChildren.push(newChild)
