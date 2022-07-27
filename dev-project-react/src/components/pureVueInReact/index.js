@@ -23,7 +23,7 @@ export default function () {
   return <AA>{{
     aa: ({value}) => <div>
       <Basic className="CCC" style={{color: 'blue'}}/>
-      <span ref={ref}>{value}</span>
+      <span ref={(r)=>{console.log(888, r)}}>{value}</span>
     </div>
   }}</AA>
 }
