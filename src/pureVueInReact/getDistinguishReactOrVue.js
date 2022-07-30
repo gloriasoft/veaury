@@ -33,7 +33,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
       if (Component === 'all' || Component.indexOf(VueComponent) > -1) {
         child = {...child}
         child.__top__ = children.__top__
-        const props = getChildInfo(child, `_key_${topIndex}`, reactInVueCall, defaultSlotsFormatter)
+        const { props, slots } = getChildInfo(child, `_key_${topIndex}`, reactInVueCall, defaultSlotsFormatter)
 
         const ref = resolveRef(child)
 
@@ -41,7 +41,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
           child.children.__top__ = children.__top__
         }
 
-        newChild = h(VueComponent, {...props})
+        newChild = h(VueComponent, {...props}, slots)
         // newChild = DirectiveHOC(child,
         //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
       } else {

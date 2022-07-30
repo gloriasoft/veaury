@@ -4,7 +4,7 @@ import applyReactInVue from './applyReactInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
-import parseVModel from "./parseVModel"
+import parseVModel from "./utils/parseVModel"
 import RandomId from './utils/getRandomId'
 
 const optionsName = 'veaury-options'
@@ -19,6 +19,25 @@ function filterVueComponent (component, vueInstance) {
     component = vueInstance.$?.appContext?.app?.component?.(component)
   }
   return component
+}
+
+export function transferSlots ($slots) {
+  if (!$slots) return
+  Object.keys($slots).forEach((key) => {
+    const originSlot = $slots[key]
+    if (originSlot == null) return
+    if (typeof originSlot === 'function') {
+      $slots[key] = originSlot
+      $slots[key].reactFunction = originSlot
+    } else {
+      $slots[key] = () => originSlot
+      $slots[key].reactSlot = originSlot
+    }
+    if (originSlot.vueFunction) {
+      $slots[key].vueFunction = originSlot.vueFunction
+    }
+  })
+  return $slots
 }
 
 const VueContainer = React.forwardRef((props, ref) => {
@@ -133,7 +152,7 @@ class VueComponentLoader extends React.Component {
     }
     if ($slots) {
       if (!dataSlots) this.__veauryVueInstance__.$data.$slots = {}
-      Object.assign(this.__veauryVueInstance__.$data.$slots, this.transferSlots($slots))
+      Object.assign(this.__veauryVueInstance__.$data.$slots, transferSlots($slots))
     }
 
     // delete all keys, except $slots
@@ -158,28 +177,6 @@ class VueComponentLoader extends React.Component {
     random.pool.delete(this.__veauryVueTargetId__)
   }
 
-  transferSlots ($slots) {
-    const { defaultSlotsFormatter } = this.props?.['veaury-options'] || {}
-
-    // Process the content in $slots into a function to prevent it from being processed by the observer of vue's data
-    if ($slots) {
-      Object.keys($slots).forEach((key) => {
-        const originSlot = $slots[key]
-        if (originSlot == null) return
-        if (typeof originSlot === 'function') {
-          $slots[key] = originSlot
-          $slots[key].reactFunction = originSlot
-        } else {
-          $slots[key] = () => originSlot
-          $slots[key].reactSlot = originSlot
-        }
-        if (originSlot.vueFunction) {
-          $slots[key].vueFunction = originSlot.vueFunction
-        }
-      })
-      return $slots
-    }
-  }
   // The dom object of the component will be received through the ref callback of the react component,
   // and the context has been bound in the constructor of the class
   __veauryCreateVueInstance__ (targetElement) {
@@ -192,7 +189,7 @@ class VueComponentLoader extends React.Component {
         $slots.default = children
       }
     }
-    $slots = this.transferSlots($slots)
+    $slots = transferSlots($slots)
     if ($slots) {
       props.$slots = $slots
     }

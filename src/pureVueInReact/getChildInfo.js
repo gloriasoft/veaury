@@ -1,29 +1,20 @@
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
-import options from '../options'
-// import RenderReactNode from './RenderReactNode'
+import { transferSlots } from '../applyVueInReact'
+import parseVModel from '../utils/parseVModel'
 
 export default function getChildInfo(child, index, reactInVueCall, defaultSlotsFormatter, hashList) {
 
   // Filter out ref
-  const {ref, ...props} = child.props || {}
+  let {ref, children, 'v-slots': slots = {}, ...props} = child.props || {}
 
-  const reactScoped = {}
-  Object.keys(child.children || []).forEach((key) => {
-    const fn = child.children[key]
-    // get reactNode and children
-    const prefix = options.react.vueNamedSlotsKey.find((prefix) => key.indexOf(prefix) === 0)
-    if (prefix || key === 'default') {
-      // replace slot's name to react props key name
-      const newKey = key.replace(new RegExp(`^${prefix}`), '').replace(/^default$/, 'children')
-      reactScoped[newKey] = defaultSlotsFormatter(fn(), reactInVueCall, hashList)
-      return
+  if (children) {
+    if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
+      slots = children
+    } else {
+      slots.default = children
     }
-    // react render props
-    reactScoped[key] = function (...args) {
-      fn.__reactArgs = args
-      return defaultSlotsFormatter(fn.apply(this, args), reactInVueCall, hashList)
-    }
-  })
+    slots = transferSlots(slots)
+  }
 
   const newProps = {}
   const style = formatStyle(props.style)
@@ -32,15 +23,10 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
   if (className !== '') newProps.class = className
 
   Object.assign(props, {
-    ...newProps,
-    ...reactScoped,
+    ...newProps
   })
   delete props.className
 
-  // if (child.type === RenderReactNode) {
-  //     const reactNode = props.node
-  //     props.node = () => reactNode
-  // }
-
-  return props
+  props = parseVModel(props)
+  return { props, slots }
 }

@@ -6,9 +6,12 @@
 </template>
 
 <script>
-// import {h} from 'vue'
-console.log(<div class="CCC" ref="DD">1212</div>)
+import {h} from 'vue'
+console.log(h('div', {dirs: {aaa: 1}}, 22222))
 export default {
+  directives: {
+    aa: {}
+  },
   data() {
     return {
       value: Math.random()
@@ -19,7 +22,7 @@ export default {
     getRef() {}
   },
   mounted() {
-    console.log(1111111111, this)
+    // console.log(1111111111, h('div', {'v-aa': 1212}))
     // setInterval(() => {
     //   this.value = Math.random()
     // }, 1000)
