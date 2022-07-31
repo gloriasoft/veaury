@@ -25,16 +25,18 @@ export default function () {
     //   setAa(Math.random())
     // }, 1000)
   }, [])
-  return <AA>
-    <Basic className="CCC" style={{color: 'blue'}}/>
-  </AA>
+  // return <AA>
+  //   <Basic className="CCC" style={{color: 'blue'}} aa={aa}/>
+  //   <button onClick={() => setAa(Math.random())}>change</button>
+  // </AA>
   return <AA>{{
     aa: ({value}) => <div>
-      <Basic className="CCC" style={{color: 'blue'}} v-model-aa={vModelAa}>
+      <Basic className="CCC" style={{color: 'blue'}} aa={aa}>
         <div>99999</div>
       </Basic>
-      <span ref={(r) => {
-      }}>{getReactNode(value)}</span>
-    </div>
+      <button onClick={() => setAa(Math.random())}>change</button>
+      {/*<span ref={(r) => {*/}
+      {/*}}>{getReactNode(value)}</span>*/}
+    </div>,
   }}</AA>
 }

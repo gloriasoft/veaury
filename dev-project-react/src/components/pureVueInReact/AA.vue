@@ -2,8 +2,7 @@
   <div style="background: green" class="PPP">
     <div ref="FFF">666</div>
     <slot />
-<!--    <slot name="aa" :value="value"/>-->
-<!--    <Basic class="CCC"/>-->
+    <slot name="aa" :value="value"/>
   </div>
 </template>
 
@@ -27,7 +26,11 @@ export default {
   methods: {
     getRef() {}
   },
+  updated() {
+    console.log('AA updated')
+  },
   mounted() {
+    console.log('AA mounted')
     // console.log(1111111111, h('div', {'v-aa': 1212}))
     // setInterval(() => {
     //   this.value = Math.random()

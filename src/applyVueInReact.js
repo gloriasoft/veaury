@@ -280,7 +280,12 @@ class VueComponentLoader extends React.Component {
                     updateChildren = scopedSlot.apply(this, args)
                   }
                   newSlot = this.getScopedSlots.__scopeSlots[i]
-                  newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: updateChildren })
+                  const lastChildren = newSlot?.component?.ctx?.__veauryReactInstance__?.state.childrenn
+                  // Here, if you use synchronous update, it may trigger an infinite loop,
+                  // so you can only use microtask execution
+                  Promise.resolve().then(() => {
+                    newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: updateChildren })
+                  })
                 }
                 if (scopedSlot.reactFunction) {
                   newSlot.reactFunction = scopedSlot.reactFunction
