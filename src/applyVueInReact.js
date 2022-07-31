@@ -232,7 +232,12 @@ class VueComponentLoader extends React.Component {
                   this.getScopedSlots.__scopeSlots[i] = newSlot
                 } else {
                   newSlot = this.getScopedSlots.__scopeSlots[i]
-                  newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                  // newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                  // Here, if you use synchronous update, it may trigger an infinite loop,
+                  // so you can only use microtask execution
+                  Promise.resolve().then(() => {
+                    newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                  })
                 }
                 if (scopedSlot.reactFunction) {
                   newSlot.reactFunction = scopedSlot.reactFunction
@@ -290,7 +295,7 @@ class VueComponentLoader extends React.Component {
         return createElement(
           filterVueComponent(VueContainerInstance.__veauryCurrentVueComponent__, this),
           {
-            ...lastProps,
+            // ...lastProps,
             ...lastAttrs,
             ...(className || newClassName || newClassName1? {'class': className || newClassName || newClassName1}: {}),
             // 'class': className || newClassName || newClassName1 || '',
