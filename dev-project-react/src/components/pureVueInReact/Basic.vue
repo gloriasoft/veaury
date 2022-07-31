@@ -1,7 +1,7 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    <button @click="changeAa">change aa->(aa is {{aa}} now!)</button><br/>
+    <button @click="changeAa">{{aa}}</button><br/>
 <!--    received foo's value: {{$attrs.foo}}-->
     <slot/>
   </div>
@@ -16,10 +16,10 @@ export default {
     }
   },
   updated() {
-    console.log(9999)
+    console.log(9999, this)
   },
   mounted() {
-    console.log('Basic mounted!!!!', this.$attrs)
+    console.log('Basic mounted!!!!', this)
   }
 
 }

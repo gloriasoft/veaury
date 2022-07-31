@@ -1,6 +1,7 @@
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import { transferSlots } from '../applyVueInReact'
 import parseVModel from '../utils/parseVModel'
+import options from "../options";
 
 export default function getChildInfo(child, index, reactInVueCall, defaultSlotsFormatter, hashList) {
 
@@ -13,8 +14,21 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
     } else {
       slots.default = children
     }
-    slots = transferSlots(slots)
+    // slots = transferSlots(slots)
   }
+
+
+  const vueSlots = {}
+  Object.keys(slots || {}).forEach((key) => {
+    let slot = slots[key]
+    vueSlots[key] = function (...args) {
+      if (typeof slot === 'function') {
+        slot = slot.apply(this, args)
+      }
+      // slot.__vueArgs = args
+      return defaultSlotsFormatter(slot, reactInVueCall, hashList)
+    }
+  })
 
   const newProps = {}
   const style = formatStyle(props.style)
@@ -28,5 +42,5 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
   delete props.className
 
   props = parseVModel(props)
-  return { props, slots }
+  return { props, slots: vueSlots }
 }

@@ -35,6 +35,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
         child.__top__ = children.__top__
         const { props, slots } = getChildInfo(child, `_key_${topIndex}`, reactInVueCall, defaultSlotsFormatter)
 
+        console.log(11111, props, slots)
         const ref = resolveRef(child)
 
         if (child.children) {

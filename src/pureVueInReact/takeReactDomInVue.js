@@ -24,7 +24,11 @@ function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter
       if (["string", "number"].indexOf(typeof newChildren) > -1) {
         newChildren = [newChildren]
       } else {
-        newChildren = [...newChildren]
+        if (newChildren instanceof Array) {
+          newChildren = [...newChildren]
+        } else {
+          newChildren = {...newChildren}
+        }
       }
       newChildren.__top__ = __top__
     }

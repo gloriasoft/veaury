@@ -40,10 +40,34 @@ export function transferSlots ($slots) {
   return $slots
 }
 
-const VueContainer = React.forwardRef((props, ref) => {
-  if (props.component == null) return null
+function VNodeBridge(props) {
+  return props.node?.()
+}
+// const VNodeBridge = {
+//   inherits: false,
+//   render(props) {
+//     return createElement('div', { style: { all: 'unset' } }, [this.$attrs.node && this.$attrs.node()])
+//   }
+// }
+
+const VueContainer = React.forwardRef((originProps, ref) => {
+  let { component, node, ...props } = originProps
+  if (component == null && node == null) return null
+  if (node != null) {
+    // reactNode
+    if (node.$$typeof || typeof node === 'string' || typeof node === 'number') {
+      return node
+    }
+    if (typeof node !== 'function') {
+      const lastNode = node
+      node = () => lastNode
+    }
+  }
+
+  component = component || VNodeBridge
+
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
-  const injection = globalOptions.useInjectPropsFromWrapper || props.component.__veauryInjectPropsFromWrapper__
+  const injection = globalOptions.useInjectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
 
   let ReactInjectionProps
   // If it is a slot, useInjectPropsFromWrapper is not executed
@@ -52,7 +76,7 @@ const VueContainer = React.forwardRef((props, ref) => {
       ReactInjectionProps = injection(props)
     }
   }
-  return <VueComponentLoader {...{...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
+  return <VueComponentLoader {...{component, ...node ? {node} : {}, ...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
 })
 
 export {
@@ -315,7 +339,7 @@ class VueComponentLoader extends React.Component {
         return createElement(
           filterVueComponent(VueContainerInstance.__veauryCurrentVueComponent__, this),
           {
-            ...lastProps,
+            // ...lastProps,
             ...lastAttrs,
             ...(className || newClassName || newClassName1? {'class': className || newClassName || newClassName1}: {}),
             // 'class': className || newClassName || newClassName1 || '',

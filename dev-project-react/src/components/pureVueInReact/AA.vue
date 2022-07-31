@@ -1,20 +1,26 @@
 <template>
-  <div style="background: green">
+  <div style="background: green" class="PPP">
     <div ref="FFF">666</div>
-    <slot name="aa" :value="value"/>
+    <slot />
+<!--    <slot name="aa" :value="value"/>-->
+<!--    <Basic class="CCC"/>-->
   </div>
 </template>
 
 <script>
 import {h} from 'vue'
+import Basic from "./Basic";
 console.log(h('div', {dirs: {aaa: 1}}, 22222))
 export default {
+  components: {
+    Basic
+  },
   directives: {
     aa: {}
   },
   data() {
     return {
-      value: Math.random()
+      value: <div>88888</div>
     }
   },
   inheritAttrs: false,
