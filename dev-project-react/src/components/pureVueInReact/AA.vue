@@ -1,8 +1,10 @@
 <template>
   <div style="background: green" class="PPP">
-    <div ref="FFF">666</div>
-    <slot />
-    <slot name="aa" :value="value"/>
+    <div ref="FFF"  :aa="{a:1}">666</div>
+    <div>{{$attrs.cc}}</div>
+<!--    <slot />-->
+    <slot name="aa" value="121212"/>
+    <button @click="changeValue">change value{{value}}</button>
   </div>
 </template>
 
@@ -19,15 +21,19 @@ export default {
   },
   data() {
     return {
-      value: <div>88888</div>
+      value: 88888
     }
   },
   inheritAttrs: false,
   methods: {
-    getRef() {}
+    getRef() {},
+    changeValue() {
+      this.value = Math.random()
+    }
   },
   updated() {
-    console.log('AA updated')
+    console.log('AA updated', this)
+    // this.$slots.aa({value: 8888})
   },
   mounted() {
     console.log('AA mounted')

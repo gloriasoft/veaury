@@ -17,7 +17,6 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
     // slots = transferSlots(slots)
   }
 
-
   const vueSlots = {}
   Object.keys(slots || {}).forEach((key) => {
     let slot = slots[key]
@@ -26,7 +25,7 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
         slot = slot.apply(this, args)
       }
       // slot.__vueArgs = args
-      return defaultSlotsFormatter(slot, reactInVueCall, hashList)
+      return [defaultSlotsFormatter(slot, reactInVueCall, hashList)]
     }
   })
 
@@ -42,5 +41,5 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
   delete props.className
 
   props = parseVModel(props)
-  return { props, slots: vueSlots }
+  return { props, slots: {...vueSlots, _: 1 /* STABLE */} }
 }
