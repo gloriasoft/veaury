@@ -37,7 +37,8 @@
     - [lazyReactInVue的用法(在Vue组件中使用异步的React组件)](#lazyreactinvue%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84react%E7%BB%84%E4%BB%B6)
     - [lazyVueInReact的用法(在React组件中使用异步的Vue组件)](#lazyvueinreact%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84vue%E7%BB%84%E4%BB%B6)
     - [获取ref实例的用法](#%E8%8E%B7%E5%8F%96ref%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%94%A8%E6%B3%95)
-  - [Contributing Guide](#contributing-guide)
+  - [Vue 和 React共存时会引发JSX的TS类型错误.](#vue-%E5%92%8C-react%E5%85%B1%E5%AD%98%E6%97%B6%E4%BC%9A%E5%BC%95%E5%8F%91jsx%E7%9A%84ts%E7%B1%BB%E5%9E%8B%E9%94%99%E8%AF%AF)
+  - [开发指引](#%E5%BC%80%E5%8F%91%E6%8C%87%E5%BC%95)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -970,7 +971,67 @@ export default function () {
 }
 ```
 
-## Contributing Guide
+## Vue 和 React共存时会引发JSX的TS类型错误.
+**如果您可以忽略 IDE 中的 TS 错误警告，则可以跳过本章。**
+Vue 和 React 在typescript全局命名空间 JSX 中都有类型定义。 因此，经常会导致 TS 的 JSX 类型冲突。  
+Vue的TS类型会在`veaury/types/veaury.d.ts`中使用，所以如果主项目是React，在安装Veaury和Vue后，会在IDE中导致JSX出现TS错误警告（如vscode或 webstorm) ，但这不会影响开发环境和生产环境的编译。
+一个可行的解决方案是使用 `patch-package` 来修改 `@vue/runtime-dom/dist/runtime-dom.d.ts` 和 `@types/react/index.d.ts`。
+比如这两个文件的改动如下。
+
+node_modules/@types/react/index.d.ts(@types/react@18.0.14)
+```diff
+diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
+index 5c5d343..a850f38 100644
+--- a/node_modules/@types/react/index.d.ts
++++ b/node_modules/@types/react/index.d.ts
+@@ -3118,7 +3118,9 @@ type ReactManagedAttributes<C, P> = C extends { propTypes: infer T; defaultProps
+ 
+ declare global {
+     namespace JSX {
+-        interface Element extends React.ReactElement<any, any> { }
++        interface Element extends React.ReactElement<any, any> {
++            [k: string]: any
++         }
+         interface ElementClass extends React.Component<any> {
+             render(): React.ReactNode;
+         }
+@@ -3133,8 +3135,12 @@ declare global {
+                 : ReactManagedAttributes<T, P>
+             : ReactManagedAttributes<C, P>;
+ 
+-        interface IntrinsicAttributes extends React.Attributes { }
+-        interface IntrinsicClassAttributes<T> extends React.ClassAttributes<T> { }
++        interface IntrinsicAttributes extends React.Attributes {
++            [k: string]: any
++         }
++        interface IntrinsicClassAttributes<T> extends React.ClassAttributes<T> { 
++            [k: string]: any
++        }
+ 
+         interface IntrinsicElements {
+             // HTML
+
+```
+
+node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts(@vue/runtime-dom@3.2.37)
+```diff
+diff --git a/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts b/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
+index 3366f5a..b9eacc6 100644
+--- a/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
++++ b/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
+@@ -1493,7 +1493,7 @@ type NativeElements = {
+ 
+ declare global {
+   namespace JSX {
+-    interface Element extends VNode {}
++    // interface Element extends VNode {}
+     interface ElementClass {
+       $props: {}
+     }
+
+```
+
+## 开发指引  
 本项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别由`create-react-app`和`@vue/cli`创建的两个初始项目。
 > **Note:** 在react项目中的`config/webpack.config.js`以及vue项目中的`vue.config.js`里，可以找到webpack的alias别名配置，将`veaury`的别名注释解开，就可以对根项目中`src`目录里的`veaury`源代码进行开发调试了
 >
