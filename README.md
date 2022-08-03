@@ -38,7 +38,7 @@
     - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
     - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
     - [Usage of getting ref](#usage-of-getting-ref)
-  - [The JSX type conflict between Vue and React in typescript.](#the-jsx-type-conflict-between-vue-and-react-in-typescript)
+  - [The JSX types conflict between Vue and React in typescript.](#the-jsx-types-conflict-between-vue-and-react-in-typescript)
   - [Development Setup](#development-setup)
   - [Project Structure](#project-structure)
 
@@ -970,7 +970,7 @@ export default function () {
   return <Basic ref={basicInstance}/>
 }
 ```
-## The JSX type conflict between Vue and React in typescript.  
+## The JSX types conflict between Vue and React in typescript.  
 > If you can ignore the TS error warning in the IDE, you can skip this chapter.  
 
 Both Vue and React have type definitions in the global namespace JSX. Therefore, it often causes the JSX types conflict of TS.  
