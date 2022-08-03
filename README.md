@@ -38,6 +38,7 @@
     - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
     - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
     - [Usage of getting ref](#usage-of-getting-ref)
+  - [The JSX type conflict between Vue and React in typescript.](#the-jsx-type-conflict-between-vue-and-react-in-typescript)
   - [Development Setup](#development-setup)
   - [Project Structure](#project-structure)
 
@@ -968,6 +969,65 @@ export default function () {
   }, [])
   return <Basic ref={basicInstance}/>
 }
+```
+## The JSX type conflict between Vue and React in typescript.  
+**If you can ignore the TS error warning in the IDE, you can skip this chapter.**  
+Both Vue and React have type definitions in the global namespace JSX. Therefore, it often causes the JSX type conflict of TS.  
+The TS type of Vue will be used in `veaury/types/veaury.d.ts`, so if the main project is React, after installing Veaury and Vue, it will cause TS error warning in JSX in IDE (such as vscode or webstorm) , but this will not affect the compilation of the development environment and production environment.  
+A working solution is to use `patch-package` to modify `@vue/runtime-dom/dist/runtime-dom.d.ts` and `@types/react/index.d.ts`.  
+For example, the changes to these two files are as follows.  
+
+node_modules/@types/react/index.d.ts(@types/react@18.0.14)  
+```diff
+diff --git a/node_modules/@types/react/index.d.ts b/node_modules/@types/react/index.d.ts
+index 5c5d343..a850f38 100644
+--- a/node_modules/@types/react/index.d.ts
++++ b/node_modules/@types/react/index.d.ts
+@@ -3118,7 +3118,9 @@ type ReactManagedAttributes<C, P> = C extends { propTypes: infer T; defaultProps
+ 
+ declare global {
+     namespace JSX {
+-        interface Element extends React.ReactElement<any, any> { }
++        interface Element extends React.ReactElement<any, any> {
++            [k: string]: any
++         }
+         interface ElementClass extends React.Component<any> {
+             render(): React.ReactNode;
+         }
+@@ -3133,8 +3135,12 @@ declare global {
+                 : ReactManagedAttributes<T, P>
+             : ReactManagedAttributes<C, P>;
+ 
+-        interface IntrinsicAttributes extends React.Attributes { }
+-        interface IntrinsicClassAttributes<T> extends React.ClassAttributes<T> { }
++        interface IntrinsicAttributes extends React.Attributes {
++            [k: string]: any
++         }
++        interface IntrinsicClassAttributes<T> extends React.ClassAttributes<T> { 
++            [k: string]: any
++        }
+ 
+         interface IntrinsicElements {
+             // HTML
+
+```
+
+node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts(@vue/runtime-dom@3.2.37)  
+```diff
+diff --git a/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts b/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
+index 3366f5a..b9eacc6 100644
+--- a/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
++++ b/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
+@@ -1493,7 +1493,7 @@ type NativeElements = {
+ 
+ declare global {
+   namespace JSX {
+-    interface Element extends VNode {}
++    // interface Element extends VNode {}
+     interface ElementClass {
+       $props: {}
+     }
+
 ```
 
 ## Development Setup  
