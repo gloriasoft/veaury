@@ -973,8 +973,8 @@ export default function () {
 ## The JSX type conflict between Vue and React in typescript.  
 > If you can ignore the TS error warning in the IDE, you can skip this chapter.  
 
-Both Vue and React have type definitions in the global namespace JSX. Therefore, it often causes the JSX type conflict of TS.  
-The TS type of Vue will be used in `veaury/types/veaury.d.ts`, so if the main project is React, after installing Veaury and Vue, it will cause TS error warning in JSX in IDE (such as vscode or webstorm) , but this will not affect the compilation of the development environment and production environment.  
+Both Vue and React have type definitions in the global namespace JSX. Therefore, it often causes the JSX types conflict of TS.  
+The TS types of Vue will be used in `veaury/types/veaury.d.ts`, so if the main project is React, after installing Veaury and Vue, it will cause TS error warning in JSX in IDE (such as vscode or webstorm) , but this will not affect the compilation of the development environment and production environment.  
 A working solution is to use `patch-package` to modify `@vue/runtime-dom/dist/runtime-dom.d.ts` and `@types/react/index.d.ts`.  
 For example, the changes to these two files are as follows.  
 
