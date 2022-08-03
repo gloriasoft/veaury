@@ -976,7 +976,7 @@ export default function () {
 
 Vue 和 React 在typescript全局命名空间 JSX 中都有类型定义。 因此，经常会导致 TS 的 JSX 类型冲突。  
 Vue的TS类型会在`veaury/types/veaury.d.ts`中使用，所以如果主项目是React，在安装Veaury和Vue后，会在IDE中导致JSX出现TS错误警告（如vscode或 webstorm) ，但这不会影响开发环境和生产环境的编译。
-一个可行的解决方案是使用 `patch-package` 来修改 `@vue/runtime-dom/dist/runtime-dom.d.ts` 和 `@types/react/index.d.ts`。
+一个可行的解决方案是使用 `patch-package` 来修改 `@vue/runtime-dom/dist/runtime-dom.d.ts` 和 `@types/react/index.d.ts`，并且确保在tsconfig.json中设置`compilerOptions.jsx`为`preserve`。  
 比如这两个文件的改动如下。
 
 node_modules/@types/react/index.d.ts(@types/react@18.0.14)
