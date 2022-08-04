@@ -1,8 +1,11 @@
-import { Component as VueComponent, VNode } from 'vue'
+// Do not actively import Vue
+// import { Component as VueComponent, VNode } from 'vue'
 
-type ReactNode = object
+type ReactNode = object | number | string;
+type VNode = object | number | string;
 type SlotFunction = () => VNode
 type ReactComponent = Function;
+type VueComponent = any;
 interface propsFromWrapper {
     [propName: string]: any;
 }
