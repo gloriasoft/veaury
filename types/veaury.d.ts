@@ -1,8 +1,11 @@
-import { Component as VueComponent, VNode } from 'vue'
+// Do not actively import Vue
+// import { Component as VueComponent, VNode } from 'vue'
 
-type ReactNode = object
+type ReactNode = object | number | string;
+type VNode = object | number | string;
 type SlotFunction = () => VNode
 type ReactComponent = Function;
+type VueComponent = any;
 interface propsFromWrapper {
     [propName: string]: any;
 }
@@ -46,7 +49,7 @@ export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => a
 export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 export const VueContainer: any;
 export const injectPropsFromWrapper: injectPropsFromWrapper;
-export const creatReactMissVue: (ReactMissVueOptions) => createReactMissVueReturn;
+export const creatReactMissVue: (ReactMissVueOptions: ReactMissVueOptions) => createReactMissVueReturn;
 export const getReactNode: (VueElement: VNode | SlotFunction) => ReactNode;
 export const RenderReactNode: VueComponent;
 export const applyPureReactInVue: typeof applyReactInVue;

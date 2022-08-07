@@ -974,10 +974,11 @@ export default function () {
 ## Vue 和 React共存时会引发JSX的TS类型错误.
 > 如果您可以忽略 IDE 中的 TS 错误警告，则可以跳过本章。  
 
-Vue 和 React 在typescript全局命名空间 JSX 中都有类型定义。 因此，经常会导致 TS 的 JSX 类型冲突。  
-Vue的TS类型会在`veaury/types/veaury.d.ts`中使用，所以如果主项目是React，在安装Veaury和Vue后，会在IDE中导致JSX出现TS错误警告（如vscode或 webstorm) ，但这不会影响开发环境和生产环境的编译。
+Vue(@vue/runtime-dom) 和 React(@types/react) 都在全局命名空间 JSX 中扩展了类型接口，这会导致类型冲突。  
+例如，JSX.Element 不能同时扩展 ReactElement 和 VNode。  
+所以如果项目中同时安装了Vue和React，会在IDE（如vscode或webstorm）的JSX中引起TS错误警告，但这不会影响开发环境和生产环境的编译。  
 一个可行的解决方案是使用 `patch-package` 来修改 `@vue/runtime-dom/dist/runtime-dom.d.ts` 和 `@types/react/index.d.ts`，并且确保在tsconfig.json中设置`compilerOptions.jsx`为`preserve`。  
-比如这两个文件的改动如下。
+比如这两个文件的改动如下。  
 
 node_modules/@types/react/index.d.ts(@types/react@18.0.14)
 ```diff
