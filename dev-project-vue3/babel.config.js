@@ -5,7 +5,8 @@ function resolve (dir) {
 
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset',
+    // Turn off '@vue/cli-plugin-babel/preset'
+    // '@vue/cli-plugin-babel/preset',
     ['veaury/babel/ReactPreset', {
       // for dev only
       test: function(filename) {

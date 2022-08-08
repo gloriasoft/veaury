@@ -1,12 +1,15 @@
 module.exports = function(context, options = {}) {
-  let presets = []
+  let presets1 = []
+  let presets2 = []
   try {
-    presets.push([require('@vue/cli-plugin-babel/preset'), {
+    presets1.push([require('@vue/cli-plugin-babel/preset'), {
       // Turn off jsx compilation of Vue
       jsx: false
-    }])
+    }], 'babel-preset-react-app')
+    presets2.push(require('@vue/cli-plugin-babel/preset'))
   } catch(e) {}
   return {
+    presets: presets2,
     overrides: [
       {
         test (filename) {
@@ -16,11 +19,11 @@ module.exports = function(context, options = {}) {
           if (filename.match(/[/\\]react_app[\\/$]+/)) return filename
         },
         ...options,
-        plugins: [
-          // Compile with React's jsx
-          'transform-react-jsx'
-        ],
-        presets
+        // plugins: [
+        //   // Compile with React's jsx
+        //   '@babel/plugin-transform-react-jsx'
+        // ],
+        presets: presets1
       }
     ]
   }
