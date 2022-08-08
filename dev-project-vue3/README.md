@@ -14,8 +14,8 @@ It is relatively easy to configure the Vue3 project to support React JSX compila
 ```js
 module.exports = {
   presets: [
-    // @vue/cli preset
-    '@vue/cli-plugin-babel/preset',
+    // Turn off '@vue/cli-plugin-babel/preset'
+    // '@vue/cli-plugin-babel/preset',
     // veary babel preset
     'veaury/babel/ReactPreset'
   ]
@@ -26,8 +26,8 @@ The way to customize the file range supported by react type jsx:
 ```js
 module.exports = {
   presets: [
-    // @vue/cli preset
-    '@vue/cli-plugin-babel/preset',
+    // Turn off '@vue/cli-plugin-babel/preset'
+    // '@vue/cli-plugin-babel/preset',
     // veary babel preset
     ['veaury/babel/ReactPreset', {
       test (filename) {
