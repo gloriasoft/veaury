@@ -10,13 +10,14 @@ To enable Vue3 project to develop React JS files, some additional dependencies n
 ## configuration  
 It is relatively easy to configure the Vue3 project to support React JSX compilation, just configure the `babel.config.js` of the local project.  
 - First install `react` , `react-dom` and `veaury`.  
+- Comment `@vue/cli-plugin-babel/preset`.  
 - Add Veaury's babel preset to the `babel.config.js`  
 ```js
 module.exports = {
   presets: [
     // Turn off '@vue/cli-plugin-babel/preset'
     // '@vue/cli-plugin-babel/preset',
-    // veary babel preset
+    // veaury babel preset
     'veaury/babel/ReactPreset'
   ]
 }
@@ -28,7 +29,7 @@ module.exports = {
   presets: [
     // Turn off '@vue/cli-plugin-babel/preset'
     // '@vue/cli-plugin-babel/preset',
-    // veary babel preset
+    // veaury babel preset
     ['veaury/babel/ReactPreset', {
       test (filename) {
         // default ignore node_modules
