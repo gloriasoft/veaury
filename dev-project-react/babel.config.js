@@ -10,8 +10,8 @@ module.exports = {
             test:function(filename) {
                 if (filename?.startsWith(resolve('../src'))) return filename
             },
-            plugins: [
-                'transform-react-jsx'
+            presets: [
+                'babel-preset-react-app'
             ]
         }
     ]
