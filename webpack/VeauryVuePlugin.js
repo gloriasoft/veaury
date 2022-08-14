@@ -16,7 +16,10 @@ class VeauryVuePlugin {
       if (filename.match(/[/\\]vue_app[\\/$]+/)) return filename
     }
     const {babelLoader} = this.options
-
+    const extensions = compiler.options.resolve?.extensions
+    if (extensions && extensions.indexOf('.vue') < 0) {
+      extensions.push('.vue')
+    }
     const rules = compiler.options.module.rules
     // find oneOf rule
     const oneOfRule = rules.find((rule) => rule.oneOf)
