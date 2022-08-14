@@ -8,8 +8,21 @@ import {h, withCtx, getCurrentInstance, createVNode} from 'vue'
 import Basic from "./Basic";
 import AA from './AA'
 
+let AASlot
+let BBSlot
+
+
 const __sfc__ = {
   name: "DD",
+  created() {
+    const slot3 = [h('div', 9999)]
+    const slot1 = {
+      default: _withCtx(() => slot3),
+      _: 1
+    }
+    BBSlot = [h(Basic, {style: {color: 'red'}, aa: this.aa, bb: () => this.$forceUpdate(), 'onUpdate:aa': (aa) => {this.aa = aa}}, slot1)]
+    AASlot = {aa: _withCtx(({value}) => BBSlot), _:1}
+  },
   data() {
     return {
       aa: Math.random()
@@ -26,6 +39,11 @@ const __sfc__ = {
     update() {
       this.$forceUpdate()
     }
+  },
+  mounted() {
+    // setInterval(() => {
+    //   this.aa = Math.random()
+    // }, 1000)
   }
   // render() {
   //   const style = {color: 'red'}
@@ -47,28 +65,30 @@ const __sfc__ = {
 
 const _withScopeId = n => (_pushScopeId("data-v-472cff63"),n=n(),_popScopeId(),n)
 const _hoisted_1 = /*#__PURE__*/ _withScopeId(() => /*#__PURE__*/_createElementVNode("div", null, "999911111", -1 /* HOISTED */))
+
+
+const AAA = ({value}) => [h(Basic, {style: {color: 'red'},
+  // aa: this.aa, bb: () => this.$forceUpdate(), 'onUpdate:aa': (aa) => {this.aa = aa}
+}, {
+  default: () => [h('div', 9999)],
+})]
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   const _component_Basic = _resolveComponent("Basic")
   const _component_AA = _resolveComponent("AA")
+  const a =this.aa
+  // const b =this.bb
 
-  return (_openBlock(), _createBlock(_component_AA, {
-    cc: $options.getRandom()
-  }, {
-    aa: _withCtx(({value}) => [
-      _createVNode(_component_Basic, _mergeProps({
-        className: "CCC",
-        style: {color: 'red'},
-        aa: $data.aa,
-        "onUpdate:aa": _cache[0] || (_cache[0] = $event => (($data.aa) = $event))
-      }), {
-        default: _withCtx(() => [
-          _hoisted_1
-        ]),
-        _: 1 /* STABLE */
-      }, 8 /* FULL_PROPS */, ["aa", "className", "style", "onUpdate:aa"])
-    ]),
-    _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["cc"]))
+  const VNode = h(_component_AA, {
+    cc: $options.getRandom(),
+    bb: () => {this.$forceUpdate()}
+  }, AASlot)
+  delete VNode.children._ctx
+  delete VNode.children.__vInternal
+  VNode.children._ = 1
+  console.log(111111111, VNode.children)
+  return VNode
+
 }
 __sfc__.render = render
 __sfc__.__scopeId = "data-v-472cff63"

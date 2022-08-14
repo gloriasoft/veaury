@@ -1,8 +1,8 @@
 <template>
   <div class="vue-component">
-    {{getRandom()}}
+    {{getRandom()}}   PPPPP
     <h3>This is the Vue Component.</h3>
-    <button @click="() => {changeAa(); bb()}">
+    <button @click="() => {bb()}">
       {{aa}}
     </button><br/>
 <!--    received foo's value: {{$attrs.foo}}-->
@@ -32,6 +32,11 @@ export default {
       // deep: true,
       handler(nv, ov) {
         console.log('attrs update')
+      }
+    },
+    $props: {
+      handler(nv, ov) {
+        console.log('props update')
       }
     },
     aa: {

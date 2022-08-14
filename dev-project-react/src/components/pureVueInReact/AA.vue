@@ -29,6 +29,12 @@ export default {
     getRef() {},
     changeValue() {
       this.value = Math.random()
+      // if (!this.cc) {
+      //   console.log('fffffff')
+      //   this.cc = 1
+      //   this.$attrs.bb()
+      // }
+
     }
   },
   updated() {

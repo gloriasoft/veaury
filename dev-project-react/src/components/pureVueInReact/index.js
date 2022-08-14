@@ -41,7 +41,7 @@ export default function (props) {
   </Basic>, [aa])
   const a = {a:1}
   console.log('HHHHHHHH', h('div', 888888))
-  // return <EE/>
+  return <EE/>
   return <AA>
     {{
       aa: ({value}) => <span><Basic v-model-aa={vModelAa} className="CCC" style={style}></Basic></span>
