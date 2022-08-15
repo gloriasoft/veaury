@@ -30,7 +30,7 @@ export default function (props) {
   return <AA>
     <div>
       <Basic className="CCC" v-model-aa={vModelAa} style={{color: 'red'}}>
-        {/*<div>99999</div>*/}
+        <div>99999</div>
       </Basic>
     </div>
   </AA>

@@ -42,8 +42,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
           child.children.__top__ = children.__top__
         }
 
-        console.log(888, props)
-        newChild = h(VueComponent, {...props})
+        newChild = h(VueComponent, {...props}, slots)
         // newChild = h(Basic)
         // newChild = DirectiveHOC(child,
         //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
