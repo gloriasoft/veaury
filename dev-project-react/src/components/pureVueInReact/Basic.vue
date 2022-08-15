@@ -1,8 +1,8 @@
 <template>
   <div class="vue-component">
     {{getRandom()}}   PPPPP
-    <h3>This is the Vue Component.</h3>
-    <button @click="() => {bb()}">
+    <h3>This is the Vue Component. {{basicValue}}</h3>
+    <button @click="changeBasicValue">
       {{aa}}
     </button><br/>
 <!--    received foo's value: {{$attrs.foo}}-->
@@ -13,7 +13,15 @@
 export default {
   props: ['aa', 'bb'],
   emits: ['update:aa'],
+  data() {
+    return {
+      basicValue: Math.random()
+    }
+  },
   methods: {
+    changeBasicValue() {
+      this.basicValue = Math.random()
+    },
     getRandom() {
       return Math.random()
     },

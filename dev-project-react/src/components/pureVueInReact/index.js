@@ -8,16 +8,7 @@ import {h, Fragment, Text} from 'vue'
 
 const AA = applyPureVueInReact(AAVue)
 const Basic = applyPureVueInReact(BasicVue)
-const DD = applyVueInReact(DDVue)
-const EE = applyVueInReact(EEVue)
-class BB extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return <div>88888</div>
-  }
-}
+
 // console.log(couldBeClass(BB))
 export default function (props) {
   const ref = useRef(null)
@@ -36,22 +27,11 @@ export default function (props) {
     //   setStyle({color: 'blue'})
     // }, 1000)
   }, [props])
-  const basicMemo = useMemo(() => <Basic className="CCC" v-model-aa={vModelAa}>
-    <div>99999</div>
-  </Basic>, [aa])
-  const a = {a:1}
-  console.log('HHHHHHHH', h('div', 888888))
-  return <EE/>
   return <AA>
-    {{
-      aa: ({value}) => <span><Basic v-model-aa={vModelAa} className="CCC" style={style}></Basic></span>
-    }}
-  </AA>
-  return <AA>{{
-    aa: ({value}) => <div>
-      <Basic className="CCC" v-model-aa={vModelAa}>
-        <div>99999</div>
+    <div>
+      <Basic className="CCC" v-model-aa={vModelAa} style={{color: 'red'}}>
+        {/*<div>99999</div>*/}
       </Basic>
-    </div>,
-  }}</AA>
+    </div>
+  </AA>
 }

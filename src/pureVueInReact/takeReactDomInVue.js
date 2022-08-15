@@ -1,4 +1,4 @@
-import {h, createElementVNode, createVNode} from 'vue';
+import {h} from 'vue';
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import resolveRef from "./resolveRef";
 

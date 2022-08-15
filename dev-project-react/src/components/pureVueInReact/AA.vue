@@ -2,8 +2,8 @@
   <div style="background: green" class="PPP">
     <div ref="FFF"  :aa="{a:1}">666</div>
     <div>{{$attrs.cc}}</div>
-<!--    <slot />-->
-    <slot name="aa" value="121212"/>
+    <slot />
+<!--    <slot name="aa" value="121212"/>-->
     <button @click="changeValue">change value{{value}}</button>
   </div>
 </template>
