@@ -5,7 +5,7 @@ This project is only used for the development of `veaury` in the main React envi
 To enable React projects to develop Vue3 files, some additional dependencies need to be installed. In actual usage scenarios, it is not necessary to deploy two front-end frameworks in one project.   
 - `vue` —— It is recommended to install the latest version.   
 ## configuration
-- First install `vue` and `veaury`
+- First install `vue` , `veaury` , `vue-loader` and `@vue/babel-plugin-jsx`.
 - Add Veaury's webpack plugin to the plugins of `config/webpack.config.js`  
 ```js
 // webpack.config.js

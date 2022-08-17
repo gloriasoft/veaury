@@ -5,9 +5,10 @@ module.exports = function(context, options = {}) {
     presets1.push([require('@vue/cli-plugin-babel/preset'), {
       // Turn off jsx compilation of Vue
       jsx: false
-    }], 'babel-preset-react-app')
+    }])
     presets2.push(require('@vue/cli-plugin-babel/preset'))
   } catch(e) {}
+  presets1.push('babel-preset-react-app')
   return {
     presets: presets2,
     overrides: [
