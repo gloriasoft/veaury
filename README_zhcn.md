@@ -87,6 +87,7 @@ $ npm i veaury -S
 
 ### Vite  
 如果项目是通过`vite`构建的，那么需要对`vite.config.js`做如下配置  
+首先安装 `@vitejs/plugin-react`, `@vitejs/plugin-vue` 和 `@vitejs/plugin-vue-jsx`。  
 
 + 主项目是vue:
 ```js
@@ -124,7 +125,7 @@ export default defineConfig({
 })
 
 ```
-如果想自定义vue jsx编译的范围, 可以将type设置为`custom`，然后通过设置`vueJsxInclude`、`vueJsxExclude`以及`overrides`来自定义编译范围
+如果想自定义vue jsx编译的范围, 可以将type设置为`custom`，然后通过设置`vueJsxInclude` 和 `vueJsxExclude`来自定义编译范围
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
@@ -135,13 +136,8 @@ export default defineConfig({
     veauryVitePlugins({
       type: 'custom',
       // 所有.vue文件以及在名为vue_app目录里的文件都将以vue jsx编译
-      vueJsxInclude: [/vue&type=script&lang.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
-      // vueJsxExclude: [],
-      // 自定义babel的vueJsxOverrides, 这个设置会覆盖 `vueJsxInclude` 和 `vueJsxExclude`
-      // vueJsxOverrides: [{
-      //   exclude: [/[/\\]react_app[\\/$]+/],
-      //   plugins: ['@vue/babel-plugin-jsx']
-      // }]
+      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      // vueJsxExclude: []
     })
   ]
 })

@@ -95,6 +95,7 @@ If you need to develop both Vue and React in a project, instead of just using an
 
 ### Vite
 If it is a project built by `vite`, the relevant configuration is as follows.  
+First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-vue-jsx`.  
 
 + The main project is Vue:  
 ```js
@@ -147,13 +148,8 @@ export default defineConfig({
     veauryVitePlugins({
       type: 'custom',
       // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
-      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
-      // vueJsxExclude: [],
-      // Customize babel's overrides, this setting will override `vueJsxInclude` and `vueJsxExclude`
-      // vueJsxOverrides: [{
-      //   exclude: [/[/\\]react_app[\\/$]+/],
-      //   plugins: ['@vue/babel-plugin-jsx']
-      // }]
+      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      // vueJsxExclude: []
     })
   ]
 })
