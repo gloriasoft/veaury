@@ -16,10 +16,10 @@ export default function (props) {
   const [aa, setAa] = vModelAa
   const [style, setStyle] = useState({color: 'red'})
   useEffect(() => {
-    console.log(44444, ref.current)
+    // console.log(44444, ref.current)
     // setInterval(() => {
     //   setAa(Math.random())
-    // }, 1000
+    // }, 1000)
   }, [])
   useEffect(() => {
     console.log('AA props updated')
@@ -27,11 +27,15 @@ export default function (props) {
     //   setStyle({color: 'blue'})
     // }, 1000)
   }, [props])
-  return <AA>
-    <div>
-      <Basic className="CCC" v-model-aa={vModelAa} style={{color: 'red'}}>
-        <div>99999</div>
-      </Basic>
-    </div>
-  </AA>
+  function changeStyle(color) {
+    setStyle({
+      color
+    })
+  }
+  return <div>
+    <AA>
+      <Basic aa={style}></Basic>
+    </AA>
+    <button onClick={() => changeStyle('red')}>set red</button><button onClick={() => changeStyle('blue')}>set blue</button>
+  </div>
 }

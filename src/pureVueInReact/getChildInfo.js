@@ -18,9 +18,10 @@ export default function getChildInfo(child, index, reactInVueCall, defaultSlotsF
   }
 
 
-  const vueSlots = {}
+  let vueSlots = null
   Object.keys(slots || {}).forEach((key) => {
     let slot = slots[key]
+    if (!vueSlots) vueSlots = {}
     vueSlots[key] = function (...args) {
       if (typeof slot === 'function') {
         slot = slot.apply(this, args)
