@@ -53,7 +53,7 @@
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
-    "veaury": "^2.2.9-beta.1",
+    "veaury": "^2.2.10-beta.0",
     "vue": "^3.2.31",
     "vue-router": "^4.0.16",
     "vuex": "^4.0.2",
