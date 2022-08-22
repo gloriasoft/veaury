@@ -266,7 +266,7 @@ class VueComponentLoader extends React.Component {
                 const { reactSlot, reactFunction } = scopedSlot
                 const slotFromReact = reactSlot || reactFunction?.apply(this, args)
                 const { defaultSlotsFormatter } = options
-                if (!this.getScopedSlots.__scopeSlots[i] && !this.getScopedSlots.__scopeSlots[i]?.component?.ctx?.__veauryReactInstance__) {
+                if (!this.getScopedSlots.__scopeSlots[i]?.component?.ctx?.__veauryReactInstance__) {
                   // Custom slot's formatter
                   if (defaultSlotsFormatter && slotFromReact) {
                     newSlot = [defaultSlotsFormatter(slotFromReact, this.reactInVueCall)]
@@ -275,19 +275,12 @@ class VueComponentLoader extends React.Component {
                   }
                   this.getScopedSlots.__scopeSlots[i] = newSlot
                 } else {
-                  // let updateChildren
-                  if (defaultSlotsFormatter && slotFromReact) {
-                    newSlot = [defaultSlotsFormatter(slotFromReact, this.reactInVueCall)]
-                    // newSlot = this.getScopedSlots.__scopeSlots[i]
-                    // console.log(88888, this.getScopedSlots.__scopeSlots[i])
-                  } else {
-                    newSlot = this.getScopedSlots.__scopeSlots[i]
-                    // Here, if you use synchronous update, it may trigger an infinite loop,
-                    // so you can only use microtask execution
-                    Promise.resolve().then(() => {
-                      newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
-                    })
-                  }
+                  newSlot = this.getScopedSlots.__scopeSlots[i]
+                  // Here, if you use synchronous update, it may trigger an infinite loop,
+                  // so you can only use microtask execution
+                  Promise.resolve().then(() => {
+                    newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
+                  })
                 }
                 if (scopedSlot.reactFunction) {
                   newSlot.reactFunction = scopedSlot.reactFunction

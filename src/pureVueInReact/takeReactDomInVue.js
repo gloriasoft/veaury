@@ -13,11 +13,16 @@ function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter
     let ref = resolveRef(child)
 
     const {style, class: className, children, ...otherProps} = child.props || {}
-    const props = {
+    const cleanClassName = Array.from(new Set(formatClass(className))).join(' ')
+    const cleanStyle = formatStyle(style)
+    let props = {
       ...otherProps,
-      style: formatStyle(style),
-      className: Array.from(new Set(formatClass(className))).join(' '),
+      ...Object.keys(cleanStyle).length === 0 ? {}: {style: cleanStyle},
+      ...cleanClassName? {className: cleanClassName}: {},
       ...(ref ? {ref} : {})
+    }
+    if (Object.keys(props).length === 0) {
+      props = null
     }
     let newChildren = children
     if (newChildren) {

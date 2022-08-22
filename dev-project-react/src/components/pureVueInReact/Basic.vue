@@ -1,5 +1,5 @@
 <template>
-  <div class="vue-component">
+  <div class="vue-component" :style="style">
     {{getRandom()}}   PPPPP
     <h3>This is the Vue Component. {{basicValue}}</h3>
     <button @click="changeBasicValue">
@@ -7,12 +7,14 @@
     </button><br/>
 <!--    received foo's value: {{$attrs.foo}}-->
     <slot/>
+    <component :is="vnode"/>
   </div>
 </template>
 <script>
 export default {
-  props: ['aa', 'bb'],
+  props: ['aa', 'bb', 'style', 'vnode'],
   emits: ['update:aa'],
+  inheritAttrs: false,
   data() {
     return {
       basicValue: Math.random()

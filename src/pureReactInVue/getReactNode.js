@@ -8,7 +8,6 @@ function getReactNode(vnode) {
   if (typeof vnode === 'function') {
     vnode = vnode()
   }
-  let hashList = []
   vnode = [vnode]
   vnode = vnode.flat(Infinity)
 

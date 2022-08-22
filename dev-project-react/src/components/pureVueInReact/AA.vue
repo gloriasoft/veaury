@@ -11,7 +11,6 @@
 <script>
 import {h} from 'vue'
 import Basic from "./Basic";
-console.log(h('div', {dirs: {aaa: 1}}, 22222))
 export default {
   components: {
     Basic

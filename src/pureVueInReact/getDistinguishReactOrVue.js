@@ -3,9 +3,7 @@ import getChildInfo from "./getChildInfo";
 import takeReactDomInVue from "./takeReactDomInVue";
 import resolveRef from "./resolveRef";
 import setChildKey from "../utils/setChildKey";
-import Basic from '../../dev-project-react/src/components/pureVueInReact/Basic'
 
-const allProps = {style: {color: 'red'}}
 export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, reactInVueCall) {
     if (children == null) return children
@@ -44,8 +42,6 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
         }
 
         newChild = h(VueComponent, {...props}, slots)
-        // newChild = DirectiveHOC(child,
-        //   <ReactComponent {...{...pureInterceptProps(props, child, VueComponent), ...(child.__extraData ? child.__extraData : {}), ...(ref ? {ref} : {})}} />)
       } else {
         newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
