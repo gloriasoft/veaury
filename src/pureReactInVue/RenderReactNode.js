@@ -11,17 +11,12 @@ function RenderReactNode(props, ref) {
   if (!ref?.current && typeof ref !== 'function' && !ref?.toString().match(/^function/)) {
     ref = null
   }
-  
+
   if (['string', 'number'].indexOf(typeof reactNode) > -1) {
-    if (ref) {
-      console.warn('[veaury warn]: The node type is a string or a number, and ref cannot be used!')
-    }
     return reactNode
   }
+
   if (reactNode instanceof Array) {
-    if (ref) {
-      console.warn('[veaury warn]: The node type is an array and cannot use ref!')
-    }
     return reactNode
   }
 
