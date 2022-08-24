@@ -1,4 +1,5 @@
 import {h} from 'vue';
+import {Fragment} from "react";
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import resolveRef from "./resolveRef";
 
@@ -7,6 +8,9 @@ function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter
     tags = tags ? [tags] : []
   }
 
+  if (child.type === Fragment) {
+    return child.props?.children
+  }
   if (typeof child.type === 'string' && (tags === 'all' || tags.indexOf(child.type) > -1)) {
 
     // Resolve ref

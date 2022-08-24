@@ -43,6 +43,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
 
         newChild = h(VueComponent, {...props}, slots)
       } else {
+
         newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
       newChild = setChildKey(newChild, children, topIndex)

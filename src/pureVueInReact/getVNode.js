@@ -1,5 +1,4 @@
 import {h} from 'vue';
-import React from 'react';
 import RenderReactNode from '../pureReactInVue/RenderReactNode';
 import getDistinguishReactOrVue from "./getDistinguishReactOrVue";
 
@@ -9,8 +8,12 @@ function getVNode(reactNode) {
   if (typeof reactNode === 'function') {
     reactNode = reactNode()
   }
+
   reactNode = [reactNode]
   reactNode = reactNode.flat(Infinity)
+  if (reactNode.length === 1) {
+    reactNode = reactNode[0]
+  }
 
   return NoWrapFunction(reactNode, (reactNode) => h(RenderReactNode, {node: reactNode}))
 }

@@ -7,7 +7,7 @@
     </button><br/>
 <!--    received foo's value: {{$attrs.foo}}-->
     <slot/>
-    <component :is="vnode"/>
+    <component :is="() => vnode"/>
   </div>
 </template>
 <script>

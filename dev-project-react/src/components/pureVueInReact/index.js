@@ -36,9 +36,10 @@ export default function (props) {
       color
     })
   }
+  // console.log(getVNode(<><div><TT/></div><div>333</div></>))
   return <div>
     <AA>
-      <Basic vnode={getVNode(<div><TT/></div>)}></Basic>
+      <Basic vnode={getVNode([<TT/>,<div>333</div>])}></Basic>
     </AA>
     <button onClick={() => changeStyle('red')}>set red</button><button onClick={() => changeStyle('blue')}>set blue</button>
   </div>
