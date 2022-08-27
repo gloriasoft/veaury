@@ -6,8 +6,6 @@ import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
 import parseVModel from "./utils/parseVModel"
 import RandomId from './utils/getRandomId'
-import Basic from '../dev-project-react/src/components/pureVueInReact/Basic'
-import AA from '../dev-project-react/src/components/pureVueInReact/AA'
 
 const optionsName = 'veaury-options'
 

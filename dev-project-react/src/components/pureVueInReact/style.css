@@ -1,0 +1,16 @@
+.slot {
+    background: aquamarine;
+    padding: 10px;
+    margin: 10px;
+}
+.flex-sub {
+    width: 50px;
+    height: 50px;
+    background: seagreen;
+    line-height: 50px;
+    margin: 5px;
+}
+.flex-sub-in-bb {
+    background: seagreen;
+    color: white;
+}

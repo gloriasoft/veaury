@@ -1,46 +1,44 @@
 import AAVue from './AA.vue'
-import BasicVue from "./Basic.vue";
-import DDVue from './DD'
-import EEVue from './EE'
+import './style.css'
 import {applyPureVueInReact, getReactNode, applyVueInReact, getVNode} from 'veaury'
-import {Component, useRef, useEffect, useState, useMemo} from 'react'
-import {h, Fragment, Text} from 'vue'
 
-const AA = applyPureVueInReact(AAVue)
-const Basic = applyPureVueInReact(BasicVue)
-
-// console.log(couldBeClass(BB))
-function TT() {
-  return <div>TTTTT</div>
-}
+const AAWithPure = applyPureVueInReact(AAVue)
+const AAWithNormal = applyVueInReact(AAVue)
 
 export default function (props) {
-  const ref = useRef(null)
-  const vModelAa = useState(Math.random)
-  const [aa, setAa] = vModelAa
-  const [style, setStyle] = useState({color: 'red'})
-  useEffect(() => {
-    console.log(44444, ref.current)
-    // setInterval(() => {
-    //   setAa(Math.random())
-    // }, 1000)
-  }, [])
-  useEffect(() => {
-    console.log('AA props updated')
-    // setInterval(() => {
-    //   setStyle({color: 'blue'})
-    // }, 1000)
-  }, [props])
-  function changeStyle(color) {
-    setStyle({
-      color
-    })
-  }
-  // console.log(getVNode(<><div><TT/></div><div>333</div></>))
-  return <div>
-    <AA>
-      <Basic vnode={getVNode([<TT/>,<div>333</div>])}></Basic>
-    </AA>
-    <button onClick={() => changeStyle('red')}>set red</button><button onClick={() => changeStyle('blue')}>set blue</button>
-  </div>
+  return <>
+    <h3>
+      This example shows the basic usage of `applyPureVueInReact`.
+    </h3>
+    <h4>
+      The style attribute display is set to 'flex' inside the AA component.
+    </h4>
+    <h4>
+      Pure mode<br/>
+      The divs in the children will no longer be placed in an additional container, so the divs will be directly
+      affected by the flex style.
+    </h4>
+    <AAWithPure>
+      <div className="flex-sub">A</div>
+      <div className="flex-sub">B</div>
+      <div className="flex-sub">C</div>
+    </AAWithPure>
+    <br/>
+    <h4>
+      Normal mode<br/>
+      The divs in the children will be placed in a container styled 'all:unset', so the flex setting in the AA component
+      has no effect on the divs.
+    </h4>
+    <AAWithNormal>
+      <div className="flex-sub">A</div>
+      <div className="flex-sub">B</div>
+      <div className="flex-sub">C</div>
+    </AAWithNormal>
+    <br/>
+    <h4>
+      Pure mode has priority over normal mode.<br/>
+      Even if there are normal mode vue components in the children of pure mode components, they will be upgraded to
+      pure mode.
+    </h4>
+  </>
 }
