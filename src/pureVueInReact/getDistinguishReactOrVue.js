@@ -2,7 +2,6 @@ import {h} from 'vue';
 import getChildInfo from "./getChildInfo";
 import takeReactDomInVue from "./takeReactDomInVue";
 import resolveRef from "./resolveRef";
-// import setChildKey from "../utils/setChildKey";
 
 export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, reactInVueCall) {
@@ -18,7 +17,6 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
         }
         if (child.type) {
           let newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter, children.__top__)
-          // newChild = setChildKey(newChild, children, topIndex)
           newChildren.push(newChild)
         }
         return
@@ -46,7 +44,6 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
 
         newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
-      // newChild = setChildKey(newChild, children, topIndex)
       newChildren.push(newChild)
     })
     newChildren = newChildren.flat(Infinity)

@@ -1,4 +1,5 @@
 import React from 'react';
+import {Fragment} from 'vue';
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import DirectiveHOC from "./FakeDirective";
 import resolveRef from "./resolveRef";
@@ -8,6 +9,11 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
     if (tags !== 'all' && ! (tags instanceof Array)) {
         tags = tags ? [tags]: []
     }
+
+    if (child.type === Fragment) {
+        return child.children
+    }
+
     if (typeof child.type === 'string' && (tags === 'all' || tags.indexOf(child.type) > -1)) {
 
         // Resolve ref

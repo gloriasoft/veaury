@@ -1,22 +1,34 @@
-import { applyVueInReact, VueContainer, getVNode } from 'veaury'
-// The vue component AA accepts a parameter of type VNode and a Vue scoped slot.
+import { applyPureVueInReact, VueContainer, getVNode, getReactNode } from 'veaury'
+// The vue component AA accepts a vue scoped slot.
 import AAVue from './AA.vue'
-const AA = applyVueInReact(AAVue)
+const AA = applyPureVueInReact(AAVue)
 
 export default function () {
   const vSlots = {
     // The scoped slot of the vue component AA
     renderSomething(VNode) {
-      const newVNode = getVNode(<>
+      const reactNode = <>
         <h4>Render scoped slots</h4>
-        <h4>1212</h4>
-        {/*<VueContainer node={VNode}/>*/}
-      </>)
-      console.log(11111, newVNode)
-      return newVNode
-    }
+        {/* There are two ways to consume VNode in reactNode. */}
+        <div style={{background: 'green', color: 'white'}}>
+          <span>rendered with VueContainer</span>
+          {/* The first is to use VueContainer */}
+          <VueContainer node={VNode}/>
+        </div>
+        <div style={{background: 'seagreen', color: 'white', marginTop: '5px'}}>
+          <span>rendered with getReactNode</span>
+          {/* The second is to directly convert VNode to ReactNode. */}
+          {getReactNode(VNode)}
+        </div>
+      </>
+      const aa = [<div>33333</div>,<div>44444</div>]
+      // Finally, it is rendered in the vue component, so it needs to be converted into VNode.
+      return (aa)
+    },
+    slot1: ({aa}) => <div>{aa}</div>
   }
-  return <AA>
-    {vSlots}
-  </AA>
+  return <>
+    <h2>This example shows how to transform and render directly in reactNode and VNode.</h2>
+    <AA v-slots={vSlots}/>
+  </>
 }
