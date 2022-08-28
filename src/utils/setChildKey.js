@@ -1,5 +1,5 @@
 export default function setChildKey(child, children, topIndex) {
-  if (child instanceof Array) {
+  if (child instanceof Array && child.length === 1) {
     child = child[0]
   }
   if (child.key == null && children.length > 1) {

@@ -47,6 +47,10 @@ export default [
     element: asyncElement(() => import('../components/pureVueInReact')),
   },
   {
+    path: '/getVNodeAndRenderVNode/*',
+    element: asyncElement(() => import('../components/getVNodeAndRenderVNode')),
+  },
+  {
     path: '*',
     element: asyncElement(() => import('../components/Introduce')),
   },

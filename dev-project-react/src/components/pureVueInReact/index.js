@@ -34,11 +34,5 @@ export default function (props) {
       <div className="flex-sub">B</div>
       <div className="flex-sub">C</div>
     </AAWithNormal>
-    <br/>
-    <h4>
-      Pure mode has priority over normal mode.<br/>
-      Even if there are normal mode vue components in the children of pure mode components, they will be upgraded to
-      pure mode.
-    </h4>
   </>
 }

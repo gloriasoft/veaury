@@ -18,5 +18,6 @@ export default function introduce() {
     <NavLink to={'/lazyVueInReact'} style={style}>lazyVueInReact</NavLink>
     <NavLink to={'/ReactMissVue'} style={style}>ReactMissVue</NavLink>
     <NavLink to={'/pureVueInReact'} style={style}>Pure mode</NavLink>
+    <NavLink to={'/getVNodeAndRenderVNode'} style={style}>getVNodeAndRenderVNode</NavLink>
   </Fragment>
 }

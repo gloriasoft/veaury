@@ -2,13 +2,13 @@ import {h} from 'vue';
 import getChildInfo from "./getChildInfo";
 import takeReactDomInVue from "./takeReactDomInVue";
 import resolveRef from "./resolveRef";
-import setChildKey from "../utils/setChildKey";
+// import setChildKey from "../utils/setChildKey";
 
 export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, reactInVueCall) {
     if (children == null) return children
     if (!(children instanceof Array)) children = [children]
-    const newChildren = []
+    let newChildren = []
     children.forEach((child, topIndex) => {
       // if (!child || child.type === Comment) return
       if (!child.type?.originVueComponent) {
@@ -18,7 +18,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
         }
         if (child.type) {
           let newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter, children.__top__)
-          newChild = setChildKey(newChild, children, topIndex)
+          // newChild = setChildKey(newChild, children, topIndex)
           newChildren.push(newChild)
         }
         return
@@ -46,9 +46,10 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
 
         newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
-      newChild = setChildKey(newChild, children, topIndex)
+      // newChild = setChildKey(newChild, children, topIndex)
       newChildren.push(newChild)
     })
+    newChildren = newChildren.flat(Infinity)
     return newChildren.length === 1 ? newChildren[0] : newChildren
   }
 }
