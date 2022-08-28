@@ -1,5 +1,5 @@
 import { applyPureVueInReact, VueContainer, getVNode, getReactNode } from 'veaury'
-import {useRef, useEffect} from 'react'
+import { useRef } from 'react'
 // The vue component AA accepts a parameter of type VNode and a vue scoped slot.
 import AAVue from './AA.vue'
 const AA = applyPureVueInReact(AAVue)
