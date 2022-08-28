@@ -11,7 +11,7 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
     }
 
     if (child.type === Fragment) {
-        return child.children
+        return slotsFormatter(child.children, vueInReactCall, hashList)
     }
 
     if (typeof child.type === 'string' && (tags === 'all' || tags.indexOf(child.type) > -1)) {

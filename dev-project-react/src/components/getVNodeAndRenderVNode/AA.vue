@@ -2,12 +2,19 @@
   <div class="vue-component">
     <h3>This is a vue component</h3>
     <slot name="renderSomething" v-bind="VNodeFoo"/>
-    <slot name="slot1" :aa="121212"/>
+    <component :is="() => VNodeBar" v-if="VNodeBar"/>
   </div>
 </template>
 
 <script setup>
-const VNodeFoo = <div>This is a VNode of Foo!</div>
+import { onMounted, ref } from 'vue'
+defineProps(['VNodeBar'])
+const VNodeFoo = ref(<div>This is a VNode of Foo! {Math.random()}</div>)
+onMounted(() => {
+  setInterval(() => {
+    VNodeFoo.value = <div>This is a VNode of Foo! {Math.random()}</div>
+  }, 1000)
+})
 </script>
 
 <style scoped>

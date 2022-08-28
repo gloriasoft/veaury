@@ -9,7 +9,7 @@ function takeReactDomInVue(child, tags, reactInVueCall, division, slotsFormatter
   }
 
   if (child.type === Fragment) {
-    return child.props?.children
+    return slotsFormatter(child.props?.children, reactInVueCall)
   }
   if (typeof child.type === 'string' && (tags === 'all' || tags.indexOf(child.type) > -1)) {
 
