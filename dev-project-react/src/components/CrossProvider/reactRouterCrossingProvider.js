@@ -3,10 +3,10 @@
 // and all of the vue components in this Provider can get the status of react hooks
 
 import { useLocation, useNavigate } from 'react-router-dom'
-import { createCrossingProviderForVueInReact } from 'veaury'
+import { createCrossingProviderForPureVueInReact } from 'veaury'
 
 // Execute 'useReactRouterForVue' in the setup function of the vue component to get the object returned by the incoming function
-const [useReactRouterForVue, ReactRouterProviderForVue] = createCrossingProviderForVueInReact(
+const [useReactRouterForVue, ReactRouterProviderForVue] = createCrossingProviderForPureVueInReact(
   // This incoming function can execute react hooks
   function() {
     return {

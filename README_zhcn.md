@@ -149,19 +149,28 @@ export default defineConfig({
 ### 在React组件中使用Vue组件 - 基本用法
 
 ```jsx
-import {applyVueInReact} from 'veaury'
-// 这是一个Vue组件
+import {applyVueInReact, applyPureVueInReact} from 'veaury'
+// This is a Vue component
 import BasicVueComponent from './Basic.vue'
 import {useState} from 'react'
-// 使用高阶组件 'applyVueInReact'
-const Basic = applyVueInReact(BasicVueComponent)
+// Use HOC 'applyVueInReact'
+const BasicWithNormal = applyVueInReact(BasicVueComponent)
+// Use HOC 'applyPureVueInReact'
+const BasicWithPure = applyPureVueInReact(BasicVueComponent)
 export default function () {
   const [foo] = useState('Hello!')
-  return <Basic foo={foo}>
-    <div>
-      默认的slot
-    </div>
-  </Basic>
+  return <>
+    <BasicWithNormal foo={foo}>
+      <div>
+        the default slot
+      </div>
+    </BasicWithNormal>
+    <BasicWithPure foo={foo}>
+      <div>
+        the default slot
+      </div>
+    </BasicWithPure>
+  </>
 }
 ```  
 
@@ -940,11 +949,15 @@ type lazyPureReactInVue = (asyncImport: Promise<any> | defineAsyncComponentOptio
 
 ### lazyVueInReact的用法(在React组件中使用异步的Vue组件)
 ```jsx
-import { lazyVueInReact } from 'veaury'
+import { lazyVueInReact, lazyPureVueInReact } from 'veaury'
 
-const AsyncBasic = lazyVueInReact(() => import('./Basic'))
+const AsyncBasicWithNormal = lazyVueInReact(() => import('./Basic'))
+const AsyncBasicWithPure = lazyPureVueInReact(() => import('./Basic'))
 export default function () {
-    return <AsyncBasic/>
+  return <>
+    <AsyncBasicWithNormal/>
+    <AsyncBasicWithPure/>
+  </>
 }
 ```
 ```typescript

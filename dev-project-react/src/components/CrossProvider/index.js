@@ -1,8 +1,8 @@
-import {applyVueInReact} from 'veaury'
+import {applyPureVueInReact} from 'veaury'
 import BasicVue from './Basic'
 import { ReactRouterProviderForVue } from './reactRouterCrossingProvider'
 
-const Basic = applyVueInReact(BasicVue)
+const Basic = applyPureVueInReact(BasicVue)
 export default function () {
 
     return <div>

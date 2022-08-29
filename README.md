@@ -160,19 +160,28 @@ export default defineConfig({
 ### Vue in React - Basic usage
 
 ```jsx
-import {applyVueInReact} from 'veaury'
+import {applyVueInReact, applyPureVueInReact} from 'veaury'
 // This is a Vue component
 import BasicVueComponent from './Basic.vue'
 import {useState} from 'react'
 // Use HOC 'applyVueInReact'
-const Basic = applyVueInReact(BasicVueComponent)
+const BasicWithNormal = applyVueInReact(BasicVueComponent)
+// Use HOC 'applyPureVueInReact'
+const BasicWithPure = applyPureVueInReact(BasicVueComponent)
 export default function () {
   const [foo] = useState('Hello!')
-  return <Basic foo={foo}>
-    <div>
-      the default slot
-    </div>
-  </Basic>
+  return <>
+    <BasicWithNormal foo={foo}>
+      <div>
+        the default slot
+      </div>
+    </BasicWithNormal>
+    <BasicWithPure foo={foo}>
+      <div>
+        the default slot
+      </div>
+    </BasicWithPure>
+  </>
 }
 ```  
 
@@ -945,11 +954,15 @@ export default {
 ```
 ### Usage of lazyVueInReact
 ```jsx
-import { lazyVueInReact } from 'veaury'
+import { lazyVueInReact, lazyPureVueInReact } from 'veaury'
 
-const AsyncBasic = lazyVueInReact(() => import('./Basic'))
+const AsyncBasicWithNormal = lazyVueInReact(() => import('./Basic'))
+const AsyncBasicWithPure = lazyPureVueInReact(() => import('./Basic'))
 export default function () {
-    return <AsyncBasic/>
+  return <>
+    <AsyncBasicWithNormal/>
+    <AsyncBasicWithPure/>
+  </>
 }
 ```
 
