@@ -4,8 +4,8 @@ import applyReactInVue from './applyReactInVue'
 import {setOptions} from './options'
 import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
-import parseVModel from "./parseVModel"
-import RandomId from './getRandomId'
+import parseVModel from "./utils/parseVModel"
+import RandomId from './utils/getRandomId'
 
 const optionsName = 'veaury-options'
 
@@ -21,10 +21,53 @@ function filterVueComponent (component, vueInstance) {
   return component
 }
 
-const VueContainer = React.forwardRef((props, ref) => {
-  if (props.component == null) return null
+export function transferSlots ($slots) {
+  if (!$slots) return
+  Object.keys($slots).forEach((key) => {
+    const originSlot = $slots[key]
+    if (originSlot == null) return
+    if (typeof originSlot === 'function') {
+      $slots[key] = originSlot
+      $slots[key].reactFunction = originSlot
+    } else {
+      $slots[key] = () => originSlot
+      $slots[key].reactSlot = originSlot
+    }
+    if (originSlot.vueFunction) {
+      $slots[key].vueFunction = originSlot.vueFunction
+    }
+  })
+  return $slots
+}
+
+function VNodeBridge(props) {
+  return props.node?.()
+}
+// const VNodeBridge = {
+//   inherits: false,
+//   render(props) {
+//     return createElement('div', { style: { all: 'unset' } }, [this.$attrs.node && this.$attrs.node()])
+//   }
+// }
+
+const VueContainer = React.forwardRef((originProps, ref) => {
+  let { component, node, ...props } = originProps
+  if (component == null && node == null) return null
+  if (node != null) {
+    // reactNode
+    if (node.$$typeof || typeof node === 'string' || typeof node === 'number') {
+      return node
+    }
+    if (typeof node !== 'function') {
+      const lastNode = node
+      node = () => lastNode
+    }
+  }
+
+  component = component || VNodeBridge
+
   const globalOptions = setOptions(props[optionsName] || {}, undefined, true)
-  const injection = globalOptions.useInjectPropsFromWrapper || props.component.__veauryInjectPropsFromWrapper__
+  const injection = globalOptions.useInjectPropsFromWrapper || component.__veauryInjectPropsFromWrapper__
 
   let ReactInjectionProps
   // If it is a slot, useInjectPropsFromWrapper is not executed
@@ -33,7 +76,7 @@ const VueContainer = React.forwardRef((props, ref) => {
       ReactInjectionProps = injection(props)
     }
   }
-  return <VueComponentLoader {...{...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
+  return <VueComponentLoader {...{component, ...node ? {node} : {}, ...props, ...ReactInjectionProps, [optionsName]: globalOptions}} ref={ref}/>
 })
 
 export {
@@ -133,7 +176,7 @@ class VueComponentLoader extends React.Component {
     }
     if ($slots) {
       if (!dataSlots) this.__veauryVueInstance__.$data.$slots = {}
-      Object.assign(this.__veauryVueInstance__.$data.$slots, this.transferSlots($slots))
+      Object.assign(this.__veauryVueInstance__.$data.$slots, transferSlots($slots))
     }
 
     // delete all keys, except $slots
@@ -158,26 +201,6 @@ class VueComponentLoader extends React.Component {
     random.pool.delete(this.__veauryVueTargetId__)
   }
 
-  transferSlots ($slots) {
-    // Process the content in $slots into a function to prevent it from being processed by the observer of vue's data
-    if ($slots) {
-      Object.keys($slots).forEach((key) => {
-        const originSlot = $slots[key]
-        if (originSlot == null) return
-        if (typeof originSlot === 'function') {
-          $slots[key] = originSlot
-          $slots[key].reactFunction = originSlot
-        } else {
-          $slots[key] = () => originSlot
-          $slots[key].reactSlot = originSlot
-        }
-        if (originSlot.vueFunction) {
-          $slots[key].vueFunction = originSlot.vueFunction
-        }
-      })
-      return $slots
-    }
-  }
   // The dom object of the component will be received through the ref callback of the react component,
   // and the context has been bound in the constructor of the class
   __veauryCreateVueInstance__ (targetElement) {
@@ -190,7 +213,7 @@ class VueComponentLoader extends React.Component {
         $slots.default = children
       }
     }
-    $slots = this.transferSlots($slots)
+    $slots = transferSlots($slots)
     if ($slots) {
       props.$slots = $slots
     }
@@ -211,6 +234,17 @@ class VueComponentLoader extends React.Component {
         setVueInstance(this)
       },
       methods: {
+        reactInVueCall(children, customOptions = {}, division) {
+          function createReactNode(child, props) {
+            return createElement(applyReactInVue(() => child, { ...customOptions, isSlots: true, wrapInstance: VueContainerInstance }))
+          }
+          if (division) {
+            if (children && children[0]) {
+              return children.map((child, index) => createElement(createReactNode(child, { key: child?.data?.key || index })))
+            }
+          }
+          return createReactNode(children)
+        },
         getScopedSlots (createElement, $scopedSlots) {
           if (!this.getScopedSlots.__scopeSlots) {
             this.getScopedSlots.__scopeSlots = {}
@@ -227,12 +261,19 @@ class VueComponentLoader extends React.Component {
                 }
                 // cache vnode
                 let newSlot
+                const { reactSlot, reactFunction } = scopedSlot
+                const slotFromReact = reactSlot || reactFunction?.apply(this, args)
+                const { defaultSlotsFormatter } = options
                 if (!this.getScopedSlots.__scopeSlots[i]?.component?.ctx?.__veauryReactInstance__) {
-                  newSlot = createElement(applyReactInVue(() => scopedSlot.apply(this, args), { ...options, isSlots: true, wrapInstance: VueContainerInstance }))
+                  // Custom slot's formatter
+                  if (defaultSlotsFormatter && slotFromReact) {
+                    newSlot = [defaultSlotsFormatter(slotFromReact, this.reactInVueCall)]
+                  } else {
+                    newSlot = this.reactInVueCall(scopedSlot.apply(this, args))
+                  }
                   this.getScopedSlots.__scopeSlots[i] = newSlot
                 } else {
                   newSlot = this.getScopedSlots.__scopeSlots[i]
-                  // newSlot?.component?.ctx?.__veauryReactInstance__?.setState({ children: scopedSlot.apply(this, args) })
                   // Here, if you use synchronous update, it may trigger an infinite loop,
                   // so you can only use microtask execution
                   Promise.resolve().then(() => {
@@ -279,6 +320,7 @@ class VueComponentLoader extends React.Component {
           style,
           ...lastProps } = this.$data
 
+
         // Get slot data (including named slots)
         const namedSlots = this.getScopedSlots(createElement, { ...$slots })
         const {className: newClassName, classname: newClassName1, ...lastAttrs} = lastProps
@@ -292,6 +334,7 @@ class VueComponentLoader extends React.Component {
             lastNamedSlots[key] = () => scopeFun
           }
         })
+
         return createElement(
           filterVueComponent(VueContainerInstance.__veauryCurrentVueComponent__, this),
           {
@@ -374,7 +417,9 @@ export default function applyVueInReact (component, options = {}) {
     component = component.default
   }
 
-  return React.forwardRef((props, ref) => {
+  const returnedReactComponent = React.forwardRef((props, ref) => {
     return <VueContainer {...props} component={component} ref={ref} {...{[optionsName]: options}}/>
   })
+  returnedReactComponent.originVueComponent = component
+  return returnedReactComponent
 }

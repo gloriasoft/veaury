@@ -1,4 +1,4 @@
-import {formatClass, formatStyle} from './vueStyleClassTransformer'
+import {formatClass, formatStyle} from '../utils/styleClassTransformer'
 import options from '../options'
 // import RenderReactNode from './RenderReactNode'
 
@@ -8,7 +8,7 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
   const {ref, ...props} = child.props || {}
 
   const reactScoped = {}
-  Object.keys(child.children || []).forEach((key) => {
+  Object.keys(child.children || {}).forEach((key) => {
     const fn = child.children[key]
     // get reactNode and children
     const prefix = options.react.vueNamedSlotsKey.find((prefix) => key.indexOf(prefix) === 0)
