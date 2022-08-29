@@ -23,6 +23,7 @@
       - [React组件使用Vue组件 - Provider / useContext 的用法](#react%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---provider--usecontext-%E7%9A%84%E7%94%A8%E6%B3%95)
       - [Vue组件使用React组件 - Provide / Inject 的用法](#vue%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---provide--inject-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [在React组件中使用 VueContainer 组件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8-vuecontainer-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [Usage of getVNode](#usage-of-getvnode)
     - [通过VNode获取ReactNode - getReactNode 的用法](#%E9%80%9A%E8%BF%87vnode%E8%8E%B7%E5%8F%96reactnode---getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [在Vue组件中直接渲染ReactNode - RenderReactNode 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93reactnode---renderreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
     - [在React组件中使用Vue组件, v-model / v-models 的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6-v-model--v-models-%E7%9A%84%E7%94%A8%E6%B3%95)
@@ -425,6 +426,36 @@ export default function () {
   }
   // 如果 'vue-router' 存在，则渲染 '<router-view>' 可以使用 '<VueContainer component="RouterView"/>'
   return <VueContainer component={BasicVue} {...passedProps}/>
+}
+```
+`VueContainer` 也可以渲染 VNode。  
+```jsx
+import {VueContainer} from "veaury"
+import {h} from 'vue'
+
+const VNode = h('div', null, () => 'This is a VNode')
+export default function ReactComponent() {
+  return <VueContainer node={VNode}/>
+}
+```
+### Usage of getVNode
+VNode = `getVNode`(ReactNode)  
+大多数情况下，vue 组件遵循 SFC 规范，但也可以通过其他方式创建 vue 组件，例如 `h` 或 jsx，可能通过属性获取 VNode。
+在 react 中将 VNode 类型的属性传递给 vue 组件时，可以使用 `getVNode`。
+```jsx
+import { applyVueInReact, getVNode } from 'veaury'
+import AAVue from './AA.vue'
+
+const AA = applyVueInReact(AAVue)
+const VNodeBar = getVNode(
+  <div style={{background: '#105a31', marginTop: '5px', color: 'white'}}>
+    <div>rendered with a property</div>
+    <div>This is Bar's VNode</div>
+  </div>
+)
+export default function ReactComponent () {
+  // `VNodeBar` is a property of type VNode, so use getVNode to convert reactNode to VNode.
+  return <AA VNodeBar={VNodeBar}/>
 }
 ```
 ### 通过VNode获取ReactNode - getReactNode 的用法

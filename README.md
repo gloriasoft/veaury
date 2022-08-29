@@ -24,6 +24,7 @@
       - [Vue in React - Usage of Provider / useContext](#vue-in-react---usage-of-provider--usecontext)
       - [React in Vue - Usage of Provide / Inject](#react-in-vue---usage-of-provide--inject)
     - [Usage of VueContainer in React Component](#usage-of-vuecontainer-in-react-component)
+    - [Usage of getVNode](#usage-of-getvnode)
     - [Usage of getReactNode](#usage-of-getreactnode)
     - [Usage of RenderReactNode](#usage-of-renderreactnode)
     - [Vue in React, Usage of v-model / v-models](#vue-in-react-usage-of-v-model--v-models)
@@ -38,7 +39,7 @@
     - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
     - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
     - [Usage of getting ref](#usage-of-getting-ref)
-  - [Typescript JSX types conflict caused by Vue and react at the same time.](#typescript-jsx-types-conflict-caused-by-vue-and-react-at-the-same-time)
+  - [Typescript JSX types conflict caused by Vue and React at the same time.](#typescript-jsx-types-conflict-caused-by-vue-and-react-at-the-same-time)
   - [Development Setup](#development-setup)
   - [Project Structure](#project-structure)
 
@@ -427,12 +428,43 @@ When React components in Vue components, `VueContainer` can display global Vue c
 import {VueContainer} from "veaury"
 import BasicVue from './Basic.vue'
 
-export default function () {
+export default function ReactComponent() {
   const passedProps = {
     name: 'Mike'
   }
   // Render '<router-view>' if 'vue-router' exists, You can use '<VueContainer component="RouterView"/>'
   return <VueContainer component={BasicVue} {...passedProps}/>
+}
+```
+`VueContainer` can also render VNodes.  
+```jsx
+import {VueContainer} from "veaury"
+import {h} from 'vue'
+
+const VNode = h('div', null, () => 'This is a VNode')
+export default function ReactComponent() {
+  return <VueContainer node={VNode}/>
+}
+```
+
+### Usage of getVNode  
+VNode = `getVNode`(ReactNode)  
+In most cases, vue components follow the SFC specification, but you can also create vue components in other ways, such as `h` or jsx, which may get VNode through properties.  
+When passing a property of type VNode to a vue component in react, you can use `getVNode`.  
+```jsx
+import { applyVueInReact, getVNode } from 'veaury'
+import AAVue from './AA.vue'
+
+const AA = applyVueInReact(AAVue)
+const VNodeBar = getVNode(
+  <div style={{background: '#105a31', marginTop: '5px', color: 'white'}}>
+    <div>rendered with a property</div>
+    <div>This is Bar's VNode</div>
+  </div>
+)
+export default function ReactComponent () {
+  // `VNodeBar` is a property of type VNode, so use getVNode to convert reactNode to VNode.
+  return <AA VNodeBar={VNodeBar}/>
 }
 ```
 
