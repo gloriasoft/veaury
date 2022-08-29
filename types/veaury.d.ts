@@ -47,14 +47,18 @@ export const applyReactInVue: (ReactComponent: ReactComponent, options?: options
 export const applyVueInReact: (VueComponent: VueComponent, options?: options) => ReactComponent;
 export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => any;
 export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
-export const VueContainer: any;
+export const VueContainer: ReactComponent;
 export const injectPropsFromWrapper: injectPropsFromWrapper;
 export const creatReactMissVue: (ReactMissVueOptions: ReactMissVueOptions) => createReactMissVueReturn;
 export const getReactNode: (VueElement: VNode | SlotFunction) => ReactNode;
+export const getVNode: (ReactElement: ReactNode) => VNode;
 export const RenderReactNode: VueComponent;
 export const applyPureReactInVue: typeof applyReactInVue;
+export const applyPureVueInReact: typeof applyVueInReact;
 export const createCrossingProviderForPureReactInVue: typeof createCrossingProviderForReactInVue;
+export const createCrossingProviderForPureVueInReact: typeof createCrossingProviderForVueInReact;
 export const lazyPureReactInVue: typeof lazyReactInVue;
+export const lazyPureVueInReact: typeof lazyVueInReact;
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {

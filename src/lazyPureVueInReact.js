@@ -1,7 +1,7 @@
 import { lazy } from 'react'
-import applyVueInReact from './applyVueInReact'
+import applyPureVueInReact from './pureVueInReact'
 export default function lazyVueInReact (asyncImport, useVueOptions) {
   return lazy(() => asyncImport().then((mod) => {
-    return { default: applyVueInReact(mod.default, useVueOptions) }
+    return { default: applyPureVueInReact(mod.default, useVueOptions) }
   }))
 }
