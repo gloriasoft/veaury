@@ -8,7 +8,7 @@
   "typings": "types/veaury.d.ts",
   "scripts": {
     "build": "cross-env BABEL_ENV=rollup rollup -c",
-    "coveralls": "coveralls -v coverage/Icov.info",
+    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "dev:vue": "npm run serve --prefix dev-project-vue3",
     "dev:react": "npm run start --prefix dev-project-react",
     "pre:vue": "cross-env BUILD_TYPE=remote npm run serve --prefix dev-project-vue3",
