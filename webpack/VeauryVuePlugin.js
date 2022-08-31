@@ -1,4 +1,10 @@
 const {VueLoaderPlugin} = require('vue-loader')
+let vueJsx = []
+try {
+  require.resolve('@vue/babel-plugin-jsx')
+  vueJsx.push('@vue/babel-plugin-jsx')
+} catch(e) {}
+
 
 class VeauryVuePlugin {
   constructor(options = {}) {
@@ -44,13 +50,14 @@ class VeauryVuePlugin {
           babelrc: false,
           plugins: [
             // Compile with Vue's jsx
-            '@vue/babel-plugin-jsx'
+            ...vueJsx
           ]
         }
       },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+        options: { hotReload: false }
       },
     ]
     rules.push(...newRules)
