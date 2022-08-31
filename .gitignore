@@ -4,6 +4,7 @@ node_modules
 yarn.lock
 package-lock.json
 /coverage
+.coveralls.yml
 
 # local env files
 .env.local
