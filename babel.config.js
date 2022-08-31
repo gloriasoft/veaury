@@ -1,18 +1,16 @@
-const path = require('path')
-function resolve (dir) {
-    return path.join(__dirname,  dir)
-}
-
 module.exports = {
-    // for dev only
-    overrides: [
-        {
-            test:function(filename) {
-                if (filename?.startsWith(resolve('../src'))) return filename
-            },
-            presets: [
-                'babel-preset-react-app'
-            ]
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ],
+    "plugins": ["@babel/plugin-proposal-object-rest-spread", "@babel/plugin-proposal-class-properties"],
+    "env": {
+        "rollup": {
+            "plugins": ["@babel/plugin-external-helpers"]
+        },
+        "test": {
+            "presets": ["@babel/preset-env"],
+            "plugins": ["@babel/plugin-proposal-class-properties"]
         }
-    ]
+    }
 }

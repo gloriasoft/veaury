@@ -20,7 +20,7 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  // collectCoverageFrom: undefined,
+  collectCoverageFrom: ['src/**/*.js'],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -76,19 +76,25 @@ module.exports = {
   // ],
 
   // An array of file extensions your modules use
-  // moduleFileExtensions: [
-  //   "js",
-  //   "mjs",
-  //   "cjs",
-  //   "jsx",
-  //   "ts",
-  //   "tsx",
-  //   "json",
-  //   "node"
-  // ],
+  moduleFileExtensions: [
+    "js",
+    "mjs",
+    "cjs",
+    "jsx",
+    "ts",
+    "tsx",
+    "json",
+    "node",
+    'vue'
+  ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  moduleNameMapper: {
+    "^veaury$": "<rootDir>/src/index.js",
+    "^react$": "<rootDir>/tests/node_modules/react",
+    "^react-dom$": "<rootDir>/tests/node_modules/react-dom",
+    "^vue$": "<rootDir>/tests/node_modules/vue",
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -155,6 +161,7 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/tests/**/*-test.[jt]s?(x)',
+    '<rootDir>/tests/**/*-test.vue',
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -172,7 +179,10 @@ module.exports = {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  // transform: undefined,
+  transform: {
+    "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "babel-jest",
+    "^.+\\.(vue)$": "@vue/vue3-jest"
+  },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [

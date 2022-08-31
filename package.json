@@ -14,8 +14,10 @@
     "pre:react": "cross-env BUILD_TYPE=remote npm run start --prefix dev-project-react",
     "dev-setup:yarn": "yarn --cwd dev-project-vue3 && yarn --cwd dev-project-react",
     "dev-setup:npm": "npm i --prefix dev-project-vue3 && npm i --prefix dev-project-react",
-    "setup:yarn": "yarn && npm run dev-setup:yarn",
-    "setup:npm": "npm i && npm run dev-setup:npm",
+    "test-setup:yarn": "yarn --cwd tests",
+    "test-setup:npm": "yarn --prefix tests",
+    "setup:yarn": "yarn && npm run dev-setup:yarn && test-setup:yarn",
+    "setup:npm": "npm i && npm run dev-setup:npm && test-setup:npm",
     "test": "jest"
   },
   "repository": {
@@ -55,6 +57,9 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
+    "@vue/compiler-sfc": "^3.2.38",
+    "@vue/vue3-jest": "^29.0.0",
+    "babel-jest": "^29.0.1",
     "babel-preset-latest": "^6.24.1",
     "cross-env": "^7.0.3",
     "jest": "^29.0.1",
