@@ -6,7 +6,7 @@ import {h} from 'vue'
 import {applyVueInReact, getVNode, VueContainer} from 'veaury'
 
 function VueFC(props, context) {
-  return h('div', context.$attrs, context.$slots)
+  return h('div', context.attrs, context.slots)
 }
 const ReactComponent = applyVueInReact(VueFC, {beforeVueAppMount(app) {
  app.component('GlobalVueComponent', VueComponent)
