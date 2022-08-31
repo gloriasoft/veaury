@@ -1,10 +1,17 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import Basic from './Basic';
+import VueComponent from './2-getVNode'
+import {applyPureVueInReact, getVNode} from 'veaury'
 
-test('renders a Vue component in React', () => {
-  render(<Basic/>);
-  const linkElement = screen.getByText(/Vue in React/);
-  expect(linkElement).toBeInTheDocument();
+const ReactComponent = applyPureVueInReact(VueComponent)
+const ReactNode = <div>test getVNode</div>
+test('test getVNode', (done) => {
+  render(<ReactComponent passingVNode={getVNode(ReactNode)}/>);
+  setTimeout(() => {
+    const linkElement = screen.getByText(/test getVNode/);
+    expect(linkElement).toBeInTheDocument();
+    done()
+  })
+
 });

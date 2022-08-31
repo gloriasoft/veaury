@@ -1,13 +1,7 @@
 <template>
-$END$
+  <component :is="() => passingVNode"/>
 </template>
 
-<script>
-export default {
-name: "2-getVNode"
-}
+<script setup>
+defineProps(['passingVNode'])
 </script>
-
-<style scoped>
-
-</style>

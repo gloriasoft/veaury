@@ -1,5 +1,5 @@
 <template>
-  <component :is="() => passingVNode"/>
+  test global vue component
 </template>
 
 <script setup>

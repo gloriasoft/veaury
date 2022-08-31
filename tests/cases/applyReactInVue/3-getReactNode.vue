@@ -1,10 +1,16 @@
 <template>
-  getReactNode
+  <ReactComponentInVue :passingReactNode="getReactNode(VNode)"/>
 </template>
 
 <script setup>
 import React from 'react'
-console.log(111111111111, <div>55555</div>)
+import {h} from 'vue'
+import {applyPureReactInVue, getReactNode} from 'veaury'
+function ReactComponent(props) {
+  return <div>{props.passingReactNode}</div>
+}
+const VNode = h('div', null, 'test getReactNode')
+const ReactComponentInVue = applyPureReactInVue(ReactComponent)
 </script>
 
 <style scoped>
