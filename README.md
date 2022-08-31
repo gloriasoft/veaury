@@ -49,8 +49,8 @@
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
 <h1 align=center>Veaury</h1>
-<h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2> 
-[![Coverage Status](https://coveralls.io/repos/github/devilwjp/veaury/badge.svg?branch=master)](https://coveralls.io/github/devilwjp/veaury?branch=master)
+<h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2>   
+[![Coverage Status](https://coveralls.io/repos/github/devilwjp/veaury/badge.svg?branch=master)](https://coveralls.io/github/devilwjp/veaury?branch=master)  
 ## What is Veaury?  
 Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
 It is built on the Vue and React framework. It's use cases include using both Vue and React in one app, migrating from React to Vue or from Vue to React, and using third-party Vue and React Components, such as `antd`, `element-ui`, `vuetify`.    
