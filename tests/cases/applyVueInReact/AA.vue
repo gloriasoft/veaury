@@ -1,5 +1,5 @@
 <template>
-  <div>Vue</div>
+  <div>Vue in React</div>
 </template>
 
 <script>

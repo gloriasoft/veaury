@@ -65,7 +65,10 @@ module.exports = {
   // globalTeardown: undefined,
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  // globals: {
+  //   Vue: require(path.resolve('./tests/node_modules/vue/dist/vue.runtime.global.prod.js')),
+  //   VueCompilerDOM: require(path.resolve('./tests/node_modules/@vue/compiler-dom'))
+  // },
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -94,6 +97,7 @@ module.exports = {
     "^react$": "<rootDir>/tests/node_modules/react",
     "^react-dom$": "<rootDir>/tests/node_modules/react-dom",
     "^vue$": "<rootDir>/tests/node_modules/vue",
+    "^@vue/test-utils$": "<rootDir>/tests/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js"
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -138,7 +142,7 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['<rootDir>/tests/setup.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
@@ -160,8 +164,7 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    '<rootDir>/tests/**/*-test.[jt]s?(x)',
-    '<rootDir>/tests/**/*-test.vue',
+    '<rootDir>/tests/**/*-test.[jt]s?(x)'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped

@@ -1,12 +1,10 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import AA from './AA';
-import { applyVueInReact } from 'veaury'
-const AAReact = applyVueInReact(AA)
+import Basic from './Basic';
 
 test('renders a Vue component in React', () => {
-  render(<AAReact/>);
-  const linkElement = screen.getByText(/Vue/);
+  render(<Basic/>);
+  const linkElement = screen.getByText(/Vue in React/);
   expect(linkElement).toBeInTheDocument();
 });

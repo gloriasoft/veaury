@@ -1,13 +1,10 @@
 <template>
-  <div>Vue</div>
+  <AA/>
 </template>
 
-<script>
-export default {
-  name: "AA"
-}
+<script setup>
+import * as Vue from 'vue'
+import {applyReactInVue} from 'veaury'
+import AAReact from './AA';
+const AA = applyReactInVue(AAReact)
 </script>
-
-<style scoped>
-
-</style>
