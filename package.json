@@ -16,8 +16,8 @@
     "dev-setup:npm": "npm i --prefix dev-project-vue3 && npm i --prefix dev-project-react",
     "test-setup:yarn": "yarn --cwd tests",
     "test-setup:npm": "yarn --prefix tests",
-    "setup:yarn": "yarn && npm run dev-setup:yarn && test-setup:yarn",
-    "setup:npm": "npm i && npm run dev-setup:npm && test-setup:npm",
+    "setup:yarn": "yarn && npm run dev-setup:yarn && npm run test-setup:yarn",
+    "setup:npm": "npm i && npm run dev-setup:npm && npm run test-setup:npm",
     "test": "jest"
   },
   "repository": {
