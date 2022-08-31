@@ -1,0 +1,22 @@
+{
+  "name": "veaury-test",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/vue": "^6.6.1",
+    "babel-jest": "^29.0.1",
+    "jest-environment-jsdom": "^29.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vue": "^3.2.38"
+  }
+}
