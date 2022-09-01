@@ -7,6 +7,8 @@ import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 
 const ReactMajorVersion = parseInt(version)
 let ReactDOM;
+// TODO: May be optimized in the future
+// Not a good way to judge, because this will result in the exported esm format with `require`.
 try {
   ReactDOM = require('react-dom/client')
 } catch(e) {
