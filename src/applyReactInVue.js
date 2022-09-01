@@ -1,11 +1,20 @@
 import * as React from "react"
-import * as ReactDOM from "react-dom"
-// TODO: react 18
-// import { createRoot } from "react-dom/client"
+import { version } from "react"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
+import { createPortal } from "react-dom"
+
+const ReactMajorVersion = parseInt(version)
+let ReactDOM;
+// TODO: May be optimized in the future
+// Not a good way to judge, because this will result in the exported esm format with `require`.
+try {
+  ReactDOM = require('react-dom/client')
+} catch(e) {
+  ReactDOM = require('react-dom')
+}
 
 function toRaws(obj) {
   return obj;
@@ -554,7 +563,7 @@ export default function applyReactInVue(component, options = {}) {
             // Store React encapsulation layer
             this.parentReactWrapperRef = reactWrapperRef
             // Store 'portal' reference
-            this.reactPortal = () => ReactDOM.createPortal(
+            this.reactPortal = () => createPortal(
               reactRootComponent,
               container,
             )
@@ -562,13 +571,16 @@ export default function applyReactInVue(component, options = {}) {
             return
           }
 
+          if (ReactMajorVersion > 17) {
+            this.__veauryReactApp__ = ReactDOM.createRoot(container)
+            this.__veauryReactApp__.render(reactRootComponent)
+            return
+          }
           ReactDOM.render(
             reactRootComponent,
             container,
           )
-          // TODO: react 18
-          // this.__veauryReactApp__ = createRoot(container)
-          // this.__veauryReactApp__.render(reactRootComponent)
+
         } else {
 
           const setReactState = () => {
@@ -655,9 +667,12 @@ export default function applyReactInVue(component, options = {}) {
       // Override some methods of native lookup 'dom'
       overwriteDomMethods(this.$refs.react)
       // Destroy the React root node
-      ReactDOM.unmountComponentAtNode(this.$refs.react)
-      // TODO: react 18
-      // this.__veauryReactApp__.unmount()
+      if (ReactMajorVersion > 17) {
+        this.__veauryReactApp__.unmount()
+      } else {
+        ReactDOM.unmountComponentAtNode(this.$refs.react)
+      }
+
       // restore native method
       recoverDomMethods()
     },

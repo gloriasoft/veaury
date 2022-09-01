@@ -27,6 +27,16 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
       ...vueJsx(vueJsxOptions),
       enforce: 'pre'
     },
+    // recover esbuild include
+    {
+      config(){
+        return {
+          esbuild: {
+            include: /\.tsx*$/
+          }
+        }
+      }
+    },
     react()
   ]
 }
