@@ -4,8 +4,11 @@ import Basic from './Basic';
 // function Basic() {
 //   return h('div', null, 121212)
 // }
-test('renders a React component In Vue', () => {
+test('renders a React component In Vue', (done) => {
   render(Basic);
-  const linkElement = screen.getByText(/React in Vue/);
-  expect(linkElement).toBeInTheDocument();
+  setTimeout(() => {
+    const linkElement = screen.getByText(/React in Vue/);
+    expect(linkElement).toBeInTheDocument();
+    done()
+  })
 });

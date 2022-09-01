@@ -4,6 +4,7 @@ import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
+import { createPortal } from "react-dom"
 
 const ReactMajorVersion = parseInt(version)
 let ReactDOM;
@@ -562,7 +563,7 @@ export default function applyReactInVue(component, options = {}) {
             // Store React encapsulation layer
             this.parentReactWrapperRef = reactWrapperRef
             // Store 'portal' reference
-            this.reactPortal = () => ReactDOM.createPortal(
+            this.reactPortal = () => createPortal(
               reactRootComponent,
               container,
             )

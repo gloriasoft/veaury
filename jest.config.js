@@ -97,7 +97,8 @@ module.exports = {
     "^react$": "<rootDir>/tests/node_modules/react",
     "^react-dom$": "<rootDir>/tests/node_modules/react-dom",
     "^vue$": "<rootDir>/tests/node_modules/vue",
-    "^@vue/test-utils$": "<rootDir>/tests/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js"
+    "^@vue/test-utils$": "<rootDir>/tests/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
+    "^react-dom/client$": "<rootDir>/tests/node_modules/react-dom/client.js",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
