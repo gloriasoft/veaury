@@ -11,9 +11,9 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-react-app": "^10.0.1",
     "core-js": "^3.6.5",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "veaury": "^2.3.0-beta.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "veaury": "^2.3.2-beta.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
