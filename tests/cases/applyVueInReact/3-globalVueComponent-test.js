@@ -12,13 +12,10 @@ const ReactComponent = applyVueInReact(VueFC, {beforeVueAppMount(app) {
  app.component('GlobalVueComponent', VueComponent)
 }})
 const ReactNode = <div>test getVNode</div>
-test('test global vue component', (done) => {
+test('test global vue component', async () => {
   render(<ReactComponent>
     <VueContainer component={'GlobalVueComponent'}/>
   </ReactComponent>);
-  setTimeout(() => {
-    const linkElement = screen.getByText(/test global vue component/);
-    expect(linkElement).toBeInTheDocument();
-    done()
-  })
+  const linkElement = await screen.findByText(/test global vue component/);
+  expect(linkElement).toBeInTheDocument();
 });

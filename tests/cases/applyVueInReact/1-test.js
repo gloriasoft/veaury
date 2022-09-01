@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, act } from '@testing-library/react';
 import React from 'react';
 import Basic from './Basic';
-import {lazyVueInReact} from 'veaury'
+import {lazyVueInReact, lazyPureVueInReact} from 'veaury'
 
 test('renders a Vue component in React', () => {
   render(<Basic/>);
@@ -11,13 +11,18 @@ test('renders a Vue component in React', () => {
 });
 
 
-test('test lazyVueInReact', (done) => {
+test('test lazyVueInReact', async () => {
   const VueComponentInReact = lazyVueInReact(() => import('./VueComponent'))
-  act(async () => {
-    render(<VueComponentInReact>test lazyVueInReact</VueComponentInReact>)
-  }).then(() => {
-    const linkElement = screen.getByText(/test lazyVueInReact/);
-    expect(linkElement).toBeInTheDocument();
-    done()
+  const PureVueComponentInReact = lazyPureVueInReact(() => import('./VueComponent'))
+  await act(async () => {
+    render(<div>
+      <VueComponentInReact>test lazyVueInReact</VueComponentInReact>
+      <PureVueComponentInReact>test lazyPureVueInReact</PureVueComponentInReact>
+    </div>)
   })
+
+  let linkElement = await screen.findByText(/test lazyVueInReact/);
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/test lazyPureVueInReact/);
+  expect(linkElement).toBeInTheDocument();
 })

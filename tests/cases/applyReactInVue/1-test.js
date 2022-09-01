@@ -5,20 +5,16 @@ import LazyReactInVue from './LazyReactInVue'
 // function Basic() {
 //   return h('div', null, 121212)
 // }
-test('renders a React component In Vue', (done) => {
+test('renders a React component In Vue', async () => {
   render(Basic);
-  setTimeout(() => {
-    const linkElement = screen.getByText(/React in Vue/);
-    expect(linkElement).toBeInTheDocument();
-    done()
-  })
+  const linkElement = await screen.findByText(/React in Vue/);
+  expect(linkElement).toBeInTheDocument();
 });
 
-test('test lazyReactInVue', (done) => {
+test('test lazyReactInVue', async () => {
   render(LazyReactInVue);
-  setTimeout(() => {
-    const linkElement = screen.getByText(/test lazyReactInVue/);
-    expect(linkElement).toBeInTheDocument();
-    done()
-  })
+  let linkElement = await screen.findByText(/test lazyReactInVue/);
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/test lazyPureReactInVue/);
+  expect(linkElement).toBeInTheDocument();
 })

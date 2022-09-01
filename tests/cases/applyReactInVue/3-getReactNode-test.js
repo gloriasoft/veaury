@@ -2,12 +2,8 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/vue';
 import VueComponent from './3-getReactNode';
 
-test('test getReactNode', (done) => {
+test('test getReactNode', async () => {
   render(VueComponent);
-  setTimeout(() => {
-    const linkElement = screen.getByText(/test getReactNode/);
-    expect(linkElement).toBeInTheDocument();
-    done()
-  })
-
+  const linkElement = await screen.findByText(/test getReactNode/);
+  expect(linkElement).toBeInTheDocument();
 });
