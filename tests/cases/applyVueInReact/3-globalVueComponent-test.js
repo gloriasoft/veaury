@@ -21,5 +21,4 @@ test('test global vue component', (done) => {
     expect(linkElement).toBeInTheDocument();
     done()
   })
-
 });

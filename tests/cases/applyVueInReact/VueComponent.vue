@@ -1,13 +1,7 @@
 <template>
-$END$
+  <slot/>
 </template>
 
-<script>
-export default {
-name: "VueComponent"
-}
+<script setup>
+
 </script>
-
-<style scoped>
-
-</style>
