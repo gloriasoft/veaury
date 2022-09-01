@@ -19,7 +19,8 @@
     "test-setup:npm": "yarn --prefix tests",
     "setup:yarn": "yarn && npm run dev-setup:yarn && npm run test-setup:yarn",
     "setup:npm": "npm i && npm run dev-setup:npm && npm run test-setup:npm",
-    "test": "jest"
+    "test": "jest",
+    "test:remote": "cross-env TEST_REMOTE=true jest"
   },
   "repository": {
     "type": "git",

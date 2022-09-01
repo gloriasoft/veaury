@@ -93,7 +93,7 @@ module.exports = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^veaury$": "<rootDir>/src/index.js",
+    ...(process.env.TEST_REMOTE? {}: {"^veaury$": "<rootDir>/src/index.js"}),
     "^react$": "<rootDir>/tests/node_modules/react",
     "^react-dom$": "<rootDir>/tests/node_modules/react-dom",
     "^vue$": "<rootDir>/tests/node_modules/vue",
