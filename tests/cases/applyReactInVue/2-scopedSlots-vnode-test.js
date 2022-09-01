@@ -8,8 +8,10 @@ test('renders a Vue component in React', (done) => {
   setTimeout(() => {
       const linkElement = screen.getByText(/vnode-/);
       expect(linkElement).toBeInTheDocument()
-      const linkElement1 = screen.getByText(/111-attr1/);
+      const linkElement1 = screen.getByText(/scopedSlotA-attr1/);
       expect(linkElement1).toBeInTheDocument()
+      const linkElement2 = screen.getByText(/slotA/);
+      expect(linkElement2).toBeInTheDocument()
       done()
   }, 0);
 });

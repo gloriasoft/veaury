@@ -1,9 +1,14 @@
 <template>
   <ReactComponent :vnodeAttr="vnodeAttr">
     <template
-      #body="{attr1}"
+      #scopedSlotA="{attr1}"
     >
-      111-{{attr1}}
+      scopedSlotA-{{attr1}}
+    </template>
+    <template
+      #slotA
+    >
+      slotA
     </template>
   </ReactComponent>
 </template>
@@ -14,7 +19,8 @@ import {createVNode} from "vue"
 import { applyReactInVue, getReactNode } from 'veaury'
 function ReactComponent(props) {
   return <div onClick={props.onClick}>
-    {props.vnodeAttr}{props.body({attr1: "attr1"})}
+    {props.vnodeAttr}{props.scopedSlotA({attr1: "attr1"})}
+    {props.slotA()}
   </div>
 }
 ReactComponent.defaultProps = {
