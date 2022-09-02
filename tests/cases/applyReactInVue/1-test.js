@@ -2,12 +2,14 @@ import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/vue';
 import Basic from './Basic';
 import LazyReactInVue from './LazyReactInVue'
-// function Basic() {
-//   return h('div', null, 121212)
-// }
+
 test('renders a React component In Vue', async () => {
   render(Basic);
-  const linkElement = await screen.findByText(/React in Vue/);
+  let linkElement = await screen.findByText(/React in Vue/);
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/test ref/);
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText((content, element) => content.match(/test pure style/) && element.style.color === 'red' && element.classList.contains('AAA'));
   expect(linkElement).toBeInTheDocument();
 });
 
@@ -18,3 +20,8 @@ test('test lazyReactInVue', async () => {
   linkElement = await screen.findByText(/test lazyPureReactInVue/);
   expect(linkElement).toBeInTheDocument();
 })
+
+
+// test('test createCrossingProviderForReactInVue', async () => {
+//
+// })
