@@ -1,8 +1,11 @@
 import {applyPureVueInReact} from 'veaury'
 import BasicVue from './Basic'
+import BasicVuePure from './BasicPure'
 import { ReactRouterProviderForVue } from './reactRouterCrossingProvider'
+import { ReactRouterProviderForVuePure } from './reactRouterCrossingProviderPure'
 
 const Basic = applyPureVueInReact(BasicVue)
+const BasicPure = applyPureVueInReact(BasicVuePure)
 export default function () {
 
     return <div>
@@ -11,5 +14,8 @@ export default function () {
         <ReactRouterProviderForVue>
             <Basic/>
         </ReactRouterProviderForVue>
+        <ReactRouterProviderForVuePure>
+            <BasicPure/>
+        </ReactRouterProviderForVuePure>
     </div>
 }

@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { createCrossingProviderForPureVueInReact } from 'veaury'
 
 // Execute 'useReactRouterForVue' in the setup function of the vue component to get the object returned by the incoming function
-const [useReactRouterForVue, ReactRouterProviderForVue] = createCrossingProviderForPureVueInReact(
+const [useReactRouterForVue, ReactRouterProviderForVuePure] = createCrossingProviderForPureVueInReact(
   // This incoming function can execute react hooks
   function() {
     return {
@@ -18,5 +18,5 @@ const [useReactRouterForVue, ReactRouterProviderForVue] = createCrossingProvider
 
 export {
   useReactRouterForVue,
-  ReactRouterProviderForVue
+  ReactRouterProviderForVuePure
 }

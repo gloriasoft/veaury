@@ -1,12 +1,12 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    the path info from 'react-router': <span style="font-weight: bold" data-testid="pathnameSearch">{{pathname + search}}</span><br/><br/>
-    <button @click="changeQuery" data-testid="changeQuery">change query</button>
+    the path info from 'react-router': <span style="font-weight: bold" data-testid="pathnameSearchPure">{{pathname + search}}</span><br/><br/>
+    <button @click="changeQuery" data-testid="changeQueryPure">change query</button>
   </div>
 </template>
 <script>
-import { useReactRouterForVue } from './reactRouterCrossingProvider'
+import { useReactRouterForVue } from './reactRouterCrossingProviderPure'
 import React from 'react'
 
 export default {
