@@ -8,18 +8,25 @@
   <ProviderInVue>
     <Basic/>
   </ProviderInVue>
+  <ProviderInVuePure>
+    <BasicPure/>
+  </ProviderInVuePure>
 </template>
 
 <script>
 import { applyPureReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Basic"
+import ReactBasicPure from "./react_app/BasicPure"
 import {ProviderInVue} from "./vueRouterAndVuexCrossingProvider";
+import {ProviderInVuePure} from "./vueRouterAndVuexCrossingProviderPure";
 
 export default {
   components: {
     ProviderInVue,
+    ProviderInVuePure,
     Basic: applyPureReactInVue(ReactBasic),
+    BasicPure: applyPureReactInVue(ReactBasicPure)
   },
   mounted() {
     // console.log(11111, this.$refs.aaa)

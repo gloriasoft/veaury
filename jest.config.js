@@ -99,6 +99,12 @@ module.exports = {
     "^vue$": "<rootDir>/tests/node_modules/vue",
     "^@vue/test-utils$": "<rootDir>/tests/node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js",
     "^react-dom/client$": "<rootDir>/tests/node_modules/react-dom/client.js",
+    "^dev-project-vue3$": "<rootDir>/dev-project-vue3",
+    "^dev-project-react$": "<rootDir>/dev-project-react",
+    "^vuex$": "<rootDir>/tests/node_modules/vuex",
+    "^vue-router$": "<rootDir>/tests/node_modules/vue-router",
+    "^pinia$": "<rootDir>/tests/node_modules/pinia",
+    "^react-router-dom$": "<rootDir>/tests/node_modules/react-router-dom"
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -165,7 +171,8 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
-    '<rootDir>/tests/**/*-test.[jt]s?(x)'
+    '<rootDir>/tests/**/*-test.[jt]s?(x)',
+    // '<rootDir>/tests/**/1-createCrossingProviderForReactInVue-test.js'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped

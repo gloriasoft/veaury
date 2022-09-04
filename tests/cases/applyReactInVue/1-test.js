@@ -20,8 +20,3 @@ test('test lazyReactInVue', async () => {
   linkElement = await screen.findByText(/test lazyPureReactInVue/);
   expect(linkElement).toBeInTheDocument();
 })
-
-
-// test('test createCrossingProviderForReactInVue', async () => {
-//
-// })

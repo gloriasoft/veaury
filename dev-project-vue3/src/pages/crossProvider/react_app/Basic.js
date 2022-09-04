@@ -24,9 +24,9 @@ export default function (props) {
   return (<div style={style.current}>
     This is the React Component<br/>
     <span>
-      the path info from 'vue-router': <span style={{fontWeight: 'bold'}}>{vueRoute.fullPath}</span><br/>
-      the count from 'vuex': <span style={{fontWeight: 'bold'}}>{vuex.state.count}</span>
+      the path info from 'vue-router': <span style={{fontWeight: 'bold'}} data-testid="fullPath">{vueRoute.fullPath}</span><br/>
+      the count from 'vuex': <span style={{fontWeight: 'bold'}} data-testid="stateCount">{vuex.state.count}</span>
     </span><br/>
-    <button onClick={changeQuery}>change query</button> <button onClick={incrementCount}>increment count</button>
+    <button onClick={changeQuery} data-testid="change query">change query</button> <button onClick={incrementCount} data-testid="increment count">increment count</button>
   </div>)
 }
