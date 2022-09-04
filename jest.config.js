@@ -93,7 +93,7 @@ module.exports = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    ...(process.env.TEST_REMOTE? {}: {"^veaury$": "<rootDir>/src/index.js"}),
+    "^veaury$": process.env.TEST_REMOTE? "<rootDir>/tests/node_modules/veaury": "<rootDir>/src/index.js",
     "^react$": "<rootDir>/tests/node_modules/react",
     "^react-dom$": "<rootDir>/tests/node_modules/react-dom",
     "^vue$": "<rootDir>/tests/node_modules/vue",
@@ -172,7 +172,7 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/tests/**/*-test.[jt]s?(x)',
-    // '<rootDir>/tests/**/1-createCrossingProviderForReactInVue-test.js'
+    // '<rootDir>/tests/cases/crossingProviderInReact/1-test.js'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -192,7 +192,8 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   transform: {
     "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "babel-jest",
-    "^.+\\.(vue)$": "@vue/vue3-jest"
+    "^.+\\.(vue)$": "@vue/vue3-jest",
+    "^.+\\.css$": "<rootDir>/tests/cssTransform.js",
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
