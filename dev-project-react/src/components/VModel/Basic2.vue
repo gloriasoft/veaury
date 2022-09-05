@@ -1,8 +1,8 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    <span>received zooValue's value: {{$attrs.zoo}}</span><br/>
-    <span>received modelValue's value: <span data-testid="vModelShow2">{{$attrs.modelValue}}</span></span><br/>
+    <span>received zooValue's value: <span :data-testid="`zooValueShow2_${$attrs.testId}`">{{$attrs.zoo}}</span></span><br/>
+    <span>received modelValue's value: <span :data-testid="`modelValueShow2_${$attrs.testId}`">{{$attrs.modelValue}}</span></span><br/>
     <slot/>
     <button @click="changeModel" :data-testid="`changeModel2_${$attrs.testId}`">change model</button>
   </div>

@@ -11,9 +11,9 @@ export default function () {
     const [foo, setFoo] = useState(Math.random())
     const [bar, setBar] = useState(Math.random())
     const [zoo, setZoo] = useState(Math.random())
-    const [type0, setType0] = useState(typeof zoo)
-    const [type1, setType1] = useState(typeof zoo)
-    const [type2, setType2] = useState(typeof zoo)
+    const [type0, setType0] = useState('')
+    const [type1, setType1] = useState('')
+    const [type2, setType2] = useState('')
 
     return <div>
         <h3>Pass v-model to Vue Components.</h3>
@@ -25,11 +25,11 @@ export default function () {
                 bar's value: {bar}
             </div>
         </Basic>
-        typeof received v-model zoo: <span data-testid="type0">{type0}</span>
+        typeof received v-model zoo: <span data-testid="modelType0">{type0}</span>
         <Basic2 v-model={[zoo, (val) => {setType0(typeof val); setZoo(val)}, 'zoo']} testId="0"/>
-        typeof received v-model zoo: <span data-testid="type1">{type1}</span>
+        typeof received v-model zoo: <span data-testid="modelType1">{type1}</span>
         <Basic2 v-model={[zoo, (val) => {setType1(typeof val); setZoo(val)}, 'zoo', ['number']]}  testId="1"/>
-        typeof received v-model value: <span data-testid="type2">{type2}</span>
+        typeof received v-model value: <span data-testid="modelType2">{type2}</span>
         <Basic2 v-model={[zoo, (val) => {setType2(typeof val); setZoo(val)}, ['number']]} testId="2"/>
         <Basic1 v-models={{
             modelValue: [zoo, setZoo],

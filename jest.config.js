@@ -172,7 +172,7 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/tests/**/*-test.[jt]s?(x)',
-    // '<rootDir>/tests/cases/useInjectPropsFromWrapperInReact/1-test.js'
+    // '<rootDir>/tests/cases/vModelInReact/1-test.js'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped

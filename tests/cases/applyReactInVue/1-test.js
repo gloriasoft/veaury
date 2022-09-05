@@ -19,4 +19,8 @@ test('test lazyReactInVue', async () => {
   expect(linkElement).toBeInTheDocument();
   linkElement = await screen.findByText(/test lazyPureReactInVue/);
   expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/lazyReactInVue loader options/);
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/lazyPureReactInVue loader options/);
+  expect(linkElement).toBeInTheDocument();
 })
