@@ -4,3 +4,5 @@ import React from 'react'
 global.Vue = Vue
 global.VueCompilerDOM = VueCompilerDOM
 global.React = React
+jest.spyOn(console, 'warn').mockImplementation(() => {});
+jest.spyOn(console, 'log').mockImplementation(() => {});
