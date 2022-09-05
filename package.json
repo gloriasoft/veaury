@@ -63,6 +63,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
+    "@vue/babel-plugin-jsx": "^1.1.1",
     "@vue/compiler-sfc": "^3.2.38",
     "@vue/vue3-jest": "^29.0.0",
     "babel-jest": "^29.0.1",
