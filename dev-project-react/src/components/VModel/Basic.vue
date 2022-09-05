@@ -1,28 +1,30 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    received modelValue's value: {{$attrs.modelValue}}<br/>
+    <span>received modelValue's value: <span data-testid="vModelShow">{{$attrs.modelValue}}</span></span><br/>
     received bar's value: {{$attrs.bar}}
     <slot/>
+    <button @click="changeModel" data-testid="changeModel">change model</button>
   </div>
 </template>
-<script>
+<script setup>
 import {onMounted, getCurrentInstance, onUnmounted} from 'vue'
-export default {
-  setup() {
-    let timer
-    const instance = getCurrentInstance()
-    onMounted(() => {
-      timer = setInterval(() => {
-        instance.emit('update:modelValue', Math.random())
-        instance.emit('update:bar', Math.random())
-      }, 1000)
-    })
-    onUnmounted(() => {
-      clearInterval(timer)
-    })
-  }
+let timer
+const instance = getCurrentInstance()
+function changeModel() {
+  instance.emit('update:modelValue', Math.random())
+  instance.emit('update:bar', Math.random())
 }
+
+// onMounted(() => {
+//   timer = setInterval(() => {
+//     instance.emit('update:modelValue', Math.random())
+//     instance.emit('update:bar', Math.random())
+//   }, 1000)
+// })
+// onUnmounted(() => {
+//   clearInterval(timer)
+// })
 </script>
 <style scoped>
 

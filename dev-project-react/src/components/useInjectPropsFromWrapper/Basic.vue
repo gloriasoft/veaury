@@ -1,8 +1,8 @@
 <template>
   <div class="vue-component">
     <h3>This is the Vue Component.</h3>
-    the path info from 'react-router': <span style="font-weight: bold">{{fullPath}}</span><br/><br/>
-    <button @click="changeQuery">change query</button>
+    the path info from 'react-router': <span style="font-weight: bold" data-testid="fullPath">{{fullPath}}</span><br/><br/>
+    <button @click="changeQuery" data-testid="changeQuery">change query</button>
   </div>
 </template>
 <script>
