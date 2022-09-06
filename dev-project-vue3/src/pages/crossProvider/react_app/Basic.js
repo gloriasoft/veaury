@@ -27,6 +27,6 @@ export default function (props) {
       the path info from 'vue-router': <span style={{fontWeight: 'bold'}} data-testid="fullPath">{vueRoute.fullPath}</span><br/>
       the count from 'vuex': <span style={{fontWeight: 'bold'}} data-testid="stateCount">{vuex.state.count}</span>
     </span><br/>
-    <button onClick={changeQuery} data-testid="change query">change query</button> <button onClick={incrementCount} data-testid="increment count">increment count</button>
+    <button onClick={changeQuery} data-testid="changeQuery">change query</button> <button onClick={incrementCount} data-testid="increment count">increment count</button>
   </div>)
 }

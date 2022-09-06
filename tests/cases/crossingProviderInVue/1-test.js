@@ -11,7 +11,7 @@ function getGlobalProperties(targetOject) {
 }
 test('test crossingProvider', async () => {
   const globalProperties = {}
-  const { findByText, getByTestId } = render(App, {
+  const { findByText, getByTestId, findByTestId } = render(App, {
     global: {
       plugins: [
         routerPlugin,
@@ -23,10 +23,9 @@ test('test crossingProvider', async () => {
   await globalProperties.$router.push({
     name: 'crossingProvider'
   })
-  const linkElement = await findByText(/\/crossingProvider/);
-  expect(linkElement).toBeInTheDocument();
+  expect(await findByTestId('fullPath')).toHaveTextContent(/\/crossingProvider/);
 
-  await fireEvent.click(await findByText('change query'))
+  await fireEvent.click(await findByTestId('changeQuery'))
   // await waitFor(async () => await findByText(/a=/))
   await waitFor(() => {
     const targetFullPath = document.location.hash.replace('#', '')
