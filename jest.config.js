@@ -75,7 +75,7 @@ module.exports = {
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [
-  //   "node_modules"
+  //   "node_modules",
   // ],
 
   // An array of file extensions your modules use
@@ -104,7 +104,8 @@ module.exports = {
     "^vuex$": "<rootDir>/tests/node_modules/vuex",
     "^vue-router$": "<rootDir>/tests/node_modules/vue-router",
     "^pinia$": "<rootDir>/tests/node_modules/pinia",
-    "^react-router-dom$": "<rootDir>/tests/node_modules/react-router-dom"
+    "^react-router-dom$": "<rootDir>/tests/node_modules/react-router-dom",
+    "^src\/(.*)$": "<rootDir>/src\/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -172,7 +173,7 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/tests/**/*-test.[jt]s?(x)',
-    // '<rootDir>/tests/cases/vModelInReact/1-test.js'
+    // '<rootDir>/tests/cases/pureReactInVue/1-test.js'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped

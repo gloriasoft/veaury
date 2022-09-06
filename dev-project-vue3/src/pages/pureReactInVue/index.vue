@@ -10,7 +10,7 @@
     The divs in the children will no longer be placed in an additional container, so the divs will be directly affected by the flex style.
   </h4>
   <AAWithPure>
-    <div class="flex-sub">A</div>
+    <div class="flex-sub" v-my data-testid="directiveTest">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
   </AAWithPure>
@@ -34,18 +34,26 @@
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
     <BB>
-      <div class="flex-sub flex-sub-in-bb">E</div>
+      <div class="flex-sub flex-sub-in-bb" ref="REF">E</div>
       <div class="flex-sub flex-sub-in-bb">F</div>
-      <div class="flex-sub flex-sub-in-bb" style="width:180px">{{random}}</div>
+      <div class="flex-sub flex-sub-in-bb" style="width:180px" data-testid="random">{{random}}</div>
     </BB>
   </AAWithPure>
 </template>
 
 <script setup>
 import { applyPureReactInVue, applyReactInVue, RenderReactNode } from 'veaury'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, getCurrentInstance } from 'vue'
 import AAReact from './react_app/AA'
 import BBReact from './react_app/BB'
+
+const instance = getCurrentInstance()
+// Custom directive
+const vMy = {
+  mounted(el) {
+    el.style.color = 'red'
+  }
+}
 
 // Children and slots in the component will be rendered completely as pure ReactNode
 const AAWithPure = applyPureReactInVue(AAReact)

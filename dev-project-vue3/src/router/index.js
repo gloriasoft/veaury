@@ -1,5 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-
+import PureReactInVue from '../pages/pureReactInVue/index'
+// For unit testing, because jest does not generate scopeId when processing vue files.
+if (!PureReactInVue.__scopeId) {
+    PureReactInVue.__scopeId = 'data-v-5fa1ff81'
+}
 export default createRouter({
     history: createWebHashHistory(),
     routes: [
@@ -53,7 +57,8 @@ export default createRouter({
         {
             name: 'pureReactInVue',
             path: '/pureReactInVue',
-            component: () => import('../pages/pureReactInVue')
+            component: PureReactInVue
+            // component: () => import('../pages/pureReactInVue')
         },
         {
             name: 'introduce',
