@@ -2,6 +2,7 @@ import {h} from 'vue';
 import getChildInfo from "./getChildInfo";
 import takeReactDomInVue from "./takeReactDomInVue";
 import resolveRef from "./resolveRef";
+import {VueContainer} from "../applyVueInReact";
 
 export default function getDistinguishReactOrVue({vueComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, reactInVueCall) {
@@ -10,7 +11,7 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
     let newChildren = []
     children.forEach((child, topIndex) => {
       // if (!child || child.type === Comment) return
-      if (!child.type?.originVueComponent) {
+      if (!child.type?.originVueComponent && child.type !== VueContainer) {
         if (child.__v_isVNode || typeof child === 'string' || typeof child === 'number') {
           newChildren.push(child)
           return
@@ -23,6 +24,16 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
       }
       // vue component in react
       let VueComponent = child.type.originVueComponent
+
+      if (child.type === VueContainer) {
+        if (child.props.component) {
+          VueComponent = child.props.component
+          delete child.props.component
+        } else {
+          newChildren.push(child.props.node)
+          return
+        }
+      }
 
       let newChild
       if (Component !== 'all' && !(Component instanceof Array)) {
@@ -41,7 +52,6 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
 
         newChild = h(VueComponent, {...props}, slots)
       } else {
-
         newChild = takeReactDomInVue(child, domTags, reactInVueCall, division, defaultSlotsFormatter)
       }
       newChildren.push(newChild)
