@@ -34,7 +34,7 @@ export function formatClass(val) {
         return val.split(/\s+/)
     }
     if (typeof val === 'object') {
-        return Object.keys(val).map((v) => (val[v] ? val[v]: ''))
+        return Object.keys(val).filter((v)=>!!val[v])
     }
     return []
 }
