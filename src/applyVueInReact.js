@@ -6,6 +6,7 @@ import REACT_ALL_HANDLERS from './reactAllHandles'
 import lookupVueWrapperRef from "./lookupVueWrapperRef"
 import parseVModel from "./utils/parseVModel"
 import RandomId from './utils/getRandomId'
+import RenderReactNode from "./pureReactInVue/RenderReactNode";
 
 const optionsName = 'veaury-options'
 
@@ -235,15 +236,12 @@ class VueComponentLoader extends React.Component {
       },
       methods: {
         reactInVueCall(children, customOptions = {}, division) {
-          function createReactNode(child, props) {
-            return createElement(applyReactInVue(() => child, { ...customOptions, isSlots: true, wrapInstance: VueContainerInstance }))
-          }
           if (division) {
             if (children && children[0]) {
-              return children.map((child, index) => createElement(createReactNode(child, { key: child?.data?.key || index })))
+              return children.map((child, index) => createElement(RenderReactNode, { node: child, key: child?.data?.key || index }))
             }
           }
-          return createReactNode(children)
+          return createElement(RenderReactNode, {node: children})
         },
         getScopedSlots (createElement, $scopedSlots) {
           if (!this.getScopedSlots.__scopeSlots) {
@@ -269,7 +267,8 @@ class VueComponentLoader extends React.Component {
                   if (defaultSlotsFormatter && slotFromReact) {
                     newSlot = [defaultSlotsFormatter(slotFromReact, this.reactInVueCall)]
                   } else {
-                    newSlot = this.reactInVueCall(scopedSlot.apply(this, args))
+                    // newSlot = this.reactInVueCall(scopedSlot.apply(this, args))
+                    newSlot = createElement(applyReactInVue(() => scopedSlot.apply(this, args), { ...options, isSlots: true, wrapInstance: VueContainerInstance }))
                   }
                   this.getScopedSlots.__scopeSlots[i] = newSlot
                 } else {
