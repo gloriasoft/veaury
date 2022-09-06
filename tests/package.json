@@ -19,7 +19,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
-    "veaury": "^2.3.3",
+    "veaury": "^2.3.4-beta.0",
     "vue": "^3.2.38",
     "vue-router": "^4.1.5",
     "vuex": "^4.0.2"
