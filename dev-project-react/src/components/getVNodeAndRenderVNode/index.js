@@ -11,7 +11,7 @@ export default function () {
       return <>
         <h4>Render scoped slots</h4>
         {/* There are two ways to consume VNode in reactNode. */}
-        <div style={{background: 'green', color: 'white'}}>
+        <div style={{background: 'green', color: 'white'}} data-testid="VueContainerTest">
           <span>rendered with VueContainer</span>
           {/* The first way is to use VueContainer */}
           <VueContainer node={VNode}/>

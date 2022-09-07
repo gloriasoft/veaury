@@ -9,7 +9,22 @@
     Pure mode<br/>
     The divs in the children will no longer be placed in an additional container, so the divs will be directly affected by the flex style.
   </h4>
+  <CC>
+    <template v-slot:renderProps1="_">
+      <div data-testid="ccRenderProps1">PPPPP</div>
+    </template>
+    <template v-slot:node:reactNode>
+      <div data-testid="ccReactNode">RRRRR</div>
+    </template>
+    <template v-slot:node:default>
+      <div data-testid="ccDefault">YYYYY</div>
+    </template>
+  </CC>
   <AAWithPure>
+    <RenderReactNode :node="ReactNode"/>
+    <VueCom1>
+      <div>12121212</div>
+    </VueCom1>
     <div class="flex-sub" v-my data-testid="directiveTest">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
@@ -20,6 +35,7 @@
     The divs in the children will be placed in a container styled 'all:unset', so the flex setting in the AA component has no effect on the divs.
   </h4>
   <AAWithNormal>
+    <RenderReactNode :node="ReactNode"/>
     <div class="flex-sub">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
@@ -34,6 +50,7 @@
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
     <BB>
+      <RenderReactNode :node="ReactNode"/>
       <div class="flex-sub flex-sub-in-bb" ref="REF">E</div>
       <div class="flex-sub flex-sub-in-bb">F</div>
       <div class="flex-sub flex-sub-in-bb" style="width:180px" data-testid="random">{{random}}</div>
@@ -43,10 +60,13 @@
 
 <script setup>
 import { applyPureReactInVue, applyReactInVue, RenderReactNode } from 'veaury'
-import { ref, onMounted, getCurrentInstance } from 'vue'
+import { ref, onMounted, getCurrentInstance, h } from 'vue'
+import { createElement } from 'react'
 import AAReact from './react_app/AA'
 import BBReact from './react_app/BB'
+import CCReact from './react_app/CC'
 
+const ReactNode = createElement('div', null, 'ReactNode')
 const instance = getCurrentInstance()
 // Custom directive
 const vMy = {
@@ -55,9 +75,14 @@ const vMy = {
   }
 }
 
+// Custom Vue component
+function VueCom1(props, context) {
+  return h('div', context.attrs, context.slots)
+}
 // Children and slots in the component will be rendered completely as pure ReactNode
 const AAWithPure = applyPureReactInVue(AAReact)
 const AAWithNormal = applyReactInVue(AAReact)
+const CC = applyPureReactInVue(CCReact)
 const BB = applyReactInVue(BBReact)
 const random = ref(Math.random())
 onMounted(() => {

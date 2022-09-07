@@ -27,4 +27,7 @@ test('Test pureReactInVue', async () => {
   expect(await findByText(/applyPureReactInVue/)).toBeInTheDocument();
   expect((await findByTestId('directiveTest')).style.color).toBe('red')
   expect(await findByTestId('random')).toBeVisible()
+  expect(await findByTestId('ccRenderProps1')).toHaveTextContent('PPPPP')
+  expect(await findByTestId('ccReactNode')).toHaveTextContent('RRRRR')
+  expect(await findByTestId('ccDefault')).toHaveTextContent('YYYYY')
 })
