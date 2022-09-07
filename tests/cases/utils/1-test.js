@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import couldBeClass from "src/utils/couldBeClass";
 import { formatClass, formatStyle } from "src/utils/styleClassTransformer";
 describe('Test utils', () => {
