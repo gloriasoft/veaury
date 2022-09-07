@@ -158,9 +158,9 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           const vueSlot = props[i]
           // TODO: defaultSlotsFormatter
           // Custom slot handler
-          if (options.defaultSlotsFormatter) {
+          if (options.defaultSlotsFormatter && props[i].__trueChildren) {
             props[i].__top__ = this.__veauryVueWrapperRef__
-            props[i] = options.defaultSlotsFormatter(props[i], this.vueInReactCall, hashList)
+            props[i] = options.defaultSlotsFormatter(props[i].__trueChildren, this.vueInReactCall, hashList)
             if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
               props[i] = [...props[i]]
             } else if (typeof props[i] === "object") {
@@ -230,7 +230,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       // Use a predicate function to determine the value of children
       getChildren()
     }
-    $slots.default = children
     const refInfo = {}
     refInfo.ref = this.setRef
     if (options.isSlots) {
@@ -241,7 +240,8 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     if (options.defaultPropsFormatter) {
       finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
     }
-    const newProps = { ...finalProps }
+    const newProps = { ...finalProps, ...$slots, ...$scopedSlots }
+
     // class components and object components and components that can pass catchVueRef
     if ((Object.getPrototypeOf(Component) !== Function.prototype && !(typeof Component === "object" && !Component.render)) || applyReact.catchVueRefs()) {
       // If it is a function component (indicates that the catchVueRef is passed), remove the ref
