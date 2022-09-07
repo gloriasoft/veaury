@@ -20,7 +20,7 @@ module.exports = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: ['src/**/*.js', 'babel/ReactPreset.js'],
+  collectCoverageFrom: ['src/**/*.js', 'babel/ReactPreset.js', 'vite/index.js'],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -106,8 +106,10 @@ module.exports = {
     "^pinia$": "<rootDir>/tests/node_modules/pinia",
     "^react-router-dom$": "<rootDir>/tests/node_modules/react-router-dom",
     "^src\/(.*)$": "<rootDir>/src\/$1",
-    "^babel\/(.*)$": "<rootDir>/babel\/$1",
+    "^root\/(.*)$": "<rootDir>\/$1",
     "^@vue\\/cli-plugin-babel\\/preset$": "<rootDir>/tests/mock/empty.js",
+    "^@vitejs\\/(.*)$": "<rootDir>/tests/node_modules/@vitejs\/$1",
+    // "^rollup$": "<rootDir>/tests/node_modules/rollup/dist/es/rollup.js",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -175,7 +177,7 @@ module.exports = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/tests/**/*-test.[jt]s?(x)',
-    // '<rootDir>/tests/cases/babel/1-test.js'
+    // '<rootDir>/tests/cases/vitePlugin/1-test.js'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped

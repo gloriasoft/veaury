@@ -1,4 +1,4 @@
-import preset from "babel/ReactPreset";
+import preset from "root/babel/ReactPreset";
 
 describe('Test babel/ReactPreset.js', () => {
   test('Test default options', () => {
