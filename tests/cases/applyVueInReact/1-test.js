@@ -3,6 +3,7 @@ import { render, screen, act } from '@testing-library/react';
 import React from 'react';
 import Basic from './Basic';
 import {lazyVueInReact, lazyPureVueInReact} from 'veaury'
+import {transferSlots} from "src/applyVueInReact";
 
 test('renders a Vue component in React', () => {
   render(<Basic/>);
@@ -25,4 +26,20 @@ test('test lazyVueInReact', async () => {
   expect(linkElement).toBeInTheDocument();
   linkElement = await screen.findByText(/test lazyPureVueInReact/);
   expect(linkElement).toBeInTheDocument();
+})
+
+describe('Test transferSlots', () => {
+  test('Without passing in $slots', () => {
+    expect(transferSlots()).toBe(undefined)
+    let slot = {
+      a: null
+    }
+    expect(transferSlots(slot) === slot).toBe(true)
+    slot = {
+      a: {
+        vueFunction: () => {}
+      }
+    }
+    expect(transferSlots(slot) === slot).toBe(true)
+  })
 })

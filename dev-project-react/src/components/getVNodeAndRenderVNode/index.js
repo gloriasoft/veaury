@@ -1,5 +1,6 @@
 import { applyPureVueInReact, VueContainer, getVNode, getReactNode } from 'veaury'
 import { useRef } from 'react'
+import { h } from 'vue'
 import AAVue from './AA.vue'
 const AA = applyPureVueInReact(AAVue)
 
@@ -31,8 +32,17 @@ export default function () {
       <div>This is Bar's VNode</div>
     </div>
   ))
+  const VNode = h('div', null, 'simple vnode')
   return <>
     <h2>This example shows how to transform and render directly in reactNode and VNode.</h2>
     <AA v-slots={vSlots.current} VNodeBar={VNodeBar.current}/>
+    {/* Just for testing */}
+    <VueContainer node={VNode}/>
+    {/* Just for testing */}
+    <VueContainer/>
+    {/* Just for testing */}
+    <VueContainer node={1212}/>
+    {/* Just for testing */}
+    <VueContainer node={() => 4444}/>
   </>
 }

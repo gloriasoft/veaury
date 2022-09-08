@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 module.exports = function(context, options = {}) {
   let presets1 = []
   let presets2 = []

@@ -19,11 +19,16 @@ describe('Test babel/ReactPreset.js', () => {
     expect(result.length === 4).toBe(true)
   })
   test('Test type custom', () => {
-    const result = vitePlugin({
+    let result = vitePlugin({
       type: 'custom',
       // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
       vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
       vueJsxExclude: []
+    })
+    expect(result.length === 4).toBe(true)
+
+    result = vitePlugin({
+      type: 'custom'
     })
     expect(result.length === 4).toBe(true)
   })
