@@ -25,7 +25,7 @@
     <VueCom1>
       <div>12121212</div>
     </VueCom1>
-    <div class="flex-sub" v-my data-testid="directiveTest">A</div>
+    <div class="flex-sub" v-my v-bar data-testid="directiveTest">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
   </AAWithPure>
@@ -72,8 +72,21 @@ const instance = getCurrentInstance()
 const vMy = {
   mounted(el) {
     el.style.color = 'red'
+  },
+  unmounted(el) {
+    el.style.color = 'unset'
   }
 }
+
+const vBar = {
+  mounted(el) {
+
+  },
+  unmounted(el) {
+
+  }
+}
+
 
 // Custom Vue component
 function VueCom1(props, context) {
