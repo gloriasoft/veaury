@@ -1,5 +1,11 @@
+/**
+ * @jest-environment node
+ */
+
 import couldBeClass from "src/utils/couldBeClass";
 import { formatClass, formatStyle } from "src/utils/styleClassTransformer";
+import parseVModel from "src/utils/parseVModel";
+
 describe('Test utils', () => {
 
   test('Test couldBeClass.js', () => {
@@ -11,8 +17,15 @@ describe('Test utils', () => {
     expect(couldBeClass(function () {})).toBe(false)
     expect(couldBeClass(() => {})).toBe(false)
     expect(couldBeClass(async function () {})).toBe(false)
-
     expect(couldBeClass(class{})).toBe(true)
+
+    let fun = () => {}
+    fun.prototype = undefined
+    expect(couldBeClass(fun)).toBe(false)
+
+    fun = function() {}
+    fun.prototype.constructor = null
+    expect(couldBeClass(fun)).toBe(false)
   })
 
   test('Test styleClassTransformer.js', () => {
@@ -28,4 +41,7 @@ describe('Test utils', () => {
     expect(JSON.stringify(formatStyle(1212))).toBe('{}')
   })
 
+  test('Test parseVModel', () => {
+    expect().toBe()
+  })
 })
