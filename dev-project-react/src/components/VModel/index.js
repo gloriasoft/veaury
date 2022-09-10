@@ -18,7 +18,11 @@ export default function () {
     return <div>
         <h3>Pass v-model to Vue Components.</h3>
         <h4>The usage of 'v-model' is similar to the usage of 'v-model' of vue's jsx.</h4>
-        <Basic v-model={[foo, setFoo]} v-model-bar={[bar, setBar]}>
+        <Basic
+          onUpdate-bar={(v) => {console.log(`bar update to ${v}`)}}
+          v-model={[foo, setFoo]} v-model-bar={[bar, setBar]}
+          onUpdate-modelValue={(v) => {console.log(`modelValue update to ${v}`)}}
+        >
             <div className="slot">
                 This is the Vue component Slot from React<br/>
                 foo's value: <span data-testid="reactModelShow">{foo}</span><br/>
