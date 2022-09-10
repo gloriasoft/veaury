@@ -21,7 +21,15 @@ function setVModel(VModels, originValue, modelKey, errorFrom = 'v-model') {
         } else if (modelMix[2] instanceof Array) {
             createModifiers(VModels, modelKey, modelMix[2])
         }
-        VModels['onUpdate:' + modelKey] = setter
+        const onUpdate = VModels['onUpdate:' + modelKey]
+        if (typeof onUpdate === 'function') {
+            VModels['onUpdate:' + modelKey] = (...args) => {
+                onUpdate.apply(this, args)
+                setter.apply(this, args)
+            }
+        } else {
+            VModels['onUpdate:' + modelKey] = setter
+        }
         VModels[modelKey] = modelMix[0]
     } else {
         throw Error(`[error:veaury] Parameter type error from '${errorFrom}', a single v-model is an array, such as [val, setter, argumentKey, modifiers] or [val, setter, modifiers]`)
@@ -38,7 +46,15 @@ export default function parseVModel (props) {
         let matcher = key.match(/^onUpdate-([^-]+)/)
         if (matcher) {
             delete newProps[key]
-            newProps[`onUpdate:${matcher[1]}`] = props[key]
+            const onUpdate = VModels[`onUpdate:${matcher[1]}`]
+            if (typeof onUpdate === 'function') {
+                VModels[`onUpdate:${matcher[1]}`] = (...args) => {
+                    onUpdate.apply(this, args)
+                    props[key].apply(this, args)
+                }
+            } else {
+                VModels[`onUpdate:${matcher[1]}`] = props[key]
+            }
             return
         }
 
