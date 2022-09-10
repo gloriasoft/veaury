@@ -41,7 +41,21 @@ describe('Test utils', () => {
     expect(JSON.stringify(formatStyle(1212))).toBe('{}')
   })
 
-  test('Test parseVModel', () => {
-    expect().toBe()
+  test('Test parseVModel\'s exception', () => {
+    expect(() => {
+      parseVModel({
+        'v-model': [1, null]
+      })
+    }).toThrow()
+    expect(() => {
+      parseVModel({
+        'v-model': null
+      })
+    }).toThrow()
+    expect(() => {
+      parseVModel({
+        'v-models': 1
+      })
+    }).toThrow()
   })
 })
