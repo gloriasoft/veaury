@@ -4,6 +4,7 @@ import routerPlugin from 'dev-project-vue3/src/router'
 import storePlugin from 'dev-project-vue3/src/store'
 import App from 'dev-project-vue3/src/App'
 import addScopeId from "src/pureReactInVue/addScopeId";
+import resolveRef from "src/pureReactInVue/resolveRef";
 
 function getGlobalProperties(targetOject) {
   return function(app) {
@@ -40,3 +41,8 @@ test('Test hashList', () => {
   expect(addScopeId(child, [])).toBe(child)
   expect(addScopeId(child, ['aaaa']).props.aaaa).toBe('')
 })
+
+// Test('Test resolveRef', () => {
+//   const child = {}
+//   expect().toBe()
+// })

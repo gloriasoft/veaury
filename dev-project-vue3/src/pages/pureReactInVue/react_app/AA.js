@@ -2,7 +2,7 @@ import React from 'react'
 
 const containerStyle = {
   background: '#91e7fc',
-  width: 500,
+  width: 800,
   margin: 'auto',
   padding: 10,
   display: 'flex',

@@ -51,7 +51,7 @@
     <div class="flex-sub">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
-    <BB style="color: red" class="test">
+    <BB style="color: red" class="test" :reactNode="VNodeToReactNode">
       <template v-slot:renderProps="_">
         renderProps for BB
       </template>
@@ -59,13 +59,16 @@
       <div class="flex-sub flex-sub-in-bb" ref="REF">E</div>
       <div class="flex-sub flex-sub-in-bb">F</div>
       <div class="flex-sub flex-sub-in-bb" style="width:180px" data-testid="random">{{random}}</div>
+      <!--  Test comment node    -->
+      <Comment/>
+      <div></div>
     </BB>
   </AAWithPure>
 </template>
 
 <script setup>
-import { applyPureReactInVue, applyReactInVue, RenderReactNode } from 'veaury'
-import { ref, onMounted, getCurrentInstance, h } from 'vue'
+import { applyPureReactInVue, applyReactInVue, RenderReactNode, getReactNode } from 'veaury'
+import { ref, onMounted, getCurrentInstance, h, Comment } from 'vue'
 import { createElement } from 'react'
 import AAReact from './react_app/AA'
 import BBReact from './react_app/BB'
@@ -73,6 +76,7 @@ import CCReact from './react_app/CC'
 
 const ReactNode = createElement('div', null, 'ReactNode')
 const instance = getCurrentInstance()
+
 // Custom directive
 const vMy = {
   mounted(el) {
@@ -103,6 +107,9 @@ const AAWithNormal = applyReactInVue(AAReact)
 const CC = applyPureReactInVue(CCReact)
 const BB = applyReactInVue(BBReact)
 const random = ref(Math.random())
+const VNodeToReactNode = getReactNode(() => <div><VueCom1>Test getReactNode</VueCom1></div>)
+
+
 onMounted(() => {
   setInterval(() => {
     random.value = Math.random()
