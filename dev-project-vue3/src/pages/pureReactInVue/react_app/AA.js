@@ -11,5 +11,6 @@ const containerStyle = {
 export default function AA(props) {
   return <div style={containerStyle}>
     {props.children}
+    {props.numberNode}
   </div>
 }

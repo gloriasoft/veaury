@@ -36,6 +36,8 @@
   </h4>
   <AAWithNormal>
     <RenderReactNode :node="ReactNode"/>
+    <RenderReactNode :node="8888"/>
+    <RenderReactNode :node="[6666, 7777]"/>
     <div class="flex-sub">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
@@ -49,8 +51,11 @@
     <div class="flex-sub">A</div>
     <div class="flex-sub">B</div>
     <div class="flex-sub">C</div>
-    <BB>
-      <RenderReactNode :node="ReactNode"/>
+    <BB style="color: red" class="test">
+      <template v-slot:renderProps="_">
+        renderProps for BB
+      </template>
+      <RenderReactNode :node="ReactNode" :ref="()=>{}"/>
       <div class="flex-sub flex-sub-in-bb" ref="REF">E</div>
       <div class="flex-sub flex-sub-in-bb">F</div>
       <div class="flex-sub flex-sub-in-bb" style="width:180px" data-testid="random">{{random}}</div>
