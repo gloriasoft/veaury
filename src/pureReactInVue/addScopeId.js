@@ -1,4 +1,3 @@
-import lookupVueWrapperRef from "../lookupVueWrapperRef";
 function addScopeId(child, hashList) {
   if (!hashList || (hashList instanceof Array && hashList.length === 0)) return child
   if (typeof hashList === 'string') hashList = [hashList]
