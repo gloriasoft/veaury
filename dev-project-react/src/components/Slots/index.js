@@ -7,7 +7,9 @@ export default function () {
     <h3>Pass Slots to Vue Components.</h3>
     <h4>The usage of 'slots' is similar to the usage of 'v-slots' of vue's jsx.</h4>
     {/*just send children*/}
-    <Basic>
+    <Basic v-slots={{
+      toReactComNode: 'To React Component Node'
+    }} showReactCom={true}>
       <div className="slot">this is children</div>
     </Basic>
     {/*send v-slots*/}

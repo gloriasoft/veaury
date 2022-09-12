@@ -29,6 +29,9 @@
       this is children (react node)
       <Custom1 :zoo="121212"/>
     </div>
+    <ReactCom>
+      React Component Children
+    </ReactCom>
   </Basic>
 </template>
 
@@ -37,12 +40,14 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { applyReactInVue } from 'veaury'
 // This is a React Component
 import ReactBasic from "./react_app/Slots"
+import ReactCom from "./react_app/ReactCom"
 import Custom1 from './Custom1'
 
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
-    Custom1
+    Custom1,
+    ReactCom: applyReactInVue(ReactCom)
   },
   setup() {
     let timer

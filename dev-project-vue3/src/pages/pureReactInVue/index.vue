@@ -14,10 +14,17 @@
       <div data-testid="ccRenderProps1">PPPPP</div>
     </template>
     <template v-slot:node:reactNode>
+      string
       <div data-testid="ccReactNode">RRRRR</div>
     </template>
     <template v-slot:node:default>
       <div data-testid="ccDefault">YYYYY</div>
+    </template>
+    <template v-slot:node:stringNode>
+      string node
+    </template>
+    <template v-slot:node:objectNode>
+      <div>object node</div>
     </template>
   </CC>
   <AAWithPure>

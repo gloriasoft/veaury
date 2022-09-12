@@ -7,5 +7,7 @@ export default function CC(props) {
     {props.renderProps2?.(<div>ReactNode</div>)}
     {props.reactNode}
     {props.children}
+    {props.stringNode}
+    {props.objectNode}
   </>
 }
