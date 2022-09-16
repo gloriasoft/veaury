@@ -4,9 +4,12 @@ const vueJsx = require('@vitejs/plugin-vue-jsx')
 const requireTransform = require('vite-plugin-require-transform').default
 function ReactDOMTransformPlugin() {
   return {
-    resolveId(source, importer) {
+    async resolveId(source, importer, options) {
       if (source.match(/react-dom\/client/)) {
-        return { id: 'veaury-fake-react-dom-client', moduleSideEffects: true }
+        const resolution = await this.resolve(source, importer, { skipSelf: true, ...options })
+        if (!resolution) {
+          return { id: 'veaury-fake-react-dom-client', moduleSideEffects: true }
+        }
       }
     },
     load(id) {
