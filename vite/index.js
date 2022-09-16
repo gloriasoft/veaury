@@ -1,6 +1,21 @@
 const vue = require('@vitejs/plugin-vue')
 const react = require('@vitejs/plugin-react')
 const vueJsx = require('@vitejs/plugin-vue-jsx')
+const requireTransform = require('vite-plugin-require-transform').default
+function ReactDOMTransformPlugin() {
+  return {
+    resolveId(source, importer) {
+      if (source.match(/react-dom\/client/)) {
+        return { id: 'veaury-fake-react-dom-client', moduleSideEffects: true }
+      }
+    },
+    load(id) {
+      if (id === 'veaury-fake-react-dom-client') {
+        return `export * from 'react-dom'; export {default} from 'react-dom';`
+      }
+    }
+  }
+}
 
 function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
 
@@ -21,6 +36,10 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
   }
 
   return [
+    ReactDOMTransformPlugin(),
+    requireTransform({
+      fileRegex: /veaury/
+    }),
     vue(),
     // Make vueJsx plugin run time earlier
     {

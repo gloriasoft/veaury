@@ -79,5 +79,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-uglify": "^6.0.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "vite-plugin-require-transform": "^1.0.3"
+  }
 }
