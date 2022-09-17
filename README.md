@@ -1,50 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-# Veaury  
-
-- [Veaury](#veaury)
-  - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
-  - [What is Veaury?](#what-is-veaury)
-  - [The greatest feature](#the-greatest-feature)
-  - [Legacy](#legacy)
-  - [Latest documentation](#latest-documentation)
-  - [Use cases](#use-cases)
-  - [Installation](#installation)
-  - [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
-    - [Webpack](#webpack)
-    - [Vite](#vite)
-  - [Usage](#usage)
-    - [Vue in React - Basic usage](#vue-in-react---basic-usage)
-    - [React in Vue - Basic usage](#react-in-vue---basic-usage)
-    - [Vue in React - Usage of events](#vue-in-react---usage-of-events)
-    - [React in Vue - Usage of events](#react-in-vue---usage-of-events)
-    - [Vue in React - Usage of slots](#vue-in-react---usage-of-slots)
-    - [React in Vue - Usage of render props and React node](#react-in-vue---usage-of-render-props-and-react-node)
-    - [Context](#context)
-      - [Vue in React - Usage of Provider / useContext](#vue-in-react---usage-of-provider--usecontext)
-      - [React in Vue - Usage of Provide / Inject](#react-in-vue---usage-of-provide--inject)
-    - [Usage of VueContainer in React Component](#usage-of-vuecontainer-in-react-component)
-    - [Usage of getVNode](#usage-of-getvnode)
-    - [Usage of getReactNode](#usage-of-getreactnode)
-    - [Usage of RenderReactNode](#usage-of-renderreactnode)
-    - [Vue in React, Usage of v-model / v-models](#vue-in-react-usage-of-v-model--v-models)
-    - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
-      - [Usage of injecting React hooks in Vue component](#usage-of-injecting-react-hooks-in-vue-component)
-      - [Usage of injecting Vue hooks in React component](#usage-of-injecting-vue-hooks-in-react-component)
-    - [Crossing provider](#crossing-provider)
-      - [Usage of createCrossingProviderForVueInReact](#usage-of-createcrossingproviderforvueinreact)
-      - [Usage of createCrossingProviderForReactInVue](#usage-of-createcrossingproviderforreactinvue)
-    - [ReactMissVue](#reactmissvue)
-      - [Usage of createReactMissVue](#usage-of-createreactmissvue)
-    - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
-    - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
-    - [Usage of getting ref](#usage-of-getting-ref)
-  - [Typescript JSX types conflict caused by Vue and React at the same time.](#typescript-jsx-types-conflict-caused-by-vue-and-react-at-the-same-time)
-  - [Development Setup](#development-setup)
-  - [Project Structure](#project-structure)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 <div align=center>
   <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
 </div>  
@@ -56,6 +9,51 @@
   <a href="https://npmcharts.com/compare/veaury?minimal=true"><img src="https://img.shields.io/npm/dm/veaury" alt="Downloads"></a>
   <a href="https://www.npmjs.com/package/veaury"><img src="https://img.shields.io/bundlephobia/minzip/veaury" alt="Size"></a>
 </p>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [What is Veaury?](#what-is-veaury)
+- [The greatest feature](#the-greatest-feature)
+- [Legacy](#legacy)
+- [Latest documentation](#latest-documentation)
+- [Use cases](#use-cases)
+- [Installation](#installation)
+- [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
+  - [Webpack](#webpack)
+  - [Vite](#vite)
+- [Usage](#usage)
+  - [Vue in React - Basic usage](#vue-in-react---basic-usage)
+  - [React in Vue - Basic usage](#react-in-vue---basic-usage)
+  - [Vue in React - Usage of events](#vue-in-react---usage-of-events)
+  - [React in Vue - Usage of events](#react-in-vue---usage-of-events)
+  - [Vue in React - Usage of slots](#vue-in-react---usage-of-slots)
+  - [React in Vue - Usage of render props and React node](#react-in-vue---usage-of-render-props-and-react-node)
+  - [Context](#context)
+    - [Vue in React - Usage of Provider / useContext](#vue-in-react---usage-of-provider--usecontext)
+    - [React in Vue - Usage of Provide / Inject](#react-in-vue---usage-of-provide--inject)
+  - [Usage of VueContainer in React Component](#usage-of-vuecontainer-in-react-component)
+  - [Usage of getVNode](#usage-of-getvnode)
+  - [Usage of getReactNode](#usage-of-getreactnode)
+  - [Usage of RenderReactNode](#usage-of-renderreactnode)
+  - [Vue in React, Usage of v-model / v-models](#vue-in-react-usage-of-v-model--v-models)
+  - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
+    - [Usage of injecting React hooks in Vue component](#usage-of-injecting-react-hooks-in-vue-component)
+    - [Usage of injecting Vue hooks in React component](#usage-of-injecting-vue-hooks-in-react-component)
+  - [Crossing provider](#crossing-provider)
+    - [Usage of createCrossingProviderForVueInReact](#usage-of-createcrossingproviderforvueinreact)
+    - [Usage of createCrossingProviderForReactInVue](#usage-of-createcrossingproviderforreactinvue)
+  - [ReactMissVue](#reactmissvue)
+    - [Usage of createReactMissVue](#usage-of-createreactmissvue)
+  - [Usage of lazyReactInVue](#usage-of-lazyreactinvue)
+  - [Usage of lazyVueInReact](#usage-of-lazyvueinreact)
+  - [Usage of getting ref](#usage-of-getting-ref)
+- [Typescript JSX types conflict caused by Vue and React at the same time.](#typescript-jsx-types-conflict-caused-by-vue-and-react-at-the-same-time)
+- [Development Setup](#development-setup)
+- [Project Structure](#project-structure)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## What is Veaury?  
 Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
