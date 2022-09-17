@@ -1,10 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Veaury  
-[![Coverage Status](https://coveralls.io/repos/github/devilwjp/veaury/badge.svg?branch=master)](https://coveralls.io/github/devilwjp/veaury?branch=master)
-[![npm](https://img.shields.io/npm/v/veaury)](https://www.npmjs.com/package/veaury)
-[![npm](https://img.shields.io/npm/dm/veaury)](https://npmcharts.com/compare/veaury?minimal=true)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/veaury)](https://npmcharts.com/compare/veaury?minimal=true)
+
 - [Veaury](#veaury)
   - [Use React in Vue3 and Vue3 in React, And as perfect as possible!](#use-react-in-vue3-and-vue3-in-react-and-as-perfect-as-possible)
   - [What is Veaury?](#what-is-veaury)
