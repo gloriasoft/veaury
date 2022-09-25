@@ -20,9 +20,9 @@ function ReactDOMTransformPlugin() {
   }
 }
 
-function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
+function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
 
-  let vueJsxOptions = {}
+  let vueJsxOptions = {...initVueJsxOptions}
   if (type === 'react') {
     vueJsxOptions.include = [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/]
   }
@@ -43,7 +43,7 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
     requireTransform({
       fileRegex: /veaury/
     }),
-    vue(),
+    vue(vueOptions),
     // Make vueJsx plugin run time earlier
     {
       ...vueJsx(vueJsxOptions),
@@ -59,7 +59,7 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude}) {
         }
       }
     },
-    react()
+    react(reactOptions)
   ]
 }
 

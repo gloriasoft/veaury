@@ -117,7 +117,13 @@ export default defineConfig({
     // only jsx in files in the directory named 'react_app' will be parsed with react jsx,
     // and jsx in other files will be parsed with vue jsx
     veauryVitePlugins({
-      type: 'vue'
+      type: 'vue',
+      // Configuration of @vitejs/plugin-vue
+      // vueOptions: {...},
+      // Configuration of @vitejs/plugin-react
+      // reactOptions: {...}, 
+      // Configuration of @vitejs/plugin-vue-jsx
+      // vueJsxOptions: {...}
     })
   ]
 })
@@ -136,7 +142,13 @@ export default defineConfig({
     // only jsx in .vue file will be parsed with vue jsx, 
     // jsx in other files will be parsed with react jsx
     veauryVitePlugins({
-      type: 'react'
+      type: 'react',
+      // Configuration of @vitejs/plugin-vue
+      // vueOptions: {...},
+      // Configuration of @vitejs/plugin-react
+      // reactOptions: {...}, 
+      // Configuration of @vitejs/plugin-vue-jsx
+      // vueJsxOptions: {...}
     })
   ]
 })
@@ -154,7 +166,13 @@ export default defineConfig({
       type: 'custom',
       // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
       vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
-      // vueJsxExclude: []
+      // vueJsxExclude: [],
+      // Configuration of @vitejs/plugin-vue
+      // vueOptions: {...},
+      // Configuration of @vitejs/plugin-react
+      // reactOptions: {...}, 
+      // Configuration of @vitejs/plugin-vue-jsx
+      // vueJsxOptions: {...}
     })
   ]
 })
