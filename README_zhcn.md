@@ -94,7 +94,7 @@ $ npm i veaury -S
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -112,7 +112,7 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -130,7 +130,7 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [

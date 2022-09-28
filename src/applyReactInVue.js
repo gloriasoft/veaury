@@ -5,16 +5,18 @@ import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
 import { createPortal } from "react-dom"
+import ReactDOM from 'react-dom'
 
 const ReactMajorVersion = parseInt(version)
-let ReactDOM;
+
+// let ReactDOM;
 // TODO: May be optimized in the future
 // Not a good way to judge, because this will result in the exported esm format with `require`.
-try {
-  ReactDOM = require('react-dom/client')
-} catch(e) {
-  ReactDOM = require('react-dom')
-}
+// try {
+//   ReactDOM = require('react-dom/client')
+// } catch(e) {
+//   ReactDOM = require('react-dom')
+// }
 
 function toRaws(obj) {
   return obj;
@@ -572,6 +574,10 @@ export default function applyReactInVue(component, options = {}) {
           }
 
           if (ReactMajorVersion > 17) {
+            // I'm not afraid of being fired
+            if (ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED !== undefined) {
+              ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true
+            }
             this.__veauryReactApp__ = ReactDOM.createRoot(container)
             this.__veauryReactApp__.render(reactRootComponent)
             return

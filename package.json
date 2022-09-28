@@ -1,7 +1,7 @@
 {
   "name": "veaury",
   "private": false,
-  "version": "2.3.8",
+  "version": "2.3.9",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
   "main": "dist/veaury.umd.js",
   "module": "dist/veaury.esm.js",
@@ -78,8 +78,5 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-uglify": "^6.0.3"
-  },
-  "dependencies": {
-    "vite-plugin-require-transform": "^1.0.3"
   }
 }
