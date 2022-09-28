@@ -106,7 +106,7 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -132,7 +132,7 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -158,7 +158,7 @@ If you want to customize the compilation scope of vueJsx, you can configure over
 ```js
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
