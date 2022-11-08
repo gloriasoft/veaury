@@ -13,6 +13,9 @@
         current time: {{currentTime}}
       </div>
       <BB ref="BBRef"/>
+      <CC>
+        <template #children="value">This is a react functional children in Vue, and received {{value}}</template>
+      </CC>
     </div>
   </Basic>
 </template>
@@ -24,14 +27,17 @@ import { applyPureReactInVue, applyReactInVue } from 'veaury'
 import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
 import ReactBB from "./react_app/BB"
+import ReactCC from "./react_app/CC"
 
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
     AA: applyReactInVue(ReactAA),
-    BB: applyReactInVue(ReactBB)
+    BB: applyReactInVue(ReactBB),
+    CC: applyReactInVue(ReactCC)
   },
   setup() {
+    return
     let timer, timer1
     const currentTime = ref(new Date().toLocaleString())
     const foo = ref(Math.random())

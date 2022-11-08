@@ -146,7 +146,6 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
   render() {
     let {
-      children,
       hashList,
       ...props
     } = this.state
@@ -163,11 +162,20 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           if (options.defaultSlotsFormatter && props[i].__trueChildren) {
             props[i].__top__ = this.__veauryVueWrapperRef__
             props[i] = options.defaultSlotsFormatter(props[i].__trueChildren, this.vueInReactCall, hashList)
-            if (props[i] instanceof Array || (typeof props[i]).indexOf("string", "number") > -1) {
-              props[i] = [...props[i]]
-            } else if (typeof props[i] === "object") {
-              props[i] = { ...props[i] }
+            function cloneChildren() {
+              if (props[i] instanceof Array) {
+                props[i] = [...props[i]]
+                return
+              }
+              if (["string", "number"].indexOf(typeof props[i]) > -1) {
+                props[i] = [props[i]]
+                return
+              }
+              if (typeof props[i] === "object") {
+                props[i] = { ...props[i] }
+              }
             }
+            cloneChildren()
           } else {
             props[i] = { ...applyVueInReact(this.createSlot(props[i]), { ...options, isSlots: true, wrapInstance }).render() }
           }
@@ -176,61 +184,14 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           props[i] = props[i].reactSlot
         }
         $slots[i] = props[i]
-      } else if (props[i].__scopedSlot) {
+        continue
+      }
+      if (props[i].__scopedSlot) {
         // The scoped slot is a pure function. In the react component,
         // you need to pass in the scoped call, and then create the vue slot component
         props[i] = props[i](this.createSlot)
         $scopedSlots[i] = props[i]
       }
-    }
-
-    const getChildren = () => {
-      if (!children.reactSlot) {
-        const vueSlot = children
-
-
-        // if (typeof children === 'function') {
-        //   const trueChildren = children()
-        //   // Check if children are from react children wrapped by applyReactInVue
-        //   if (trueChildren.length === 1) {
-        //     if (trueChildren[0].reactSlot) {
-        //       children = trueChildren[0].reactSlot
-        //       return
-        //     }
-        //     // Vue Fragment wrapped
-        //     if (trueChildren[0].type === VueFragment && trueChildren[0].children?.length === 1 && trueChildren[0].children[0].reactSlot) {
-        //       children = trueChildren[0].children[0].reactSlot
-        //       return
-        //     }
-        //   }
-        // }
-        // TODO: defaultSlotsFormatter
-        if (options.defaultSlotsFormatter && children.__trueChildren) {
-          children.__top__ = this.__veauryVueWrapperRef__
-          children = options.defaultSlotsFormatter(children.__trueChildren, this.vueInReactCall, hashList)
-          if (children instanceof Array) {
-            children = [...children]
-            return
-          }
-          if (["string", "number"].indexOf(typeof children) > -1) {
-            children = [children]
-            return
-          }
-          if (typeof children === "object") {
-            children = { ...children }
-          }
-        } else {
-          children = { ...applyVueInReact(this.createSlot(children), { ...options, isSlots: true, wrapInstance }).render() }
-          children.vueFunction = vueSlot
-        }
-        return
-      }
-      children = children.reactSlot
-    }
-    // parse normal slots
-    if (children != null) {
-      // Use a predicate function to determine the value of children
-      getChildren()
     }
     const refInfo = {}
     refInfo.ref = this.setRef
@@ -252,12 +213,10 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         delete refInfo.ref
       }
       return (
-          <Component {...newProps} {...refInfo}>
-            {children}
-          </Component>
+          <Component {...newProps} {...refInfo}/>
       )
     }
-    return <FunctionComponentWrap passedProps={newProps} component={Component} {...refInfo}>{children}</FunctionComponentWrap>
+    return <FunctionComponentWrap passedProps={newProps} component={Component} {...refInfo}>{newProps.children}</FunctionComponentWrap>
   }
 }
 export default function applyReactInVue(component, options = {}) {
