@@ -146,10 +146,11 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
 
   render() {
     let {
-      children,
+      // children,
       hashList,
       ...props
     } = this.state
+    let children
     const $slots = {}
     const $scopedSlots = {}
     // parse slots
@@ -183,7 +184,10 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
         $scopedSlots[i] = props[i]
       }
     }
-
+    // normal slot
+    if (!props.children?.vueFunction) {
+      children = props.children
+    }
     const getChildren = () => {
       if (!children.reactSlot) {
         const vueSlot = children
@@ -253,11 +257,11 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       }
       return (
           <Component {...newProps} {...refInfo}>
-            {children}
+            {children || newProps.children}
           </Component>
       )
     }
-    return <FunctionComponentWrap passedProps={newProps} component={Component} {...refInfo}>{children}</FunctionComponentWrap>
+    return <FunctionComponentWrap passedProps={newProps} component={Component} {...refInfo}>{children || newProps.children}</FunctionComponentWrap>
   }
 }
 export default function applyReactInVue(component, options = {}) {
