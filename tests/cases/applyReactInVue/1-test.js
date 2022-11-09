@@ -11,6 +11,10 @@ test('renders a React component In Vue', async () => {
   expect(linkElement).toBeInTheDocument();
   linkElement = await screen.findByText((content, element) => content.match(/test pure style/) && element.style.color === 'red' && element.classList.contains('AAA'));
   expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/normal DDDDD/)
+  expect(linkElement).toBeInTheDocument();
+  linkElement = await screen.findByText(/pure DDDDD/)
+  expect(linkElement).toBeInTheDocument();
 });
 
 test('test lazyReactInVue', async () => {
