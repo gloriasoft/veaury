@@ -28,7 +28,10 @@ export default function getDistinguishReactOrVue({vueComponents: Component, domT
       if (child.type === VueContainer) {
         if (child.props.component) {
           VueComponent = child.props.component
-          delete child.props.component
+          child = {...child}
+          const props = {...child.props}
+          delete props.component
+          child.props = props
         } else {
           newChildren.push(child.props.node)
           return

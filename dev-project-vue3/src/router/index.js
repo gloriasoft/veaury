@@ -8,6 +8,11 @@ export default createRouter({
     history: createWebHashHistory(),
     routes: [
         {
+            name: 'VueMissReact',
+            path: '/VueMissReact',
+            component: () => import('../pages/vueMissReact')
+        },
+        {
             name: 'basic',
             path: '/basic',
             component: () => import('../pages/basic')
