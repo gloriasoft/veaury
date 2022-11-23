@@ -11,7 +11,7 @@
 <script setup>
 import {useContext, createContext} from 'react'
 import {defineComponent, onMounted, onUnmounted, ref} from 'vue'
-import {applyPureReactInVue, applyReactInVue, createCrossingProviderForPureVueInReact } from 'veaury'
+import {applyPureReactInVue, createCrossingProviderForPureVueInReact } from 'veaury'
 
 // 创建一个React context
 const ReactTestContext = createContext()
