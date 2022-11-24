@@ -1,5 +1,6 @@
 <template>
   <ReactTestContextProviderInVue :value="contextValue">
+    <!--  这个Provider使内部的所有vue组件都能使用到预设的react hooks    -->
     <HooksProviderInVue>
       <!--  这个vue组件内部使用了react hooks,并且通过hooks获取到了最外层的context的值    -->
       <VueComponent/>
@@ -13,7 +14,7 @@ import {useContext, createContext} from 'react'
 import {defineComponent, onMounted, onUnmounted, ref} from 'vue'
 import {applyPureReactInVue, createCrossingProviderForPureVueInReact } from 'veaury'
 
-// 创建一个React context
+// 创建一个React context, 作为测试react hook状态的来源
 const ReactTestContext = createContext()
 // 将React context的Provider转换为vue组件
 const ReactTestContextProviderInVue = applyPureReactInVue(ReactTestContext.Provider)
@@ -30,7 +31,7 @@ const [useHooksInVue, HooksProvider] = createCrossingProviderForPureVueInReact(
 // 将HooksProvider转换为vue组件
 const HooksProviderInVue = applyPureReactInVue(HooksProvider)
 
-// 临时定义一个vue组件，组件里使用前面定义的vue hooks
+// 临时定义一个vue组件作为测试组件，组件里使用前面定义的vue hooks
 const VueComponent = defineComponent({
   setup() {
     // 这里其实就是在vue里使用了react hooks
@@ -45,13 +46,14 @@ const contextValue = ref(Math.random())
 
 let timer
 onMounted(() => {
-  clearTimeout(timer)
+  clearInterval(timer)
+  // 每秒会修改react context的值，作为测试结果观察
   timer = setInterval(() => {
     contextValue.value = Math.random()
   }, 1000)
 })
 
 onUnmounted(() => {
-  clearTimeout(timer)
+  clearInterval(timer)
 })
 </script>
