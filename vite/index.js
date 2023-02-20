@@ -54,7 +54,7 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
       config(){
         return {
           esbuild: {
-            include: /\.tsx*$/
+            include: /\.[jt]sx*$/
           }
         }
       }
