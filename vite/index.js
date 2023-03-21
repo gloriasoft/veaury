@@ -23,10 +23,8 @@ const vueJsx = require('@vitejs/plugin-vue-jsx')
 function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
 
   let vueJsxOptions = {...initVueJsxOptions}
-  let defaultVueJsxExclude = [/\.vue$/i]
   if (type === 'react') {
-    vueJsxOptions.include = [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/$]+/]
-    vueJsxOptions.exclude = defaultVueJsxExclude
+    vueJsxOptions.include = [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/][\w\W]+\.[tj]sx$/]
   }
   if (type === 'vue') {
     vueJsxOptions.exclude = [/[/\\]react_app[\\/$]+/]
@@ -38,7 +36,6 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
     if (vueJsxExclude) {
       vueJsxOptions.exclude = vueJsxExclude
     }
-    vueJsxOptions.exclude = [...defaultVueJsxExclude, ...vueJsxOptions.exclude || []]
   }
 
   return [

@@ -165,7 +165,7 @@ export default defineConfig({
     veauryVitePlugins({
       type: 'custom',
       // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
-      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      vueJsxInclude: [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/][\w\W]+\.[tj]sx$/],
       // vueJsxExclude: [],
       // Configuration of @vitejs/plugin-vue
       // vueOptions: {...},

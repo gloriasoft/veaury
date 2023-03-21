@@ -136,8 +136,8 @@ export default defineConfig({
   plugins: [
     veauryVitePlugins({
       type: 'custom',
-      // 所有.vue文件以及在名为vue_app目录里的文件都将以vue jsx编译
-      vueJsxInclude: [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/],
+      // 所有.vue文件中的jsx以及在名为vue_app目录里的jsx文件都将以vue jsx编译
+      vueJsxInclude: [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/][\w\W]+\.[tj]sx$/],
       // vueJsxExclude: []
     })
   ]
