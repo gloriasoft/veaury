@@ -23,8 +23,10 @@ const vueJsx = require('@vitejs/plugin-vue-jsx')
 function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
 
   let vueJsxOptions = {...initVueJsxOptions}
+  let defaultVueJsxExclude = [/\.vue$/i]
   if (type === 'react') {
-    vueJsxOptions.include = [/vue&type=script&lang\.[tj]sx?$/, /vue&type=script&setup=true&lang\.[tj]sx?$/, /[/\\]vue_app[\\/$]+/]
+    vueJsxOptions.include = [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/$]+/]
+    vueJsxOptions.exclude = defaultVueJsxExclude
   }
   if (type === 'vue') {
     vueJsxOptions.exclude = [/[/\\]react_app[\\/$]+/]
@@ -36,11 +38,13 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
     if (vueJsxExclude) {
       vueJsxOptions.exclude = vueJsxExclude
     }
+    vueJsxOptions.exclude = [...defaultVueJsxExclude, ...vueJsxOptions.exclude || []]
   }
 
   return [
     // ReactDOMTransformPlugin(),
     // requireTransform({
+
     //   fileRegex: /veaury/
     // }),
     vue(vueOptions),
@@ -54,7 +58,7 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
       config(){
         return {
           esbuild: {
-            include: /\.[jt]sx*$/
+            include: /\.[jt]sx?$/
           }
         }
       }
