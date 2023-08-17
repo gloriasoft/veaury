@@ -27,12 +27,20 @@ class VeauryVuePlugin {
       extensions.push('.vue')
     }
     const rules = compiler.options.module.rules
+    if (!rules) { // Make sure rules array exists
+      console.error("Unable to find rules in compiler options");
+      return;
+    }
     // find oneOf rule
     const oneOfRule = rules.find((rule) => rule.oneOf)
     // the last rule is file-loader
     const fileLoaderRule = oneOfRule && oneOfRule.oneOf[oneOfRule.oneOf.length-1]
 
     if (fileLoaderRule) {
+      // Make sure exclude array exists before calling push
+      if (!fileLoaderRule.exclude) {
+        fileLoaderRule.exclude = [];
+      }
       // ignore vue type file
       fileLoaderRule.exclude.push(/\.vue$/)
     }
