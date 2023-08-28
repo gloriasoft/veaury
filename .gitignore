@@ -1,11 +1,18 @@
 .DS_Store
 node_modules
-/dist
 yarn.lock
+dev-project-react
+dev-project-vue3
+test
 package-lock.json
 /coverage
 .coveralls.yml
-
+.eslintignore
+babel.config.json
+jest.config.js
+pure_mode.md
+README_zhcn.md
+rollup.config.js
 # local env files
 .env.local
 .env.*.local
