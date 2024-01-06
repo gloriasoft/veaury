@@ -8,7 +8,6 @@ export default class A extends React.Component {
         }
     }
     render() {
-        document.body.appendChild(document.createTextNode("reactUnMountSuccess"))
         return (<div>
             <div className="aaa">unMountTest</div>
         </div>)

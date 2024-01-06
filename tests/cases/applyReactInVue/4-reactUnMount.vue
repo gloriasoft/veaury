@@ -12,11 +12,11 @@ export default {
         ReactComponentInVue: applyReactInVue(ReactComponent)
     },
     setup() {
-        const showFlag = ref(false)
+        const showFlag = ref(true)
         onMounted(() => {
             setTimeout(() => {
                 showFlag.value = false
-            }, 1000);
+            }, 200);
         })
 
         return {
