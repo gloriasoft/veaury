@@ -617,20 +617,18 @@ export default function applyReactInVue(component, options = {}) {
     },
     beforeUnmount() {
       clearTimeout(this.updateTimer)
+      // Magical Code!
+      // Override some methods of native lookup 'dom',
+      // so that React can still look up the dom object before the Vue component is destroyed
+      overwriteDomMethods(this.$refs.react)
       // destroy 'Portal'
       if (this.reactPortal) {
-        // Magical Code!
-        // Override some methods of native lookup 'dom',
-        // so that React can still look up the dom object before the Vue component is destroyed
-        overwriteDomMethods(this.$refs.react)
         this.parentReactWrapperRef?.removeReactPortal(this.reactPortal)
         // restore native method
         recoverDomMethods()
         return
       }
 
-      // Override some methods of native lookup 'dom'
-      overwriteDomMethods(this.$refs.react)
       // Destroy the React root node
       if (ReactMajorVersion > 17) {
         this.__veauryReactApp__.unmount()

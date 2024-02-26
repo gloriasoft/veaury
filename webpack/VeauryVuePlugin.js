@@ -34,7 +34,7 @@ class VeauryVuePlugin {
 
     if (fileLoaderRule) {
       // ignore vue type file
-      fileLoaderRule.exclude.push(/\.vue$/)
+      fileLoaderRule.exclude?.push(/\.vue$/)
     }
 
     const newRules = [

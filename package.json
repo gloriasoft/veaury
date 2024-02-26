@@ -1,7 +1,7 @@
 {
   "name": "veaury",
   "private": false,
-  "version": "2.3.12",
+  "version": "2.3.15",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
   "main": "dist/veaury.umd.js",
   "module": "dist/veaury.esm.js",
@@ -16,7 +16,7 @@
     "dev-setup:yarn": "yarn --cwd dev-project-vue3 && yarn --cwd dev-project-react",
     "dev-setup:npm": "npm i --prefix dev-project-vue3 && npm i --prefix dev-project-react",
     "test-setup:yarn": "yarn --cwd tests",
-    "test-setup:npm": "yarn --prefix tests",
+    "test-setup:npm": "npm i --prefix tests",
     "setup:yarn": "yarn && npm run dev-setup:yarn && npm run test-setup:yarn",
     "setup:npm": "npm i && npm run dev-setup:npm && npm run test-setup:npm",
     "test": "jest",

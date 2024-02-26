@@ -5,10 +5,11 @@
   <h4>
     Using React components in Vue components.
   </h4>
+  <ReactUnMount v-if="showFlag" />
   <Basic :foo="foo" ref="BasicRef" :null="null">
     <div class="slot">
       This is the Vue default slot
-      <AA v-if="showFlag" :disappearTime="5" ref="AARef"/>
+      <AA v-if="showFlag" :disappearTime="6" ref="AARef"/>
       <div>
         current time: {{currentTime}}
       </div>
@@ -28,16 +29,17 @@ import ReactBasic from "./react_app/Basic"
 import ReactAA from "./react_app/AA"
 import ReactBB from "./react_app/BB"
 import ReactCC from "./react_app/CC"
+import ReactUnMount from "./react_app/UnMount"
 
 export default {
   components: {
     Basic: applyReactInVue(ReactBasic),
     AA: applyReactInVue(ReactAA),
     BB: applyReactInVue(ReactBB),
-    CC: applyReactInVue(ReactCC)
+    CC: applyReactInVue(ReactCC),
+    ReactUnMount: applyReactInVue(ReactUnMount),
   },
   setup() {
-    return
     let timer, timer1
     const currentTime = ref(new Date().toLocaleString())
     const foo = ref(Math.random())
