@@ -14,7 +14,7 @@ export function overwriteDomMethods(refDom) {
                 const oldResult = old.apply(this, args)
                 if (oldResult && (oldResult.constructor !== NodeList || (oldResult.constructor === NodeList && oldResult.length > 0))) return oldResult
                 // If each function of Document is called using apply, an error will occur. Here you need to use the native function of Element.
-                const nativeElementFn = domTopObject.Element[method] || Element.prototype[mehtod]
+                const nativeElementFn = domTopObject.Element[method] || Element.prototype[method]
                 return nativeElementFn.apply(refDom, args)
             }
         })
