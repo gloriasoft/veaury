@@ -9,7 +9,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import {useContext, createContext} from 'react'
 import {defineComponent, onMounted, onUnmounted, ref} from 'vue'
 import {applyPureReactInVue, createCrossingProviderForPureVueInReact } from 'veaury'

@@ -73,7 +73,7 @@
   </AAWithPure>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { applyPureReactInVue, applyReactInVue, RenderReactNode, getReactNode } from 'veaury'
 import { ref, onMounted, getCurrentInstance, h, Comment } from 'vue'
 import { createElement } from 'react'
