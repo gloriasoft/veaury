@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { onMounted, ref, onUpdated } from 'vue'
 defineProps(['VNodeBar'])
 const VNodeFoo = ref(<div>This is a VNode of Foo! {Math.random()}</div>)
