@@ -506,7 +506,7 @@ Sometimes the property of the react component is a complex data structure, which
 <template>
   <AA :prop1="propForReact"/>
 </template>
-<script setup>
+<script setup lang="jsx">
 import { getReactNode, applyPureReactInVue } from 'veaury'
 import AAReact from './react_app/AA.jsx'
 const AA = applyPureReactInVue(AAReact)
