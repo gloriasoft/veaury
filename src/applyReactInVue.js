@@ -160,7 +160,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           // TODO: defaultSlotsFormatter
           // Custom slot handler
           if (options.defaultSlotsFormatter && props[i].__trueChildren) {
-            props[i].__top__ = this.__veauryVueWrapperRef__
+            props[i].__trueChildren.__top__ = this.__veauryVueWrapperRef__
             props[i] = options.defaultSlotsFormatter(props[i].__trueChildren, this.vueInReactCall, hashList)
             function cloneChildren() {
               if (props[i] instanceof Array) {
@@ -201,7 +201,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
     let finalProps = props
     // TODO: defaultPropsFormatter
     if (options.defaultPropsFormatter) {
-      finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
+      finalProps = options.defaultPropsFormatter.call(this, props, this.vueInReactCall, hashList)
     }
     const newProps = { ...finalProps, ...$slots, ...$scopedSlots }
 

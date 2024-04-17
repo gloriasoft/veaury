@@ -11,7 +11,26 @@ export default function applyPureReactInVue (ReactComponent, combinedOption) {
       pureTransformer: true,
       // Custom slot handler
       defaultSlotsFormatter: NoWrapFunction,
+      // This function will be called by the react container component using call(this,...)
       defaultPropsFormatter(props, vueInReactCall, hashList) {
+
+        // When some react components are doing two-way binding, the status update will be out of sync, such as the input component
+        // Use internal synchronization updates to solve this problem
+        if (ReactComponent.__syncUpdateForPureReactInVue) {
+          Object.keys(ReactComponent.__syncUpdateForPureReactInVue).map((key) => {
+            if (props[key] && typeof props[key] === 'function') {
+              const __veauryVueWrapperRef__ = this.__veauryVueWrapperRef__
+              const oldFun = props[key]
+              props[key] = function(...args) {
+                __veauryVueWrapperRef__.__veaurySyncUpdateProps__(ReactComponent.__syncUpdateForPureReactInVue[key].apply(this, args))
+                oldFun.apply(this, args)
+                __veauryVueWrapperRef__.macroTaskUpdate = true
+                __veauryVueWrapperRef__.__veauryMountReactComponent__(true, true, {})
+              }
+            }
+          })
+        }
+
         const newProps = {}
         Object.keys(props).forEach((key) => {
           let slot = props[key]

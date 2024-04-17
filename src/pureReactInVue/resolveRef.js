@@ -3,7 +3,7 @@
 
 import couldBeClass from "../utils/couldBeClass";
 
-export default function resolveRef(child) {
+export default function resolveRef(child, children) {
   if (typeof child.type?.originReactComponent === 'function' && !couldBeClass(child.type?.originReactComponent)) {
     return null
   }
@@ -12,6 +12,12 @@ export default function resolveRef(child) {
     const refKey = ref
     ref = (reactRef) => {
       if (!reactRef) return
+      reactRef.__syncUpdateProps = function (newExtraData = {}) {
+        if (!children.__top__) return
+        child.__extraData = newExtraData
+        children.__top__.__syncUpdateProps({})
+      }
+
       if (child.ref.i.refs) {
         // object is not extensible, so reassign the whole object
         const $refs = {...child.ref.i.refs}

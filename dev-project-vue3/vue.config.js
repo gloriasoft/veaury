@@ -9,6 +9,7 @@ module.exports = {
       errors: false
     }
   },
+  transpileDependencies:['tailwind-merge'],
   configureWebpack: {
     resolve: {
       alias: {

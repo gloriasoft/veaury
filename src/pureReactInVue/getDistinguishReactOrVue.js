@@ -45,7 +45,7 @@ export default function getDistinguishReactOrVue({reactComponents: Component, do
           child.__top__ = children.__top__
           const props = getChildInfo(child, `_key_${topIndex}`, vueInReactCall, defaultSlotsFormatter, hashList)
 
-          const ref = resolveRef(child)
+          const ref = resolveRef(child, children)
 
           if (child.children) {
             child.children.__top__ = children.__top__

@@ -8,11 +8,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.2.10",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-react-app": "^10.0.1",
     "core-js": "^3.6.5",
+    "framer-motion": "^11.0.28",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwindcss": "^3.4.3",
     "veaury": "^2.3.11-beta.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",
