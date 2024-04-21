@@ -277,7 +277,7 @@ export default function applyReactInVue(component, options = {}) {
     render() {
       /**
        * Magical code!
-       * The 'slotsInit' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
+       * The '__veauryCheckReactSlot__' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
        * However, when 'scopedSlot' is forcibly executed, it may rely on some function input parameters.
        * Forcibly executing without input parameters may lead to errors,
        * resulting in the failure of subsequent 'createElement' function execution,
@@ -286,7 +286,6 @@ export default function applyReactInVue(component, options = {}) {
        */
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
-      // this.slotsInit()
       this.__veauryCheckReactSlot__(this.$slots)
       return VNode
     },
@@ -298,34 +297,44 @@ export default function applyReactInVue(component, options = {}) {
             return true
           }
         }
+        if (slots instanceof Array) {
+          slots.forEach((slot) => {
+            this.__veauryCheckReactSlot__(slot.children)
+          })
+          return
+        }
         Object.keys(slots).forEach((key) => {
+          const fn = slots[key]
+          if (typeof fn !== 'function') return
+          // If this function is executed inside the react component, the incoming parameters will be save
+          let trueChildren
           try {
-            const fn = slots[key]
-            // If this function is executed inside the react component, the incoming parameters will be save
-            let trueChildren = fn.apply(this, fn.__reactArgs || [{}])
-            // trueChildren = trueChildren.filter((n) => n.type !== Comment)
-            fn.__trueChildren = trueChildren
+            trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+          } catch(e){
+            return
+          }
 
-            trueChildren.forEach((child) => {
-              if (child.children) {
-                this.__veauryCheckReactSlot__(child.children)
-              }
-            })
+          // trueChildren = trueChildren.filter((n) => n.type !== Comment)
+          fn.__trueChildren = trueChildren
 
-            // Check if children are from react children wrapped by applyReactInVue
-            if (trueChildren.length === 1) {
-              const child = trueChildren[0]
-              if (linkReact(fn, child, 'reactSlot')) return
-              if (linkReact(fn, child, 'reactFunction')) return
-
-              // Vue Fragment wrapped
-              if (child.type === VueFragment && child.children?.length === 1) {
-                const subChild = child.children[0]
-                if (linkReact(fn, subChild, 'reactSlot')) return
-                linkReact(fn, subChild, 'reactFunction')
-              }
+          trueChildren.forEach((child) => {
+            if (child.children) {
+              this.__veauryCheckReactSlot__(child.children)
             }
-          } catch(e) {}
+          })
+          // Check if children are from react children wrapped by applyReactInVue
+          if (trueChildren.length === 1) {
+            const child = trueChildren[0]
+            if (linkReact(fn, child, 'reactSlot')) return
+            if (linkReact(fn, child, 'reactFunction')) return
+
+            // Vue Fragment wrapped
+            if (child.type === VueFragment && child.children?.length === 1) {
+              const subChild = child.children[0]
+              if (linkReact(fn, subChild, 'reactSlot')) return
+              linkReact(fn, subChild, 'reactFunction')
+            }
+          }
         })
       },
       __veauryPushVuePortal__(vuePortal) {

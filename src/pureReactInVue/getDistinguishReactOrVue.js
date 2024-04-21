@@ -12,6 +12,7 @@ import setChildKey from "../utils/setChildKey";
 export default function getDistinguishReactOrVue({reactComponents: Component, domTags, division = true}) {
   return function defaultSlotsFormatter(children, vueInReactCall, hashList) {
     if (children && children.forEach) {
+      if (!children.__top__) children.__top__ = this
       const newChildren = []
       children.forEach((child, topIndex) => {
         if (!child || child.type === Comment) return

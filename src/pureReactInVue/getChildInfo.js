@@ -15,7 +15,7 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
     if (prefix || key === 'default') {
       // replace slot's name to react props key name
       const newKey = key.replace(new RegExp(`^${prefix}`), '').replace(/^default$/, 'children')
-      reactScoped[newKey] = defaultSlotsFormatter(fn(), vueInReactCall, hashList)
+      reactScoped[newKey] = defaultSlotsFormatter.call(child.__top__, fn(), vueInReactCall, hashList)
       return
     }
     // react render props
