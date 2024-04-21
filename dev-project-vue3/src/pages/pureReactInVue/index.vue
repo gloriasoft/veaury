@@ -71,7 +71,12 @@
       <div></div>
     </BB>
   </AAWithPure>
-  <ReactInput :value="value" @valueChange="onValueChange" />
+  <Box>
+    <Box v-for="e in [1]">
+      <ReactInput :value="value" @valueChange="onValueChange" />
+    </Box>
+  </Box>
+
 </template>
 
 <script setup lang="jsx">
@@ -82,6 +87,7 @@ import { createElement } from 'react'
 import AAReact from './react_app/AA'
 import BBReact from './react_app/BB'
 import CCReact from './react_app/CC'
+import BoxReact from './react_app/Box'
 
 // After the Input component is bidirectionally bound, inputting text will cause confusion in the timing of status updates, and synchronous update injection processing is required.
 injectSyncUpdateForPureReactInVue(Input, {
@@ -94,6 +100,7 @@ injectSyncUpdateForPureReactInVue(Input, {
   }
 })
 const ReactInput = applyPureReactInVue(Input);
+const Box = applyPureReactInVue(BoxReact)
 
 const ReactNode = createElement('div', null, 'ReactNode')
 const instance = getCurrentInstance()
