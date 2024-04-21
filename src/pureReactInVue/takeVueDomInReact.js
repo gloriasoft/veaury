@@ -11,7 +11,7 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
     }
 
     if (child.type === Fragment) {
-        return slotsFormatter(child.children, vueInReactCall, hashList)
+        return slotsFormatter.call(__top__, child.children, vueInReactCall, hashList)
     }
 
     if (typeof child.type === 'string' && (tags === 'all' || tags.indexOf(child.type) > -1)) {
@@ -36,7 +36,7 @@ function takeVueDomInReact(child, tags, vueInReactCall, division, slotsFormatter
             }
             newChildren.__top__ = __top__
         }
-        const reactNode = addScopeId(<child.type {...props}>{slotsFormatter(newChildren, vueInReactCall, hashList)}</child.type>, child.scopeId)
+        const reactNode = addScopeId(<child.type {...props}>{slotsFormatter.call(__top__, newChildren, vueInReactCall, hashList)}</child.type>, child.scopeId)
         return DirectiveHOC(child, reactNode)
     }
     return vueInReactCall([child], null, division)
