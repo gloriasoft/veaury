@@ -291,6 +291,7 @@ export default function applyReactInVue(component, options = {}) {
     },
     methods: {
       __veauryCheckReactSlot__(slots) {
+        if (typeof slots !== 'object' || slots == null) return
         function linkReact(slot, child, type) {
           if (child[type]) {
             slot[type] = child[type]
