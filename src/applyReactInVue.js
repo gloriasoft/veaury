@@ -136,7 +136,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       if (children && children[0]) {
         return children.map((child, index) => applyVueInReact(this.createSlot(child instanceof Function ? child : [child]), {
           ...options, ...customOptions, isSlots: true, wrapInstance,
-        }).render({ key: child?.data?.key || index }))
+        }).render({ key: child?.key || undefined }))
       }
     }
     return applyVueInReact(this.createSlot(children), {
