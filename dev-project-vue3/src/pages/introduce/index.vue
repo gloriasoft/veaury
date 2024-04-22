@@ -11,6 +11,7 @@
   <router-link to="/useInjectPropsFromWrapper">useInjectPropsFromWrapper</router-link>
   <router-link to="/crossingProvider">CrossingProvider</router-link>
   <router-link to="/pureReactInVue">pureReactInVue</router-link>
+  <router-link to="/watchref">watchref</router-link>
 </template>
 
 <script>

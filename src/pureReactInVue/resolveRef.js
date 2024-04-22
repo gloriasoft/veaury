@@ -11,13 +11,6 @@ export default function resolveRef(child, children) {
   if (ref && typeof ref === 'string') {
     const refKey = ref
     ref = (reactRef) => {
-      if (!reactRef) return
-      reactRef.__syncUpdateProps = function (newExtraData = {}) {
-        if (!children.__top__) return
-        child.__extraData = newExtraData
-        children.__top__.__syncUpdateProps({})
-      }
-
       if (child.ref.i.refs) {
         // object is not extensible, so reassign the whole object
         const $refs = {...child.ref.i.refs}
@@ -26,8 +19,15 @@ export default function resolveRef(child, children) {
       }
       // composition api ref variable exists
       const refObj = child.ref.i.setupState?.[refKey]
-      if (refObj !== undefined) {
+      if (child.ref.i.setupState && refKey in child.ref.i.setupState) {
         child.ref.i.setupState[refKey] = reactRef
+      }
+
+      if (!reactRef) return
+      reactRef.__syncUpdateProps = function (newExtraData = {}) {
+        if (!children.__top__) return
+        child.__extraData = newExtraData
+        children.__top__.__syncUpdateProps({})
       }
     }
     const oldRef= ref
@@ -36,7 +36,7 @@ export default function resolveRef(child, children) {
         return target[key]
       },
       set(target, key, value) {
-        if (child.ref.i.refs?.[refKey]) {
+        if (child.ref.i.refs && refKey in child.ref.i.refs) {
           const $refs = {...child.ref.i.refs}
           $refs[key] = value
           child.ref.i.refs = $refs
