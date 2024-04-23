@@ -208,7 +208,7 @@ export default function () {
 ```  
 
 ### React in Vue - Basic usage
-`applyPureReactInVue` is recommended.  
+`applyPureReactInVue` is recommended.
 [Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
 <template>
@@ -238,6 +238,49 @@ export default {
 }
 </script>
 ```
+> [!NOTE]
+> 
+> When using `applyPureReactInVue` or `applyReactInVue` to perform two-way binding on some react components, if the values are modified frequently, the modification may not be timely. 
+> 
+> Veury provides a method `injectSyncUpdateForPureReactInVue` to solve this problem
+> 
+> [>> The related issue](https://github.com/devilwjp/veaury/issues/119)
+
+Let's see an example.
+
+(React component Input.js)
+```jsx
+import React from 'react'
+
+export default function Input(props) {
+  return <input value={props.value} onKeyPress={props.onKeyPress}/>
+}
+```
+
+(Vue page Example.vue)
+```vue
+<template>
+  <SimpleInput :value="value" @change="value = $event.target.value"/>
+</template>
+<script setup>
+import { applyPureReactInVue, injectSyncUpdateForPureReactInVue} from 'veaury'
+import ReactSimpleInput from "./Input";
+
+// The component only needs to be injected globally once. If injected multiple times, it is equivalent to appending and overwriting function hooks.
+injectSyncUpdateForPureReactInVue(ReactSimpleInput, {
+  // The name of the hook function that determines the content update of the Input component
+  onChange(args) {
+    return {
+      value: args.target.value
+    }
+  }
+})
+
+const SimpleInput = applyPureReactInVue(ReactSimpleInput)
+const value = ref("");
+</script>
+```
+
 
 ### Vue in React - Usage of events
 
