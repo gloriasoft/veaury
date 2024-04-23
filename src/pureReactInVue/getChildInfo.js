@@ -18,10 +18,13 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
       reactScoped[newKey] = defaultSlotsFormatter.call(child.__top__, fn(), vueInReactCall, hashList)
       return
     }
-    // react render props
-    reactScoped[key] = function (...args) {
-      fn.__reactArgs = args
-      return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
+
+    if (typeof fn === 'function') {
+      // react render props
+      reactScoped[key] = function (...args) {
+        fn.__reactArgs = args
+        return defaultSlotsFormatter(fn.apply(this, args), vueInReactCall, hashList)
+      }
     }
   })
 
