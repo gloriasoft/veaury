@@ -30,6 +30,12 @@ interface ReactMissVueOptions {
     useVueInjection: injectionFunction
     beforeVueAppMount?: (app: object) => any
 }
+interface SyncUpdateHooks {
+    [key: string]: Function
+}
+interface SyncUpdateStates {
+    [key: string]: any
+}
 type useCrossingHooks = Function
 type CrossingProviderComponent = component
 type ReactContext = Object
@@ -59,6 +65,7 @@ export const createCrossingProviderForPureReactInVue: typeof createCrossingProvi
 export const createCrossingProviderForPureVueInReact: typeof createCrossingProviderForVueInReact;
 export const lazyPureReactInVue: typeof lazyReactInVue;
 export const lazyPureVueInReact: typeof lazyVueInReact;
+export const injectSyncUpdateForPureReactInVue: (ReactComponent: ReactComponent, syncUpdateHooks: SyncUpdateHooks) => SyncUpdateStates;
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {

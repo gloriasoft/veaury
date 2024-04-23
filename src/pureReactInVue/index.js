@@ -11,6 +11,7 @@ export default function applyPureReactInVue (ReactComponent, combinedOption) {
       pureTransformer: true,
       // Custom slot handler
       defaultSlotsFormatter: NoWrapFunction,
+      // This function will be called by the react container component using call(this,...)
       defaultPropsFormatter(props, vueInReactCall, hashList) {
         const newProps = {}
         Object.keys(props).forEach((key) => {

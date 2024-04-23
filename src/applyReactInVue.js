@@ -136,7 +136,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       if (children && children[0]) {
         return children.map((child, index) => applyVueInReact(this.createSlot(child instanceof Function ? child : [child]), {
           ...options, ...customOptions, isSlots: true, wrapInstance,
-        }).render({ key: child?.data?.key || index }))
+        }).render({ key: child?.key || undefined }))
       }
     }
     return applyVueInReact(this.createSlot(children), {
@@ -160,7 +160,7 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
           // TODO: defaultSlotsFormatter
           // Custom slot handler
           if (options.defaultSlotsFormatter && props[i].__trueChildren) {
-            props[i].__top__ = this.__veauryVueWrapperRef__
+            props[i].__trueChildren.__top__ = this.__veauryVueWrapperRef__
             props[i] = options.defaultSlotsFormatter(props[i].__trueChildren, this.vueInReactCall, hashList)
             function cloneChildren() {
               if (props[i] instanceof Array) {
@@ -199,9 +199,27 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       return this.state.children || this.props.children
     }
     let finalProps = props
+
+    // When some react components are doing two-way binding, the status update will be out of sync, such as the input component
+    // Use internal synchronization updates to solve this problem
+    if (Component.__syncUpdateForPureReactInVue) {
+      Object.keys(Component.__syncUpdateForPureReactInVue).map((key) => {
+        if (finalProps[key] && typeof finalProps[key] === 'function') {
+          const __veauryVueWrapperRef__ = this.__veauryVueWrapperRef__
+          const oldFun = finalProps[key]
+          finalProps[key] = function(...args) {
+            __veauryVueWrapperRef__.__veaurySyncUpdateProps__(Component.__syncUpdateForPureReactInVue[key].apply(this, args))
+            oldFun.apply(this, args)
+            __veauryVueWrapperRef__.macroTaskUpdate = true
+            __veauryVueWrapperRef__.__veauryMountReactComponent__(true, true, {})
+          }
+        }
+      })
+    }
+
     // TODO: defaultPropsFormatter
     if (options.defaultPropsFormatter) {
-      finalProps = options.defaultPropsFormatter(props, this.vueInReactCall, hashList)
+      finalProps = options.defaultPropsFormatter.call(this, finalProps, this.vueInReactCall, hashList)
     }
     const newProps = { ...finalProps, ...$slots, ...$scopedSlots }
 
@@ -277,7 +295,7 @@ export default function applyReactInVue(component, options = {}) {
     render() {
       /**
        * Magical code!
-       * The 'slotsInit' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
+       * The '__veauryCheckReactSlot__' function allows' slots' to be executed once in 'render' to generate a 'dep' relationship.
        * However, when 'scopedSlot' is forcibly executed, it may rely on some function input parameters.
        * Forcibly executing without input parameters may lead to errors,
        * resulting in the failure of subsequent 'createElement' function execution,
@@ -286,46 +304,56 @@ export default function applyReactInVue(component, options = {}) {
        */
       const VNode = createElement(options.react.componentWrap, { ref: "react", ...options.react.componentWrapAttrs || {}}, this.VEAURY_Portals.map(({ Portal, key }) => Portal(createElement, key)))
       // Must be executed after 'VNode' is created
-      // this.slotsInit()
       this.__veauryCheckReactSlot__(this.$slots)
       return VNode
     },
     methods: {
       __veauryCheckReactSlot__(slots) {
+        if (typeof slots !== 'object' || slots == null) return
         function linkReact(slot, child, type) {
           if (child[type]) {
             slot[type] = child[type]
             return true
           }
         }
+        if (slots instanceof Array) {
+          slots.forEach((slot) => {
+            this.__veauryCheckReactSlot__(slot.children)
+          })
+          return
+        }
         Object.keys(slots).forEach((key) => {
+          const fn = slots[key]
+          if (typeof fn !== 'function') return
+          // If this function is executed inside the react component, the incoming parameters will be save
+          let trueChildren
           try {
-            const fn = slots[key]
-            // If this function is executed inside the react component, the incoming parameters will be save
-            let trueChildren = fn.apply(this, fn.__reactArgs || [{}])
-            // trueChildren = trueChildren.filter((n) => n.type !== Comment)
-            fn.__trueChildren = trueChildren
+            trueChildren = fn.apply(this, fn.__reactArgs || [{}])
+          } catch(e){
+            return
+          }
 
-            trueChildren.forEach((child) => {
-              if (child.children) {
-                this.__veauryCheckReactSlot__(child.children)
-              }
-            })
+          // trueChildren = trueChildren.filter((n) => n.type !== Comment)
+          fn.__trueChildren = trueChildren
 
-            // Check if children are from react children wrapped by applyReactInVue
-            if (trueChildren.length === 1) {
-              const child = trueChildren[0]
-              if (linkReact(fn, child, 'reactSlot')) return
-              if (linkReact(fn, child, 'reactFunction')) return
-
-              // Vue Fragment wrapped
-              if (child.type === VueFragment && child.children?.length === 1) {
-                const subChild = child.children[0]
-                if (linkReact(fn, subChild, 'reactSlot')) return
-                linkReact(fn, subChild, 'reactFunction')
-              }
+          trueChildren.forEach((child) => {
+            if (child.children) {
+              this.__veauryCheckReactSlot__(child.children)
             }
-          } catch(e) {}
+          })
+          // Check if children are from react children wrapped by applyReactInVue
+          if (trueChildren.length === 1) {
+            const child = trueChildren[0]
+            if (linkReact(fn, child, 'reactSlot')) return
+            if (linkReact(fn, child, 'reactFunction')) return
+
+            // Vue Fragment wrapped
+            if (child.type === VueFragment && child.children?.length === 1) {
+              const subChild = child.children[0]
+              if (linkReact(fn, subChild, 'reactSlot')) return
+              linkReact(fn, subChild, 'reactFunction')
+            }
+          }
         })
       },
       __veauryPushVuePortal__(vuePortal) {
