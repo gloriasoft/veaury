@@ -199,9 +199,27 @@ const createReactContainer = (Component, options, wrapInstance) => class applyRe
       return this.state.children || this.props.children
     }
     let finalProps = props
+
+    // When some react components are doing two-way binding, the status update will be out of sync, such as the input component
+    // Use internal synchronization updates to solve this problem
+    if (Component.__syncUpdateForPureReactInVue) {
+      Object.keys(Component.__syncUpdateForPureReactInVue).map((key) => {
+        if (finalProps[key] && typeof finalProps[key] === 'function') {
+          const __veauryVueWrapperRef__ = this.__veauryVueWrapperRef__
+          const oldFun = finalProps[key]
+          finalProps[key] = function(...args) {
+            __veauryVueWrapperRef__.__veaurySyncUpdateProps__(Component.__syncUpdateForPureReactInVue[key].apply(this, args))
+            oldFun.apply(this, args)
+            __veauryVueWrapperRef__.macroTaskUpdate = true
+            __veauryVueWrapperRef__.__veauryMountReactComponent__(true, true, {})
+          }
+        }
+      })
+    }
+
     // TODO: defaultPropsFormatter
     if (options.defaultPropsFormatter) {
-      finalProps = options.defaultPropsFormatter.call(this, props, this.vueInReactCall, hashList)
+      finalProps = options.defaultPropsFormatter.call(this, finalProps, this.vueInReactCall, hashList)
     }
     const newProps = { ...finalProps, ...$slots, ...$scopedSlots }
 
