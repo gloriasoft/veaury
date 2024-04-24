@@ -7,19 +7,30 @@ export default function resolveRef(child, children) {
   if (typeof child.type?.originReactComponent === 'function' && !couldBeClass(child.type?.originReactComponent)) {
     return null
   }
-  let ref = child.ref?.r
+
+  let ref
+  let refProxy
+  // vue ENV production
+  if (child.ref?.k) {
+    ref = child.ref?.k
+    refProxy = child.ref?.r
+  } else {
+    ref = child.ref?.r
+  }
   if (ref && typeof ref === 'string') {
     const refKey = ref
     ref = (reactRef) => {
-      if (child.ref.i.refs) {
+      if (child.ref?.i?.refs) {
         // object is not extensible, so reassign the whole object
         const $refs = {...child.ref.i.refs}
         $refs[refKey] = reactRef
         child.ref.i.refs = $refs
       }
-      // composition api ref variable exists
-      const refObj = child.ref.i.setupState?.[refKey]
-      if (child.ref.i.setupState && refKey in child.ref.i.setupState) {
+
+      if (refProxy) {
+        refProxy.value = reactRef
+        // In vue ENV development, composition api ref variable exists
+      } else if (child.ref.i.setupState && refKey in child.ref.i.setupState){
         child.ref.i.setupState[refKey] = reactRef
       }
 
@@ -36,7 +47,7 @@ export default function resolveRef(child, children) {
         return target[key]
       },
       set(target, key, value) {
-        if (child.ref.i.refs && refKey in child.ref.i.refs) {
+        if (child.ref?.i?.refs && refKey in child.ref?.i?.refs) {
           const $refs = {...child.ref.i.refs}
           $refs[key] = value
           child.ref.i.refs = $refs
