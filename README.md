@@ -253,7 +253,7 @@ Let's see an example.
 import React from 'react'
 
 export default function Input(props) {
-  return <input value={props.value} onKeyPress={props.onKeyPress}/>
+  return <input value={props.value} onChange={props.onChange}/>
 }
 ```
 
