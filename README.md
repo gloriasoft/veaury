@@ -1140,11 +1140,26 @@ index 3366f5a..b9eacc6 100644
 
 ## Development Setup  
 The directories `dev-project-react` and `dev-project-vue3` in the project are the basic projects of the development environment of `veaury`, and they are also the two initial projects created by `create-react-app` and `@vue/cli` respectively.
-> **Note:** In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`
+> [!NOTE]  
+> In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`
 >
+> [!TIP]  
 > **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects
 >
+> [!TIP]  
 > **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development  
+> 
+> [!IMPORTANT]  
+> Introduction to other scripts in `package.json`  
+> `npm run build`: Build veaury to production.  
+> `build:vue`: Build the project `dev-project-vue3` to production.  
+> `build:react`:  the project `dev-project-react` to production.  
+> `remotedev:vue`: Start the project `dev-project-vue3` to development (`veaury` is pointed to the dependency in node_modules.)  
+> `remotedev:react`: Start the project `dev-project-react` to development (`veaury` is pointed to the dependency in node_modules.)  
+> `remotebuild:vue`: Build the project `dev-project-vue3` to production (`veaury` is pointed to the dependency in node_modules.)  
+> `remotebuild:react`: Build the project `dev-project-react` to production (`veaury` is pointed to the dependency in node_modules.)  
+> `test`: Carry out testing  
+
 
 ## Project Structure  
 - `babel`: contains babel presets for projects built via webpack to solve the problem of compiling both vue and react type jsx.  
