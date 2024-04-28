@@ -14,6 +14,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
 - [Legacy](#legacy)
@@ -54,6 +55,13 @@
 - [Project Structure](#project-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 商业合作  
+正在寻求商业合作的可能性(wechat: devilwjp_new / QQ: 9700616)  
+- 帮助您的项目做兼容和迁移
+- 帮助您vue或react的组件库，同时存在另一种技术栈版本
+- 帮助您的sdk同时具备支持vue和react的项目
+- 开源的是免费版，可为企业和个人提供定制版需求
 
 ## What is Veaury?  
 Veaury (pronounced /ˈvjuːri/, inspired by 'beauty') is a tool library.
