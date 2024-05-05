@@ -269,6 +269,14 @@ import BasicVue from './Basic.vue'
 
 const Basic = applyVueInReact(BasicVue)
 export default function () {
+  const vSlots = {
+    // 在Vue组件的template内使用'<slot name="slot1" />'进行渲染
+    slot1: <div>this is slot1(namedSlot)</div>,
+    // 在Vue组件的template内使用'<slot name="slot2" value="xxxxxx"/>'进行渲染
+    slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
+    // 在Vue组件的template内使用'<slot/>'进行渲染
+    default: <div>this is children</div>
+  }
   return <div>
     {/*只传递children*/}
     <Basic>
@@ -276,11 +284,7 @@ export default function () {
       <div>this is children</div>
     </Basic>
     {/*传递 v-slots*/}
-    <Basic v-slots={{
-      slot1: <div>this is slot1(namedSlot)</div>,
-      slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-      default: <div>this is children</div>
-    }}/>
+    <Basic v-slots={vSlots}/>
     {/*另一种用法*/}
     <Basic>
       {{
