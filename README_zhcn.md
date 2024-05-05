@@ -287,11 +287,7 @@ export default function () {
     <Basic v-slots={vSlots}/>
     {/*另一种用法*/}
     <Basic>
-      {{
-        slot1: <div>this is slot1(namedSlot)</div>,
-        slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-        default: <div>this is children</div>
-      }}
+      {vSlots}
     </Basic>
   </div>
 }
