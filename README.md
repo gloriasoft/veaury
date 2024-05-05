@@ -352,6 +352,14 @@ import BasicVue from './Basic.vue'
 
 const Basic = applyVueInReact(BasicVue)
 export default function () {
+  const vSlots = {
+    // Render with '<slot name="slot1" />' in Vue Component
+    slot1: <div>this is slot1(namedSlot)</div>,
+    // Render with '<slot name="slot2" value="xxxxxx"/>' in Vue Component
+    slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
+    // Render with '<slot/>' in Vue Component
+    default: <div>this is children</div>
+  }
   return <div>
     {/*just send children*/}
     <Basic>
@@ -359,21 +367,10 @@ export default function () {
       <div>this is children</div>
     </Basic>
     {/*send v-slots*/}
-    <Basic v-slots={{
-      // Render with '<slot name="slot1" />' in Vue Component
-      slot1: <div>this is slot1(namedSlot)</div>,
-      // Render with '<slot name="slot2" value="xxxxxx"/>' in Vue Component
-      slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-      // Render with '<slot/>' in Vue Component
-      default: <div>this is children</div>
-    }}/>
+    <Basic v-slots={vSlots}/>
     {/*another usage*/}
     <Basic>
-      {{
-        slot1: <div>this is slot1(namedSlot)</div>,
-        slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-        default: <div>this is children</div>
-      }}
+      {vSlots}
     </Basic>
   </div>
 }
