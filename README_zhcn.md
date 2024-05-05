@@ -277,11 +277,8 @@ export default function () {
     </Basic>
     {/*传递 v-slots*/}
     <Basic v-slots={{
-      // 在Vue组件的template内使用'<slot name="slot1" />'进行渲染
       slot1: <div>this is slot1(namedSlot)</div>,
-      // 在Vue组件的template内使用'<slot name="slot2" value="xxxxxx"/>'进行渲染
       slot2: ({value}) => <div>this is slot2(scopedSlot), and receive value: {value}</div>,
-      // 在Vue组件的template内使用'<slot/>'进行渲染
       default: <div>this is children</div>
     }}/>
     {/*另一种用法*/}
