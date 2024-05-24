@@ -44,7 +44,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 <div align=center>
-  <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
+  <img src="https://github.com/devilwjp/VueReact/assets/38802722/dd7ccd14-4e02-4f4c-bf59-bc0f95088d82"/>
 </div>  
 <h1 align=center>Veaury</h1>
 <h2 align=center>Vue3应用可以使用React组件，React应用可以使用Vue3组件，并且非常完美！</h2> 
@@ -95,6 +95,8 @@ $ npm i veaury -S
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
 import veauryVitePlugins from 'veaury/vite/index.js'
+// 如果是vite 6, 应该使用 `veaury/vite/esm`
+// import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [

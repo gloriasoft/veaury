@@ -1,5 +1,5 @@
 <div align=center>
-  <img src="https://raw.githubusercontent.com/devilwjp/VueReact/master/vuereact-combined.png"/>
+  <img src="https://github.com/devilwjp/VueReact/assets/38802722/dd7ccd14-4e02-4f4c-bf59-bc0f95088d82"/>
 </div>  
 <h1 align=center>Veaury</h1>
 <h2 align=center>Use React in Vue3 and Vue3 in React, And as perfect as possible!</h2>
@@ -115,6 +115,8 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 import { defineConfig } from 'vite'
 // >= veaury@2.1.1
 import veauryVitePlugins from 'veaury/vite/index.js'
+// if vite 6, should use `veaury/vite/esm`
+// import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
