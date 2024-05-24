@@ -1,24 +1,6 @@
-const vue = require('@vitejs/plugin-vue')
-const react = require('@vitejs/plugin-react')
-const vueJsx = require('@vitejs/plugin-vue-jsx')
-// const requireTransform = require('vite-plugin-require-transform').default
-// function ReactDOMTransformPlugin() {
-//   return {
-//     async resolveId(source, importer, options) {
-//       if (source.match(/react-dom\/client/)) {
-//         const resolution = await this.resolve(source, importer, { skipSelf: true, ...options })
-//         if (!resolution) {
-//           return { id: 'veaury-fake-react-dom-client', moduleSideEffects: true }
-//         }
-//       }
-//     },
-//     load(id) {
-//       if (id === 'veaury-fake-react-dom-client') {
-//         return `export * from 'react-dom'; export {default} from 'react-dom';`
-//       }
-//     }
-//   }
-// }
+import vue from '@vitejs/plugin-vue'
+import react from '@vitejs/plugin-react'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 
 function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
 
@@ -64,4 +46,4 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
   ]
 }
 
-module.exports = veauryVitePlugins
+export default veauryVitePlugins
