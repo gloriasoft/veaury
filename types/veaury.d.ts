@@ -55,7 +55,7 @@ export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => a
 export const lazyReactInVue: (asyncImport: Promise<any> | defineAsyncComponentOptions, options?: options) => any;
 export const VueContainer: ReactComponent;
 export const injectPropsFromWrapper: injectPropsFromWrapper;
-export const creatReactMissVue: (ReactMissVueOptions: ReactMissVueOptions) => createReactMissVueReturn;
+export const createReactMissVue: (ReactMissVueOptions: ReactMissVueOptions) => createReactMissVueReturn;
 export const getReactNode: (VueElement: VNode | SlotFunction) => ReactNode;
 export const getVNode: (ReactElement: ReactNode) => VNode;
 export const RenderReactNode: VueComponent;
