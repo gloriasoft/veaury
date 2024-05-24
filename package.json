@@ -1,7 +1,7 @@
 {
   "name": "veaury",
   "private": false,
-  "version": "2.3.18",
+  "version": "2.4.0",
   "description": "Use React in Vue3 and Vue3 in React, And as perfect as possible!",
   "main": "dist/veaury.umd.js",
   "module": "dist/veaury.esm.js",
