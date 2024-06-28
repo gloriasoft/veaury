@@ -8,6 +8,22 @@ test('test reactUnMount', async () => {
   await new Promise(resolve => {
     setTimeout(resolve, 300);
   })
-  const linkElement = await screen.findByText(/reactUnMountSuccess/);
+  const linkElement = await screen.findByText(/test-result-1/);
   expect(linkElement).toBeInTheDocument()  
 });
+test('test reactUnMount getElementById', async () => {
+  render(Component);
+  await new Promise(resolve => {
+    setTimeout(resolve, 300);
+  })
+  const linkElement = await screen.findByText(/test-result-2/);
+  expect(linkElement).toBeInTheDocument()  
+});
+// test('test reactUnMount querySelector', async () => {
+//   render(Component);
+//   await new Promise(resolve => {
+//     setTimeout(resolve, 300);
+//   })
+//   const linkElement = await screen.findByText(/reactUnMountQuerySelectorSuccess/);
+//   expect(linkElement).toBeInTheDocument()  
+// });
