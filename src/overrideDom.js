@@ -11,7 +11,6 @@ export function overwriteDomMethods(refDom) {
             const old = window[key].prototype[method]
             if (!old) return
             domTopObject[key][method] = old
-            // console.log(`key:${key}, method:${method}, old:${old}`)
             window[key].prototype[method] = function (...args) {
                 const oldResult = old.apply(this, args)
                 if (oldResult && (oldResult.constructor !== NodeList || (oldResult.constructor === NodeList && oldResult.length > 0))) return oldResult
