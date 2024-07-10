@@ -42,7 +42,10 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
         }
       }
     },
-    react(reactOptions)
+    react({
+      jsxImportSource: 'react',
+      ...reactOptions
+    })
   ]
 }
 
