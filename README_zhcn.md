@@ -93,10 +93,9 @@ $ npm i veaury -S
 + 主项目是vue:
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
-// 如果是vite 6, 应该使用 `veaury/vite/esm`
-// import veauryVitePlugins from 'veaury/vite/esm'
+
+// 如果是cjs模式，使用 'veaury/vite/cjs'
+import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
@@ -113,14 +112,15 @@ export default defineConfig({
 + The main project is React:
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
+
+// 如果是cjs模式，使用 'veaury/vite/cjs'
+import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
     // 关闭 react 插件
     // react(),
-    // type设为react时，所有.vue文件里的jsx将以vue jsx进行编译，其他文件的jsx都是以react jsx编译
+    // type设为react时，所有.vue文件中的jsx以及在名为vue_app目录里的jsx文件都将以vue jsx编译，其他的以react jsx编译
     veauryVitePlugins({
       type: 'react'
     })
@@ -131,14 +131,15 @@ export default defineConfig({
 如果想自定义vue jsx编译的范围, 可以将type设置为`custom`，然后通过设置`vueJsxInclude` 和 `vueJsxExclude`来自定义编译范围
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
+
+// 如果是cjs模式，使用 'veaury/vite/cjs'
+import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
     veauryVitePlugins({
       type: 'custom',
-      // 所有.vue文件中的jsx以及在名为vue_app目录里的jsx文件都将以vue jsx编译
+      // 所有.vue文件中的jsx以及在名为vue_app目录里的jsx文件都将以vue jsx编译，其他的以react jsx编译
       vueJsxInclude: [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/][\w\W]+\.[tj]sx$/],
       // vueJsxExclude: []
     })

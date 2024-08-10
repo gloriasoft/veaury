@@ -113,10 +113,10 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 + The main project is Vue:  
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
-// if vite 6, should use `veaury/vite/esm`
-// import veauryVitePlugins from 'veaury/vite/esm'
+
+// if mode cjs, should use `veaury/vite/cjs`
+import veauryVitePlugins from 'veaury/vite/esm'
+
 
 export default defineConfig({
   plugins: [
@@ -141,15 +141,16 @@ export default defineConfig({
 + The main project is React:  
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
+
+// if mode cjs, should use `veaury/vite/cjs`
+import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
     // Turn off react plugin
     // react(),
     // When the type of veauryVitePlugins is set to react, 
-    // only jsx in .vue file will be parsed with vue jsx, 
+    // only jsx in .vue files and files in a directory named "vue_app" will be parsed using vue jsx, 
     // jsx in other files will be parsed with react jsx
     veauryVitePlugins({
       type: 'react',
@@ -164,17 +165,19 @@ export default defineConfig({
 })
 
 ```
-If you want to customize the compilation scope of vueJsx, you can configure overrides by setting type to `custom`.
+If you want to customize the compilation scope of vueJsx, you can configure overrides by setting type to `custom`.  
+Use `vueJsxInclude` and `vueJsxExclude` to configure the file range to be parsed using vue jsx, the others will be parsed using react jsx.  
 ```js
 import { defineConfig } from 'vite'
-// >= veaury@2.1.1
-import veauryVitePlugins from 'veaury/vite/index.js'
+
+// if mode cjs, should use `veaury/vite/cjs`
+import veauryVitePlugins from 'veaury/vite/esm'
 
 export default defineConfig({
   plugins: [
     veauryVitePlugins({
       type: 'custom',
-      // The jsx in .vue files and in the directory named 'vue_app' will be parsed with vue jsx.
+      // Only jsx in .vue files and files in a directory named "react_app" will be parsed using vue jsx , others will be parsed using react jsx.
       vueJsxInclude: [/vue&type=script&lang\.[tj]sx$/i, /vue&type=script&setup=true&lang\.[tj]sx$/i, /[/\\]vue_app[\\/][\w\W]+\.[tj]sx$/],
       // vueJsxExclude: [],
       // Configuration of @vitejs/plugin-vue
