@@ -2,8 +2,11 @@ const {VueLoaderPlugin} = require('vue-loader')
 let vueJsx = []
 try {
   require.resolve('@vue/babel-plugin-jsx')
+  require.resolve('babel-loader')
   vueJsx.push('@vue/babel-plugin-jsx')
-} catch(e) {}
+} catch(e) {
+  console.warn(e)
+}
 
 
 class VeauryVuePlugin {
@@ -15,9 +18,9 @@ class VeauryVuePlugin {
     function defaultBabelInclude(filename) {
       if (filename.match(/[/\\]node_modules[\\/$]+/)) return
       // // default pass vue file
-      if (filename.match(/\.(vue|vue\.js)$/i)){
-        return filename
-      }
+      if (filename.match(/\.(vue|vue\.[jt]sx?)$/i)) return filename
+      if (filename.match(/vue&type=script&setup=true&lang\.[tj]sx$/i)) return filename
+      if (filename.match(/vue&type=script&lang\.[tj]sx$/i)) return filename
       // default pass vue_app path
       if (filename.match(/[/\\]vue_app[\\/$]+/)) return filename
     }
@@ -26,18 +29,18 @@ class VeauryVuePlugin {
     if (extensions && extensions.indexOf('.vue') < 0) {
       extensions.push('.vue')
     }
+
     const rules = compiler.options.module.rules
-    // find oneOf rule
-    const oneOfRule = rules.find((rule) => rule.oneOf)
-    // the last rule is file-loader
-    const fileLoaderRule = oneOfRule && oneOfRule.oneOf[oneOfRule.oneOf.length-1]
+    rules.unshift({
+      test: /\.vue$/,
+      loader: 'vue-loader',
+      options: { hotReload: false },
+    })
 
-    if (fileLoaderRule) {
-      // ignore vue type file
-      fileLoaderRule.exclude?.push(/\.vue$/)
-    }
-
-    const newRules = [
+    rules.push({
+        test: /\.vue$/,
+        type: 'javascript/auto'
+      },
       {
         include: defaultBabelInclude,
         ...babelLoader,
@@ -53,14 +56,7 @@ class VeauryVuePlugin {
             ...vueJsx
           ]
         }
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: { hotReload: false }
-      },
-    ]
-    rules.push(...newRules)
+      })
     // apply VueLoaderPlugin
     this.vueLoaderPluginInstance.apply(compiler)
   }
