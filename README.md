@@ -14,6 +14,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [About charges](#about-charges)
 - [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
@@ -55,6 +56,17 @@
 - [Project Structure](#project-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## About charges  
+Veaury is still free, but some complex functions will be implemented by paid plug-ins in the future.
+The following requirements will be covered by the fee:
+- Perfectly supports the SSR framework (next and nuxt) to ensure lossless performance display of components and ensure that the styles inside the components are effective.  
+
+We will provide plugins for webpack and vite. By setting the token, the plug-ins can be made to work. At this time, Veaury will have all the capabilities that exist in the paid version.  
+Token will be charged based on the number of IPs.  
+10 IPs cost $70 per year.  
+100 IPs cost $300 per year.  
+
 
 ## 商业合作  
 正在寻求商业合作的可能性(wechat: devilwjp_new / QQ: 9700616)  
