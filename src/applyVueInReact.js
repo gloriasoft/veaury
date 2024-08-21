@@ -200,12 +200,21 @@ class VueComponentLoader extends React.Component {
     }
     this.__veauryVueInstance__ && this.__veauryVueInstance__.$.appContext.app.unmount()
     random.pool.delete(this.__veauryVueTargetId__)
+    this.vueCreated = false
+  }
+
+  componentDidMount() {
+    // Since in nextjs, the ref function may not be retriggered, a verification trigger is performed when the component is mounted.
+    this.__veauryCreateVueInstance__(this.vueContainerElement)
   }
 
   // The dom object of the component will be received through the ref callback of the react component,
   // and the context has been bound in the constructor of the class
   __veauryCreateVueInstance__ (targetElement) {
+    if (this.vueCreated) return
+    this.vueCreated = true
     const VueContainerInstance = this
+    this.vueContainerElement = targetElement
     let { component, [optionsName]: options, children, 'v-slots': $slots = {}, ...props } = this.props
     if (children) {
       if (typeof children === 'object' && !(children instanceof Array) && !children.$$typeof) {
