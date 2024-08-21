@@ -63,7 +63,7 @@ The following requirements will be covered by the fee:
 - Perfectly supports the SSR framework (next and nuxt) to ensure lossless performance display of components and ensure that the styles inside the components are effective.  
 
 We will provide plugins for webpack and vite. By setting the token, the plug-ins can be made to work. At this time, Veaury will have all the capabilities that exist in the paid version.  
-Token will be charged based on the number of IPs.  
+Tokens will be charged based on the number of IPs.  
 10 IPs cost $70 per year.  
 100 IPs cost $300 per year.  
 
