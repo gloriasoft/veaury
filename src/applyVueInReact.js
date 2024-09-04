@@ -156,7 +156,7 @@ class VueComponentLoader extends React.Component {
       this.updateVueComponent(component)
     }
     if (component.__fromReactSlot) return true
-    if (!this.__veauryVueInstance__) return
+    if (!this.__veauryVueInstance__) return true
 
     if (children) {
       if (!$slots) {
