@@ -94,8 +94,10 @@ $ npm i veaury -S
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是cjs模式，使用 'veaury/vite/cjs'
-import veauryVitePlugins from 'veaury/vite/esm'
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -113,8 +115,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是cjs模式，使用 'veaury/vite/cjs'
-import veauryVitePlugins from 'veaury/vite/esm'
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -132,8 +136,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是cjs模式，使用 'veaury/vite/cjs'
-import veauryVitePlugins from 'veaury/vite/esm'
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [

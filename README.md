@@ -126,9 +126,10 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
-
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -154,8 +155,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -182,8 +185,10 @@ Use `vueJsxInclude` and `vueJsxExclude` to configure the file range to be parsed
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
