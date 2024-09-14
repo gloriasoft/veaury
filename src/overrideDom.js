@@ -8,18 +8,19 @@ const domTopObject = { Document: {}, Element: {} }
 export function overwriteDomMethods(refDom) {
     Object.keys(domTopObject).forEach((key) => {
         domMethods.forEach((method) => {
-            const old = window[key].prototype[method]
+            const old = domTopObject[key][method] || window[key].prototype[method]
             if (!old) return
             domTopObject[key][method] = old
             window[key].prototype[method] = function (...args) {
                 const oldResult = old.apply(this, args)
                 if (oldResult && (oldResult.constructor !== NodeList || (oldResult.constructor === NodeList && oldResult.length > 0))) return oldResult
                 // If each function of Document is called using apply, an error will occur. Here you need to use the native function of Element.
-                if (method === 'getElementById'){
-                    method = 'querySelector'
+                let currentMethod = method
+                if (currentMethod === 'getElementById'){
+                    currentMethod = 'querySelector'
                     args = ['#' + args[0]]
                 }
-                const nativeElementFn = domTopObject.Element[method] || Element.prototype[method]
+                const nativeElementFn = domTopObject.Element[currentMethod] || Element.prototype[currentMethod]
                 return nativeElementFn.apply(refDom, args)
             }
         })
