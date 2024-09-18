@@ -14,6 +14,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [About charges](#about-charges)
 - [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
@@ -55,6 +56,17 @@
 - [Project Structure](#project-structure)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## About charges  
+Veaury is still free, but some complex functions will be implemented by paid plug-ins in the future.
+The following requirements will be covered by the fee:
+- Perfectly supports the SSR framework (next and nuxt) to ensure lossless performance display of components and ensure that the styles inside the components are effective.  
+
+We will provide plugins for webpack and vite. By setting the token, the plug-ins can be made to work. At this time, Veaury will have all the capabilities that exist in the paid version.  
+Tokens will be charged based on the number of IPs.  
+10 IPs cost $70 per year.  
+100 IPs cost $300 per year.  
+
 
 ## 商业合作  
 正在寻求商业合作的可能性(wechat: devilwjp_new / QQ: 9700616)  
@@ -114,9 +126,10 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
-
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -142,8 +155,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
@@ -170,8 +185,10 @@ Use `vueJsxInclude` and `vueJsxExclude` to configure the file range to be parsed
 ```js
 import { defineConfig } from 'vite'
 
-// if mode cjs, should use `veaury/vite/cjs`
-import veauryVitePlugins from 'veaury/vite/esm'
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
+import veauryVitePlugins from 'veaury/vite'
 
 export default defineConfig({
   plugins: [
