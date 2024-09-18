@@ -27,13 +27,27 @@ class VeauryVuePlugin {
       // default pass vue_app path
       if (filename.match(/[/\\]vue_app[\\/$]+/)) return filename
     }
-    const {babelLoader} = this.options
+    const {babelLoader, isNext} = this.options
     const extensions = compiler.options.resolve?.extensions
     if (extensions && extensions.indexOf('.vue') < 0) {
       extensions.push('.vue')
     }
 
     const rules = compiler.options.module.rules
+    const firstOneOf = rules.find((item) => item.oneOf)
+
+    if (isNext === true) {
+      // remove error-loader
+      firstOneOf.oneOf = firstOneOf.oneOf.filter((item) => item?.use?.loader !== 'error-loader')
+
+      firstOneOf.oneOf.push({
+        test: /\.css$/,
+        use: [
+          'style-loader','css-loader'
+        ]
+      })
+    }
+
     rules.unshift({
       test: /\.vue$/,
       loader: 'vue-loader',
@@ -59,7 +73,8 @@ class VeauryVuePlugin {
             ...vueJsx
           ]
         }
-      })
+      }
+    )
     // apply VueLoaderPlugin
     this.vueLoaderPluginInstance.apply(compiler)
   }
