@@ -57,8 +57,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 商业合作  
-正在寻求商业合作的可能性(wechat: devilwjp_new / QQ: 9700616)  
+## 合作和机会  
+正在寻求商业合作的可能性，或者您的公司愿意提供一份适合我的工作机会，我也会考虑(wechat: devilwjp_new / QQ: 9700616)  
 - 帮助您的项目做兼容和迁移
 - 帮助您vue或react的组件库，同时存在另一种技术栈版本
 - 帮助您的sdk同时具备支持vue和react的项目
