@@ -1,53 +1,66 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-# 目录引导  
-
-- [Veaury](#veaury)
-  - [Vue3应用可以使用React组件，React应用可以使用Vue3组件，并且非常完美！](#vue3%E5%BA%94%E7%94%A8%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6react%E5%BA%94%E7%94%A8%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8vue3%E7%BB%84%E4%BB%B6%E5%B9%B6%E4%B8%94%E9%9D%9E%E5%B8%B8%E5%AE%8C%E7%BE%8E)
-  - [什么是Veaury?](#%E4%BB%80%E4%B9%88%E6%98%AFveaury)
-  - [重要功能](#%E9%87%8D%E8%A6%81%E5%8A%9F%E8%83%BD)
-  - [支持Vue2？](#%E6%94%AF%E6%8C%81vue2)
-  - [使用场景](#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
-  - [安装](#%E5%AE%89%E8%A3%85)
-  - [项目的预配置](#%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%A2%84%E9%85%8D%E7%BD%AE)
-    - [Webpack](#webpack)
-    - [Vite](#vite)
-  - [用法](#%E7%94%A8%E6%B3%95)
-    - [在React组件中使用Vue组件 - 基本用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
-    - [在Vue组件中使用React组件 - 基本用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
-    - [在React组件中使用Vue组件 - 事件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在Vue组件中使用React组件 - 事件的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在React组件中使用Vue组件 - 插槽的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E6%8F%92%E6%A7%BD%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在Vue组件中使用React组件 - 传递render props 和 React node 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BC%A0%E9%80%92render-props-%E5%92%8C-react-node-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [Context(上下文)](#context%E4%B8%8A%E4%B8%8B%E6%96%87)
-      - [React组件使用Vue组件 - Provider / useContext 的用法](#react%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---provider--usecontext-%E7%9A%84%E7%94%A8%E6%B3%95)
-      - [Vue组件使用React组件 - Provide / Inject 的用法](#vue%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---provide--inject-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在React组件中使用 VueContainer 组件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8-vuecontainer-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [Usage of getVNode](#usage-of-getvnode)
-    - [通过VNode获取ReactNode - getReactNode 的用法](#%E9%80%9A%E8%BF%87vnode%E8%8E%B7%E5%8F%96reactnode---getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在Vue组件中直接渲染ReactNode - RenderReactNode 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93reactnode---renderreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [在React组件中使用Vue组件, v-model / v-models 的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6-v-model--v-models-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
-      - [在 Vue 组件中注入 React hooks的用法](#%E5%9C%A8-vue-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-react-hooks%E7%9A%84%E7%94%A8%E6%B3%95)
-      - [在 React 组件中注入 Vue hooks 的用法](#%E5%9C%A8-react-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-vue-hooks-%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [跨框架的Provider](#%E8%B7%A8%E6%A1%86%E6%9E%B6%E7%9A%84provider)
-      - [createCrossingProviderForVueInReact 的用法](#createcrossingproviderforvueinreact-%E7%9A%84%E7%94%A8%E6%B3%95)
-      - [createCrossingProviderForReactInVue的用法](#createcrossingproviderforreactinvue%E7%9A%84%E7%94%A8%E6%B3%95)
-    - [ReactMissVue](#reactmissvue)
-      - [Usage of createReactMissVue](#usage-of-createreactmissvue)
-    - [lazyReactInVue的用法(在Vue组件中使用异步的React组件)](#lazyreactinvue%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84react%E7%BB%84%E4%BB%B6)
-    - [lazyVueInReact的用法(在React组件中使用异步的Vue组件)](#lazyvueinreact%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84vue%E7%BB%84%E4%BB%B6)
-    - [获取ref实例的用法](#%E8%8E%B7%E5%8F%96ref%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%94%A8%E6%B3%95)
-  - [Vue 和 React共存时会引发JSX的TS类型错误.](#vue-%E5%92%8C-react%E5%85%B1%E5%AD%98%E6%97%B6%E4%BC%9A%E5%BC%95%E5%8F%91jsx%E7%9A%84ts%E7%B1%BB%E5%9E%8B%E9%94%99%E8%AF%AF)
-  - [开发指引](#%E5%BC%80%E5%8F%91%E6%8C%87%E5%BC%95)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 <div align=center>
   <img src="https://github.com/devilwjp/VueReact/assets/38802722/dd7ccd14-4e02-4f4c-bf59-bc0f95088d82"/>
 </div>  
 <h1 align=center>Veaury</h1>
 <h2 align=center>Vue3应用可以使用React组件，React应用可以使用Vue3组件，并且非常完美！</h2> 
+<p align="center">
+  <a href="https://coveralls.io/github/devilwjp/veaury?branch=master"><img src="https://coveralls.io/repos/github/devilwjp/veaury/badge.svg?branch=master" alt="Coverage Status"></a>
+  <a href="https://www.npmjs.com/package/veaury"><img src="https://img.shields.io/npm/v/veaury" alt="Version"></a>
+  <a href="https://npmcharts.com/compare/veaury?minimal=true"><img src="https://img.shields.io/npm/dm/veaury" alt="Downloads"></a>
+  <a href="https://www.npmjs.com/package/veaury"><img src="https://img.shields.io/bundlephobia/minzip/veaury" alt="Size"></a>
+</p>
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# 目录引导  
+
+- [合作和机会](#%E5%90%88%E4%BD%9C%E5%92%8C%E6%9C%BA%E4%BC%9A)
+- [什么是Veaury?](#%E4%BB%80%E4%B9%88%E6%98%AFveaury)
+- [重要功能](#%E9%87%8D%E8%A6%81%E5%8A%9F%E8%83%BD)
+- [支持Vue2？](#%E6%94%AF%E6%8C%81vue2)
+- [使用场景](#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF)
+- [安装](#%E5%AE%89%E8%A3%85)
+- [项目的预配置](#%E9%A1%B9%E7%9B%AE%E7%9A%84%E9%A2%84%E9%85%8D%E7%BD%AE)
+  - [Webpack](#webpack)
+  - [Vite](#vite)
+- [在SSR项目中使用Veaury](#%E5%9C%A8ssr%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8veaury)
+- [用法](#%E7%94%A8%E6%B3%95)
+  - [在React组件中使用Vue组件 - 基本用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+  - [在Vue组件中使用React组件 - 基本用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+  - [在React组件中使用Vue组件 - 事件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在Vue组件中使用React组件 - 事件的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在React组件中使用Vue组件 - 插槽的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E6%8F%92%E6%A7%BD%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在Vue组件中使用React组件 - 传递render props 和 React node 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BC%A0%E9%80%92render-props-%E5%92%8C-react-node-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [Context(上下文)](#context%E4%B8%8A%E4%B8%8B%E6%96%87)
+    - [React组件使用Vue组件 - Provider / useContext 的用法](#react%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---provider--usecontext-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [Vue组件使用React组件 - Provide / Inject 的用法](#vue%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---provide--inject-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在React组件中使用 VueContainer 组件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8-vuecontainer-%E7%BB%84%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [Usage of getVNode](#usage-of-getvnode)
+  - [通过VNode获取ReactNode - getReactNode 的用法](#%E9%80%9A%E8%BF%87vnode%E8%8E%B7%E5%8F%96reactnode---getreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在Vue组件中直接渲染ReactNode - RenderReactNode 的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E6%B8%B2%E6%9F%93reactnode---renderreactnode-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [在React组件中使用Vue组件, v-model / v-models 的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6-v-model--v-models-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [Option useInjectPropsFromWrapper](#option-useinjectpropsfromwrapper)
+    - [在 Vue 组件中注入 React hooks的用法](#%E5%9C%A8-vue-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-react-hooks%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [在 React 组件中注入 Vue hooks 的用法](#%E5%9C%A8-react-%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B3%A8%E5%85%A5-vue-hooks-%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [跨框架的Provider](#%E8%B7%A8%E6%A1%86%E6%9E%B6%E7%9A%84provider)
+    - [createCrossingProviderForVueInReact 的用法](#createcrossingproviderforvueinreact-%E7%9A%84%E7%94%A8%E6%B3%95)
+    - [createCrossingProviderForReactInVue的用法](#createcrossingproviderforreactinvue%E7%9A%84%E7%94%A8%E6%B3%95)
+  - [ReactMissVue](#reactmissvue)
+    - [Usage of createReactMissVue](#usage-of-createreactmissvue)
+  - [lazyReactInVue的用法(在Vue组件中使用异步的React组件)](#lazyreactinvue%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84react%E7%BB%84%E4%BB%B6)
+  - [lazyVueInReact的用法(在React组件中使用异步的Vue组件)](#lazyvueinreact%E7%9A%84%E7%94%A8%E6%B3%95%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%BC%82%E6%AD%A5%E7%9A%84vue%E7%BB%84%E4%BB%B6)
+  - [获取ref实例的用法](#%E8%8E%B7%E5%8F%96ref%E5%AE%9E%E4%BE%8B%E7%9A%84%E7%94%A8%E6%B3%95)
+- [Vue 和 React共存时会引发JSX的TS类型错误.](#vue-%E5%92%8C-react%E5%85%B1%E5%AD%98%E6%97%B6%E4%BC%9A%E5%BC%95%E5%8F%91jsx%E7%9A%84ts%E7%B1%BB%E5%9E%8B%E9%94%99%E8%AF%AF)
+- [开发指引](#%E5%BC%80%E5%8F%91%E6%8C%87%E5%BC%95)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 合作和机会
+正在寻求商业合作的可能性，或者您的公司愿意提供一份适合我的工作机会，我也会考虑(wechat: devilwjp_new / QQ: 9700616)
+- 帮助您的项目做兼容和迁移
+- 帮助您vue或react的组件库，同时存在另一种技术栈版本
+- 帮助您的sdk同时具备支持vue和react的项目
+- 开源的是免费版，可为企业和个人提供定制版需求
 
 ## 什么是Veaury?  
 Veaury 是基于React和Vue3的工具库，主要用于React和Vue在一个项目中公共使用的场景，主要运用在项目迁移、技术栈融合的开发模式、跨技术栈使用第三方组件的场景。  
@@ -94,10 +107,10 @@ $ npm i veaury -S
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
-// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs/index.cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm/index.mjs` 引入
 // 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -115,10 +128,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
-// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs/index.cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm/index.mjs` 引入
 // 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -136,10 +149,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs` 引入
-// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm` 引入
+// 如果是commonjs模式(vite.config.cjs), 使用 `veaury/vite/cjs/index.cjs` 引入
+// 如果是esmodule模式(vite.config.mjs), 使用 `veaury/vite/esm/index.mjs` 引入
 // 如果vite的配置文件是`.js`后缀名(vite.config.js), 推荐使用如下的方式引入.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -152,6 +165,14 @@ export default defineConfig({
   ]
 })
 ```
+
+## 在SSR项目中使用Veaury
+如果您的项目使用SSR框架，您仍然可以正常使用Veaury。通过Veaury转换的组件应该是客户端组件。  
+并允许在`Next.js`中创建`.vue`文件，或在`Nuxt.js`中创建React的`.jsx`文件。
+
+以下是分别在 Next.js 和 Nuxt.js 中使用 Veaury 的示例。   
+[How to create and use Vue components using Veaury in Next.js](https://github.com/devilwjp/veaury_in_nextjs)  
+[How to create and use React components using Veaury in Nuxt.js](https://github.com/devilwjp/veaury_in_nuxtjs)  
 
 ## 用法
 

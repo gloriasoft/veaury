@@ -14,8 +14,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [About charges](#about-charges)
-- [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
+- [合作和机会](#%E5%90%88%E4%BD%9C%E5%92%8C%E6%9C%BA%E4%BC%9A)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
 - [Legacy](#legacy)
@@ -25,6 +24,7 @@
 - [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
   - [Webpack](#webpack)
   - [Vite](#vite)
+- [Using Veaury in the SSR projects](#using-veaury-in-the-ssr-projects)
 - [Usage](#usage)
   - [Vue in React - Basic usage](#vue-in-react---basic-usage)
   - [React in Vue - Basic usage](#react-in-vue---basic-usage)
@@ -57,19 +57,8 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## About charges  
-Veaury is still free, but some complex functions will be implemented by paid plug-ins in the future.
-The following requirements will be covered by the fee:
-- Perfectly supports the SSR framework (next and nuxt) to ensure lossless performance display of components and ensure that the styles inside the components are effective.  
-
-We will provide plugins for webpack and vite. By setting the token, the plug-ins can be made to work. At this time, Veaury will have all the capabilities that exist in the paid version.  
-Tokens will be charged based on the number of IPs.  
-10 IPs cost $70 per year.  
-100 IPs cost $300 per year.  
-
-
-## 商业合作  
-正在寻求商业合作的可能性(wechat: devilwjp_new / QQ: 9700616)  
+## 合作和机会  
+正在寻求商业合作的可能性，或者您的公司愿意提供一份适合我的工作机会，我也会考虑(wechat: devilwjp_new / QQ: 9700616)  
 - 帮助您的项目做兼容和迁移
 - 帮助您vue或react的组件库，同时存在另一种技术栈版本
 - 帮助您的sdk同时具备支持vue和react的项目
@@ -126,10 +115,10 @@ First install `@vitejs/plugin-react`, `@vitejs/plugin-vue` and `@vitejs/plugin-v
 ```js
 import { defineConfig } from 'vite'
 
-// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
-// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs/index.cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm/index.mjs`
 // If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -155,10 +144,10 @@ export default defineConfig({
 ```js
 import { defineConfig } from 'vite'
 
-// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
-// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs/index.cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm/index.mjs`
 // If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -185,10 +174,10 @@ Use `vueJsxInclude` and `vueJsxExclude` to configure the file range to be parsed
 ```js
 import { defineConfig } from 'vite'
 
-// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs`
-// If mode esm(vite.config.mjs), should use `veaury/vite/esm`
+// If mode cjs(vite.config.cjs), should use `veaury/vite/cjs/index.cjs`
+// If mode esm(vite.config.mjs), should use `veaury/vite/esm/index.mjs`
 // If the configuration file of vite has a `.js` suffix(vite.config.js), it is recommended to import it in the following way.
-import veauryVitePlugins from 'veaury/vite'
+import veauryVitePlugins from 'veaury/vite/index.js'
 
 export default defineConfig({
   plugins: [
@@ -207,6 +196,15 @@ export default defineConfig({
   ]
 })
 ```
+
+## Using Veaury in the SSR projects    
+If your project uses the SSR framework, you can still use Veaury normally. The component converted through Veaury should be a client component.  
+And allows creating `.vue` files in `Next.js`, or `.jsx` files of React in `Nuxt.js`.  
+
+The following are examples of using Veaury in Next.js and Nuxt.js respectively.  
+[How to create and use Vue components using Veaury in Next.js](https://github.com/devilwjp/veaury_in_nextjs)  
+[How to create and use React components using Veaury in Nuxt.js](https://github.com/devilwjp/veaury_in_nuxtjs)  
+
 ## Usage
 
 ### Vue in React - Basic usage
