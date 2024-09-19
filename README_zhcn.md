@@ -153,6 +153,14 @@ export default defineConfig({
 })
 ```
 
+## 在SSR项目中使用Veaury
+如果您的项目使用SSR框架，您仍然可以正常使用Veaury。通过Veaury转换的组件应该是客户端组件。  
+并允许在`Next.js`中创建`.vue`文件，或在`Nuxt.js`中创建React的`.jsx`文件。
+
+以下是分别在 Next.js 和 Nuxt.js 中使用 Veaury 的示例。   
+[How to create and use Vue components using Veaury in Next.js](https://github.com/devilwjp/veaury_in_nextjs)  
+[How to create and use React components using Veaury in Nuxt.js](https://github.com/devilwjp/veaury_in_nuxtjs)  
+
 ## 用法
 
 ### 在React组件中使用Vue组件 - 基本用法

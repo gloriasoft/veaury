@@ -13,6 +13,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
+
 - [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
@@ -23,6 +24,7 @@
 - [Do you want to preconfigure your project in advance?](#do-you-want-to-preconfigure-your-project-in-advance)
   - [Webpack](#webpack)
   - [Vite](#vite)
+- [Using Veaury in the SSR projects](#using-veaury-in-the-ssr-projects)
 - [Usage](#usage)
   - [Vue in React - Basic usage](#vue-in-react---basic-usage)
   - [React in Vue - Basic usage](#react-in-vue---basic-usage)
@@ -197,11 +199,11 @@ export default defineConfig({
 
 ## Using Veaury in the SSR projects    
 If your project uses the SSR framework, you can still use Veaury normally. The component converted through Veaury should be a client component.  
-And allows coding .vue files in 'Next.js', or React's .jsx files in 'Nuxt.js'.  
+And allows creating `.vue` files in `Next.js`, or `.jsx` files of React in `Nuxt.js`.  
 
 The following are examples of using Veaury in Next.js and Nuxt.js respectively.  
-[How to create and use Vue components using Veaury in Next.js](https://github.com/devilwjp/veaury_in_nextjs)
-[How to create and use React components using Veaury in Nuxt.js](https://github.com/devilwjp/veaury_in_nextjs)
+[How to create and use Vue components using Veaury in Next.js](https://github.com/devilwjp/veaury_in_nextjs)  
+[How to create and use React components using Veaury in Nuxt.js](https://github.com/devilwjp/veaury_in_nuxtjs)  
 
 ## Usage
 
