@@ -14,7 +14,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [商业合作](#%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C)
+- [合作和机会](#%E5%90%88%E4%BD%9C%E5%92%8C%E6%9C%BA%E4%BC%9A)
 - [What is Veaury?](#what-is-veaury)
 - [The greatest feature](#the-greatest-feature)
 - [Legacy](#legacy)
