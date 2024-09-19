@@ -20,7 +20,7 @@ const vueJsx = require('@vitejs/plugin-vue-jsx')
 //   }
 // }
 
-function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
+function veauryVitePlugins({isNuxt, type, vueJsxInclude, vueJsxExclude, vueOptions = {}, vueJsxOptions: initVueJsxOptions = {}, reactOptions = {}}) {
 
   let vueJsxOptions = {...initVueJsxOptions}
   if (type === 'react') {
@@ -44,7 +44,7 @@ function veauryVitePlugins({type, vueJsxInclude, vueJsxExclude, vueOptions = {},
 
     //   fileRegex: /veaury/
     // }),
-    vue(vueOptions),
+    isNuxt === true? {}: vue(vueOptions),
     // Make vueJsx plugin run time earlier
     {
       ...vueJsx(vueJsxOptions),
