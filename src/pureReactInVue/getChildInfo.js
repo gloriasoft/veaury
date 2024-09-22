@@ -45,5 +45,8 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
   //     props.node = () => reactNode
   // }
 
+  // remove ref_for
+  if (typeof props.ref_for === "boolean") delete props.ref_for
+
   return props
 }
