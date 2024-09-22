@@ -659,7 +659,7 @@ export default function applyReactInVue(component, options = {}) {
 
       // Destroy the React root node
       if (ReactMajorVersion > 17) {
-        this.__veauryReactApp__.unmount()
+        this.__veauryReactApp__?.unmount()
       } else {
         ReactDOM.unmountComponentAtNode(this.$refs.react)
       }
