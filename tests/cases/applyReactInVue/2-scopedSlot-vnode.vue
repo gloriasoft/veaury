@@ -13,7 +13,7 @@
   </ReactComponent>
 </template>
 
-<script>
+<script lang="jsx">
 import React from "react"
 import {createVNode} from "vue"
 import { applyReactInVue, getReactNode } from 'veaury'

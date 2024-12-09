@@ -27,6 +27,7 @@
 - [用法](#%E7%94%A8%E6%B3%95)
   - [在React组件中使用Vue组件 - 基本用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
   - [在Vue组件中使用React组件 - 基本用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95)
+    - [如果你的vue项目中安装了`react-dom 19`及以上版本，你应该使用`veaury@^2.6.0`](#%E5%A6%82%E6%9E%9C%E4%BD%A0%E7%9A%84vue%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%AE%89%E8%A3%85%E4%BA%86react-dom-19%E5%8F%8A%E4%BB%A5%E4%B8%8A%E7%89%88%E6%9C%AC%E4%BD%A0%E5%BA%94%E8%AF%A5%E4%BD%BF%E7%94%A8veaury%5E260)
   - [在React组件中使用Vue组件 - 事件的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
   - [在Vue组件中使用React组件 - 事件的用法](#%E5%9C%A8vue%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8react%E7%BB%84%E4%BB%B6---%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%94%A8%E6%B3%95)
   - [在React组件中使用Vue组件 - 插槽的用法](#%E5%9C%A8react%E7%BB%84%E4%BB%B6%E4%B8%AD%E4%BD%BF%E7%94%A8vue%E7%BB%84%E4%BB%B6---%E6%8F%92%E6%A7%BD%E7%9A%84%E7%94%A8%E6%B3%95)
@@ -205,6 +206,24 @@ export default function () {
 ```  
 
 ### 在Vue组件中使用React组件 - 基本用法
+#### 如果你的vue项目中安装了`react-dom 19`及以上版本，你应该使用`veaury@^2.6.0`  
+`react-dom 19` no longer supports dynamically determining whether to use `render` or `createRoot`. In order to be compatible with `react-dom 17` and previous versions, you need to manually configure `createRoot` in the veaury configuration.
+
+```js
+// react-dom >= 19, You only need to configure it globally once
+import { createRoot } from 'react-dom/client'
+import { setVeauryOptions } from 'veaury'
+setVeauryOptions({
+  react: {
+    createRoot
+  }
+})
+```
+
+If `createRoot` is not configured in react-dom 19 and above, the following error will be reported
+![image](https://github.com/user-attachments/assets/1abeec7d-a78c-4a1b-b2df-e113f72fa3c4)
+
+
 现在推荐使用`applyPureReactInVue`代替`applyReactInvue`.  
 [了解 `applyPureReactInVue` 和 `applyReactInVue` 的区别](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)
 ```vue
@@ -1104,6 +1123,7 @@ index 3366f5a..b9eacc6 100644
 本项目中的`dev-project-react`和`dev-project-vue3`目录是`veaury`开发环境的基础项目，分别由`create-react-app`和`@vue/cli`创建的两个初始项目。
 > **Note:** 在react项目中的`config/webpack.config.js`以及vue项目中的`vue.config.js`里，可以找到webpack的alias别名配置，将`veaury`的别名注释解开，就可以对根项目中`src`目录里的`veaury`源代码进行开发调试了
 >
-> **Setup:** 在主项目的根目录下运行命令行`npm run setup:yarn` 或者 `npm run setup:npm`，可以整体安装主项目和两个调试用的子项目
+> 只能使用`yarn`进行安装
+> **Setup:** 在主项目的根目录下运行命令行`npm run setup` 可以整体安装主项目和两个调试用的子项目
 >
 > **Develop:** 在主项目的根目录下运行命令行`npm run dev:vue` 以及 `npm run setup:npm`就可以对子项目进行开发调试

@@ -28,6 +28,7 @@
 - [Usage](#usage)
   - [Vue in React - Basic usage](#vue-in-react---basic-usage)
   - [React in Vue - Basic usage](#react-in-vue---basic-usage)
+    - [If `react-dom 19` and above is installed in your vue project, you should use `veaury@^2.6.0`.](#if-react-dom-19-and-above-is-installed-in-your-vue-project-you-should-use-veaury%5E260)
   - [Vue in React - Usage of events](#vue-in-react---usage-of-events)
   - [React in Vue - Usage of events](#react-in-vue---usage-of-events)
   - [Vue in React - Usage of slots](#vue-in-react---usage-of-slots)
@@ -236,6 +237,26 @@ export default function () {
 ```  
 
 ### React in Vue - Basic usage
+#### If `react-dom 19` and above is installed in your vue project, you should use `veaury@^2.6.0`.  
+`react-dom 19` no longer supports dynamically determining whether to use `render` or `createRoot`. In order to be compatible with `react-dom 17` and previous versions, you need to manually configure `createRoot` in the veaury configuration.  
+
+```js
+// react-dom >= 19, You only need to configure it globally once
+import { createRoot } from 'react-dom/client'
+import { setVeauryOptions } from 'veaury'
+setVeauryOptions({
+  react: {
+    createRoot
+  }
+})
+```
+
+If `createRoot` is not configured in react-dom 19 and above, the following error will be reported
+![image](https://github.com/user-attachments/assets/1abeec7d-a78c-4a1b-b2df-e113f72fa3c4)
+
+
+
+
 `applyPureReactInVue` is recommended.
 [Learn about the difference between `applyPureReactInVue` and `applyReactInVue`.](https://github.com/devilwjp/veaury/blob/master/pure_mode.md)   
 ```vue
@@ -1169,7 +1190,8 @@ The directories `dev-project-react` and `dev-project-vue3` in the project are th
 > In the `config/webpack.config.js` of the React project and the `vue.config.js` of the Vue project, you can uncomment the `veaury` in `alias` to develop the source code of `veaury`
 
 > [!TIP]  
-> **Setup:** Run the command `npm run setup:yarn` or `npm run setup:npm` in the root directory of the main project to install the main project and two subprojects
+> This project can only be installed using `yarn`.
+> **Setup:** Run the command `npm run setup` in the root directory of the main project to install the main project and two subprojects
 
 > [!TIP]  
 > **Develop:** Run the commands `npm run dev:vue` and `npm run dev:react` in the root directory of the main project for development  

@@ -71,16 +71,16 @@
       <div></div>
     </BB>
   </AAWithPure>
-  <Box>
-    <Box v-for="e in [1]">
-      <ReactInput :value="value" @valueChange="onValueChange" />
-    </Box>
-  </Box>
+<!--  <Box>-->
+<!--    <Box v-for="e in [1]">-->
+<!--      <ReactInput :value="value" @valueChange="onValueChange" />-->
+<!--    </Box>-->
+<!--  </Box>-->
 
 </template>
 
 <script setup lang="jsx">
-import { Input } from "@nextui-org/react";
+// import { Input } from "@nextui-org/react";
 import { applyPureReactInVue, applyReactInVue, RenderReactNode, getReactNode, injectSyncUpdateForPureReactInVue } from 'veaury'
 import { ref, onMounted, getCurrentInstance, h, Comment } from 'vue'
 import { createElement } from 'react'
@@ -90,16 +90,16 @@ import CCReact from './react_app/CC'
 import BoxReact from './react_app/Box'
 
 // After the Input component is bidirectionally bound, inputting text will cause confusion in the timing of status updates, and synchronous update injection processing is required.
-injectSyncUpdateForPureReactInVue(Input, {
-  // The name of the hook function that determines the content update of the Input component
-  onValueChange(...args) {
-    // The state key that determines the content of the Input component
-    return {
-      value: args[0]
-    }
-  }
-})
-const ReactInput = applyPureReactInVue(Input);
+// injectSyncUpdateForPureReactInVue(Input, {
+//   // The name of the hook function that determines the content update of the Input component
+//   onValueChange(...args) {
+//     // The state key that determines the content of the Input component
+//     return {
+//       value: args[0]
+//     }
+//   }
+// })
+// const ReactInput = applyPureReactInVue(Input);
 const Box = applyPureReactInVue(BoxReact)
 
 const ReactNode = createElement('div', null, 'ReactNode')
