@@ -44,11 +44,20 @@ type CrossingProviderVueInReactReturn = [useCrossingHooks, CrossingProviderCompo
 type useReactMissVueHooks = useCrossingHooks
 type ReactMissVueProvider = CrossingProviderComponent
 type createReactMissVueReturn = [useReactMissVueHooks, ReactMissVueProvider, ReactContext]
+interface VeauryOptions {
+    react?: {
+        [key: string]: any
+        createRoot?: Function
+    },
+    vue?: {
+        [key: string]: any
+    }
+}
 
 export const createCrossingProviderForReactInVue: (vueInjection: injectionFunction) => CrossingProviderReactInVueReturn;
 export const createCrossingProviderForVueInReact: (reactInjection: injectionFunction, providerName?: string) => CrossingProviderVueInReactReturn;
-// export const veauryOptions: options;
-// export const setVeauryOptions: (veauryOptions: options) => options;
+export const veauryOptions: VeauryOptions;
+export const setVeauryOptions: (veauryOptions: VeauryOptions) => VeauryOptions;
 export const applyReactInVue: (ReactComponent: ReactComponent, options?: options) => VueComponent;
 export const applyVueInReact: (VueComponent: VueComponent, options?: options) => ReactComponent;
 export const lazyVueInReact: (asyncImport: Promise<any>, options?: options) => any;

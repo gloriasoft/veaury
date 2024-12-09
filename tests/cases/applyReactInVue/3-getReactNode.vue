@@ -2,7 +2,7 @@
   <ReactComponentInVue :passingReactNode="getReactNode(VNode)"/>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import React from 'react'
 import {h} from 'vue'
 import {applyPureReactInVue, getReactNode} from 'veaury'

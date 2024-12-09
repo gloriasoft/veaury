@@ -1,13 +1,12 @@
 import * as React from "react"
-import { version } from "react"
 import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
-import { createPortal } from "react-dom"
+import { createPortal, version } from "react-dom"
 import ReactDOM from 'react-dom'
 
-const ReactMajorVersion = parseInt(version)
+const ReactDOMMajorVersion = parseInt(version)
 
 // let ReactDOM;
 // TODO: May be optimized in the future
@@ -560,12 +559,16 @@ export default function applyReactInVue(component, options = {}) {
             return
           }
 
-          if (ReactMajorVersion > 17) {
+          if (ReactDOMMajorVersion > 17) {
             // I'm not afraid of being fired
             if (ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED !== undefined) {
               ReactDOM.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.usingClientEntryPoint = true
             }
-            this.__veauryReactApp__ = ReactDOM.createRoot(container)
+            const createRoot = options.react.createRoot || ReactDOM.createRoot
+            if (ReactDOMMajorVersion > 18 && !createRoot) {
+              console.warn(`'react-dom 19' no longer supports dynamically determining whether to use 'render' or 'createRoot'. In order to be compatible with 'react-dom 17' and previous versions, you need to manually configure 'createRoot' in the veaury configuration.`)
+            }
+            this.__veauryReactApp__ = createRoot(container)
             this.__veauryReactApp__.render(reactRootComponent)
             return
           }
@@ -658,7 +661,7 @@ export default function applyReactInVue(component, options = {}) {
       }
 
       // Destroy the React root node
-      if (ReactMajorVersion > 17) {
+      if (ReactDOMMajorVersion > 17) {
         this.__veauryReactApp__?.unmount()
       } else {
         ReactDOM.unmountComponentAtNode(this.$refs.react)
