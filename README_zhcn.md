@@ -1102,6 +1102,8 @@ index 5c5d343..a850f38 100644
 ```
 
 node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts(@vue/runtime-dom@3.2.37)
+> 从 Vue 3.4 开始，Vue 不再隐式注册全局 `JSX` 命名空间，patch 的路径应为 `node_modules/vue/jsx-runtime/index.d.ts`
+
 ```diff
 diff --git a/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts b/node_modules/@vue/runtime-dom/dist/runtime-dom.d.ts
 index 3366f5a..b9eacc6 100644
