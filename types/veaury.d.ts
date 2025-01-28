@@ -76,7 +76,7 @@ export const lazyPureReactInVue: typeof lazyReactInVue;
 export const lazyPureVueInReact: typeof lazyVueInReact;
 export const injectSyncUpdateForPureReactInVue: (ReactComponent: ReactComponent, syncUpdateHooks: SyncUpdateHooks) => SyncUpdateStates;
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
     interface ComponentCustomProperties {
         __veauryReactRef__?: any;
     }
