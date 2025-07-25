@@ -504,6 +504,25 @@ export default function applyReactInVue(component, options = {}) {
         if (updateType) {
           Object.keys(updateType).forEach((key) => compareLast[key]())
         }
+
+        const setReactState = () => {
+            this.__veauryReactInstance__ && this.__veauryReactInstance__.setState((prevState) => {
+              // Clear the previous 'state', preventing merging
+              Object.keys(prevState).forEach((key) => {
+                if (options.isSlots && key === 'children') return
+                delete prevState[key]
+              })
+              return {
+                ...this.__veauryCache__,
+                ...toRaws(this.__veauryInjectedProps__),
+                ...!options.isSlots && this.__veauryLast__.slot,
+                ...toRaws(this.__veauryLast__.attrs),
+                // '__veauryVueProviderList__': this. __veauryVueProviderList__
+              }
+            })
+            this.__veauryCache__ = null
+        }
+        
         // component creation
         if (!update) {
           compareLast.slot()
@@ -521,7 +540,10 @@ export default function applyReactInVue(component, options = {}) {
             hashList={hashList}
             {...(this.$attrs.style ? { style: this.$attrs.style } : {})}
             // style={this.$attrs.style}
-            ref={(ref) => (this.__veauryReactInstance__ = ref)}
+            ref={(ref) => {
+              this.__veauryReactInstance__ = ref;
+              setReactState();
+            }}
           />
 
           const container = this.$refs.react
@@ -578,25 +600,6 @@ export default function applyReactInVue(component, options = {}) {
           )
 
         } else {
-
-          const setReactState = () => {
-            this.__veauryReactInstance__ && this.__veauryReactInstance__.setState((prevState) => {
-              // Clear the previous 'state', preventing merging
-              Object.keys(prevState).forEach((key) => {
-                if (options.isSlots && key === 'children') return
-                delete prevState[key]
-              })
-              return {
-                ...this.__veauryCache__,
-                ...toRaws(this.__veauryInjectedProps__),
-                ...!options.isSlots && this.__veauryLast__.slot,
-                ...toRaws(this.__veauryLast__.attrs),
-                // '__veauryVueProviderList__': this. __veauryVueProviderList__
-              }
-            })
-            this.__veauryCache__ = null
-          }
-
 
           // do the micro task update
           if (this.microTaskUpdate) {
