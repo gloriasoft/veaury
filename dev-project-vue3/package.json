@@ -31,6 +31,9 @@
     "eslint-plugin-vue": "^7.0.0",
     "react-refresh": "^0.14.0"
   },
+  "resolutions": {
+    "@achrinza/node-ipc": "9.2.9"
+  },
   "eslintConfig": {
     "root": true,
     "env": {
