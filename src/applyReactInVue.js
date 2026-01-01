@@ -456,6 +456,19 @@ export default function applyReactInVue(component, options = {}) {
           hashList.push(scopedId)
         }
 
+        const rawAttrs = this.$attrs || {}
+        const attrsWithWrappedEvents = {}
+
+        Object.keys(rawAttrs).forEach((key) => {
+          const val = rawAttrs[key]
+          if (key.startsWith('on') && typeof val === 'function') {
+            attrsWithWrappedEvents[key] = this.__veauryWrapReactEventListener__(val)
+          } else {
+            attrsWithWrappedEvents[key] = val
+          }
+        })
+
+
         const normalSlots = {}
         const scopedSlots = {}
         let children
@@ -498,7 +511,7 @@ export default function applyReactInVue(component, options = {}) {
             }
           },
           attrs: () => {
-            this.__veauryLast__.attrs = this.$attrs
+            this.__veauryLast__.attrs = attrsWithWrappedEvents
           }
         }
         if (updateType) {
@@ -517,7 +530,7 @@ export default function applyReactInVue(component, options = {}) {
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
             // __veauryVueProviderList__={this.__veauryVueProviderList__}
-            {...toRaws(this.$attrs)}
+            {...toRaws(attrsWithWrappedEvents)}
             {...toRaws(this.__veauryInjectedProps__)}
             {...{ children }}
             {...lastNormalSlots}
@@ -647,6 +660,21 @@ export default function applyReactInVue(component, options = {}) {
           if (!this.macroTaskUpdate && !this.microTaskUpdate) {
             setReactState()
           }
+        }
+      },
+      __veauryWrapReactEventListener__(fn) {
+        if (typeof fn !== 'function') return fn
+    
+        return (e, ...rest) => {
+          // React 16/17에서 pooling 방지용 (18 이상에선 no-op)
+          if (e && typeof e.persist === 'function') {
+            e.persist()
+          }
+    
+          // Vue 쪽에는 SyntheticEvent 대신 nativeEvent(또는 원래 값)를 넘긴다
+          const native = e && e.nativeEvent ? e.nativeEvent : e
+    
+          return fn(native, ...rest)
         }
       },
     },
