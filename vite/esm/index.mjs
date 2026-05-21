@@ -36,7 +36,10 @@ function veauryVitePlugins({isNuxt, type, vueJsxInclude, vueJsxExclude, vueOptio
     {
       config(){
         return {
-          esbuild: {
+          esbuild: { // for vite < 8
+            include: /\.[jt]sx?$/
+          },
+          oxc: { // for vite >= 8
             include: /\.[jt]sx?$/
           }
         }
