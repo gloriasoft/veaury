@@ -1,4 +1,5 @@
 import {formatClass, formatStyle} from '../utils/styleClassTransformer'
+import transformPropsKeys from '../utils/transformPropsKeys'
 import options from '../options'
 // import RenderReactNode from './RenderReactNode'
 
@@ -34,10 +35,7 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
   if (Object.keys(style).length > 0) newProps.style = style
   if (className !== '') newProps.className = className
 
-  Object.assign(props, {
-    ...newProps,
-    ...reactScoped,
-  })
+  Object.assign(props, newProps)
   delete props.class
 
   // if (child.type === RenderReactNode) {
@@ -48,5 +46,5 @@ export default function getChildInfo(child, index, vueInReactCall, defaultSlotsF
   // remove ref_for
   if (typeof props.ref_for === "boolean") delete props.ref_for
 
-  return props
+  return { ...transformPropsKeys(props), ...reactScoped }
 }

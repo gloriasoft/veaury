@@ -5,6 +5,7 @@
 import couldBeClass from "src/utils/couldBeClass";
 import { formatClass, formatStyle } from "src/utils/styleClassTransformer";
 import parseVModel from "src/utils/parseVModel";
+import transformPropsKeys from "src/utils/transformPropsKeys";
 
 describe('Test utils', () => {
 
@@ -57,5 +58,13 @@ describe('Test utils', () => {
         'v-models': 1
       })
     }).toThrow()
+  })
+
+  test('Test transformPropsKeys.js', () => {
+    expect(transformPropsKeys({ 'my-prop': 'a', 'another-prop': 'b' })).toEqual({ myProp: 'a', anotherProp: 'b' })
+    expect(transformPropsKeys({ 'aria-label': 'x', 'data-foo': 'y' })).toEqual({ 'aria-label': 'x', 'data-foo': 'y' })
+    expect(transformPropsKeys({ alreadyCamel: 'z' })).toEqual({ alreadyCamel: 'z' })
+    expect(transformPropsKeys(null)).toBe(null)
+    expect(transformPropsKeys(undefined)).toBe(undefined)
   })
 })
