@@ -3,6 +3,7 @@ import applyVueInReact from "./applyVueInReact"
 import { setOptions } from "./options"
 import { h as createElement, getCurrentInstance, reactive, Fragment as VueFragment, Comment } from 'vue'
 import { overwriteDomMethods, recoverDomMethods } from './overrideDom'
+import transformPropsKeys from './utils/transformPropsKeys'
 import { createPortal, version } from "react-dom"
 import ReactDOM from 'react-dom'
 
@@ -498,7 +499,7 @@ export default function applyReactInVue(component, options = {}) {
             }
           },
           attrs: () => {
-            this.__veauryLast__.attrs = this.$attrs
+            this.__veauryLast__.attrs = transformPropsKeys(this.$attrs)
           }
         }
         if (updateType) {
@@ -517,7 +518,7 @@ export default function applyReactInVue(component, options = {}) {
           const Component = createReactContainer(component, options, this)
           let reactRootComponent = <Component
             // __veauryVueProviderList__={this.__veauryVueProviderList__}
-            {...toRaws(this.$attrs)}
+            {...transformPropsKeys(toRaws(this.$attrs))}
             {...toRaws(this.__veauryInjectedProps__)}
             {...{ children }}
             {...lastNormalSlots}
